@@ -1,4 +1,4 @@
-package edu.northeastern.recipeasy;
+package edu.northeastern.recipeasy.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
