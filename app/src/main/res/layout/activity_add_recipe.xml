@@ -193,7 +193,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/guidelinev2"
-            app:layout_constraintTop_toBottomOf="@+id/guidelineBottomMainLabel" />
+            app:layout_constraintTop_toBottomOf="@+id/guidelineBottomMainLabel"
+            android:autofillHints="Name of the Dish" />
 
         <Spinner
             android:id="@+id/spinnerAddNewCuisine"
@@ -239,7 +240,8 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toEndOf="@+id/guidelinev2"
-            app:layout_constraintTop_toBottomOf="@+id/rangeSliderCaloriesIdAddNewRecipe" />
+            app:layout_constraintTop_toBottomOf="@+id/rangeSliderCaloriesIdAddNewRecipe"
+            android:autofillHints="Prep Time in Minutes" />
 
         <EditText
             android:id="@+id/cookTimeId"
@@ -253,7 +255,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/prepTimeId"
-            app:layout_constraintTop_toBottomOf="@+id/rangeSliderCaloriesIdAddNewRecipe" />
+            app:layout_constraintTop_toBottomOf="@+id/rangeSliderCaloriesIdAddNewRecipe"
+            android:autofillHints="Cook Time in Minutes" />
 
         <EditText
             android:id="@+id/servingSizeIdAddNewRecipe"
@@ -267,7 +270,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/guidelinev2"
-            app:layout_constraintTop_toBottomOf="@+id/prepTimeId" />
+            app:layout_constraintTop_toBottomOf="@+id/prepTimeId"
+            android:autofillHints="Number of Servings" />
 
         <TextView
             android:id="@+id/dietaryRestrictionsAddNewLabelId"
@@ -421,7 +425,8 @@
             app:layout_constraintBottom_toTopOf="@+id/guidelineBottomUploadButtons"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/cameraButtonId"
-            app:layout_constraintTop_toBottomOf="@+id/guidelineBottomCameraLabel" />
+            app:layout_constraintTop_toBottomOf="@+id/guidelineBottomCameraLabel"
+            tools:ignore="DuplicateSpeakableTextCheck" />
 
         <ImageView
             android:id="@+id/pictureOfDishId"
@@ -431,7 +436,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/guidelineBottomUploadButtons"
-            tools:srcCompat="@tools:sample/avatars" />
+            tools:srcCompat="@tools:sample/avatars"
+            android:contentDescription="@string/picture_of_dish" />
 
         <Button
             android:id="@+id/submitButtonId"

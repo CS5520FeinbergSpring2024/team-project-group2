@@ -18,5 +18,6 @@
     <string name="ingredients_string">Ingredients:</string>
     <string name="add_new_ingredient">Add Ingredient</string>
     <string name="camera_section_label">Upload a Photo of your Dish:</string>
+    <string name="picture_of_dish">Picture of Dish</string>
 
 </resources>
