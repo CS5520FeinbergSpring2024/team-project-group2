@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<androidx.constraintlayout.widget.ConstraintLayout
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+    tools:context=".activities.AddRecipeActivity">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.04" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline27"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.27" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline36"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.36" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline58"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.58" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline77"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.77" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline97"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.97" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelinev1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".1" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelinev2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".35" />
+
+    <TextView
+        android:id="@+id/newRecipeTitleLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_a_new_recipe_string"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/guideline5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/addNewDishLabelId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dish_string"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBaseline_toBaselineOf="@id/editDishAddRecipe"
+        app:layout_constraintBottom_toTopOf="@+id/labelCuisineAddRecipe"
+        app:layout_constraintEnd_toStartOf="@+id/guidelinev2"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/guidelinev1"
+        app:layout_constraintTop_toBottomOf="@id/guideline5" />
+
+    <TextView
+        android:id="@+id/servingSizeLabelIdAddNewRecipe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/servings_string"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBaseline_toBaselineOf="@id/servingSizeIdAddNewRecipe"
+        app:layout_constraintBottom_toTopOf="@id/guideline27"
+        app:layout_constraintEnd_toStartOf="@+id/guidelinev2"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/guidelinev1"
+        app:layout_constraintTop_toBottomOf="@+id/timeLabelId" />
+
+    <TextView
+        android:id="@+id/caloriesLabelId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/calories_string"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/timeLabelId"
+        app:layout_constraintEnd_toStartOf="@+id/guidelinev2"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/guidelinev1"
+        app:layout_constraintTop_toBottomOf="@+id/labelCuisineAddRecipe" />
+
+    <TextView
+        android:id="@+id/timeLabelId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/time_string"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBaseline_toBaselineOf="@id/cookTimeId"
+        app:layout_constraintBottom_toTopOf="@+id/servingSizeLabelIdAddNewRecipe"
+        app:layout_constraintEnd_toStartOf="@+id/guidelinev2"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/guidelinev1"
+        app:layout_constraintTop_toBottomOf="@+id/caloriesLabelId" />
+
+    <TextView
+        android:id="@+id/labelCuisineAddRecipe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/addNewDishLabelId"
+        android:text="@string/cuisine_string"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/caloriesLabelId"
+        app:layout_constraintEnd_toStartOf="@+id/guidelinev2"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/guidelinev1"
+        app:layout_constraintTop_toBottomOf="@+id/addNewDishLabelId" />
+
+    <EditText
+        android:id="@+id/editDishAddRecipe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/dish_string"
+        android:inputType="text"
+        app:layout_constraintBottom_toTopOf="@+id/spinnerAddNewCuisine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/guidelinev2"
+        app:layout_constraintTop_toBottomOf="@+id/guideline5" />
+
+    <Spinner
+        android:id="@+id/spinnerAddNewCuisine"
+        android:layout_width="210dp"
+        android:layout_height="33dp"
+        android:layout_alignBaseline="@+id/labelCuisineAddRecipe"
+        android:entries="@array/cuisine_options"
+        app:layout_constraintBottom_toTopOf="@+id/rangeSliderCaloriesIdAddNewRecipe"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/guidelinev2"
+        app:layout_constraintTop_toBottomOf="@+id/editDishAddRecipe" />
+
+    <com.google.android.material.slider.RangeSlider
+        android:id="@+id/rangeSliderCaloriesIdAddNewRecipe"
+        android:layout_width="229dp"
+        android:layout_height="46dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerVertical="true"
+        android:contentDescription="@string/calories_string"
+        android:stepSize="50.0"
+        android:valueFrom="0.0"
+        android:valueTo="2000.0"
+        app:layout_constraintBottom_toTopOf="@+id/prepTimeId"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/guidelinev2"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerAddNewCuisine"
+        app:values="@array/single_calorie_value" />
+
+    <EditText
+        android:id="@+id/prepTimeId"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:hint="@string/prep_time_string"
+        android:inputType="number"
+        app:layout_constraintBottom_toTopOf="@+id/servingSizeIdAddNewRecipe"
+        app:layout_constraintEnd_toStartOf="@+id/cookTimeId"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toEndOf="@+id/guidelinev2"
+        app:layout_constraintTop_toBottomOf="@+id/rangeSliderCaloriesIdAddNewRecipe" />
+
+    <EditText
+        android:id="@+id/cookTimeId"
+        android:layout_width="95dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/cook_time_string"
+        android:inputType="number"
+        app:layout_constraintBottom_toTopOf="@+id/servingSizeIdAddNewRecipe"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/prepTimeId"
+        app:layout_constraintTop_toBottomOf="@+id/rangeSliderCaloriesIdAddNewRecipe"
+        tools:layout_editor_absoluteY="198dp" />
+
+    <EditText
+        android:id="@+id/servingSizeIdAddNewRecipe"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/servings_string"
+        android:inputType="number"
+        app:layout_constraintBottom_toTopOf="@id/guideline27"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/guidelinev2"
+        app:layout_constraintTop_toBottomOf="@+id/prepTimeId" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

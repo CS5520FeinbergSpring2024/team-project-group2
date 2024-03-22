@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">RecipEasy</string>
+    <string name="add_a_new_recipe_string">Add a New Recipe</string>
+    <string name="dish_string">Dish</string>
+    <string name="cuisine_string">Cuisine</string>
+    <string name="calories_string">Calories</string>
+    <string name="prep_time_string">Prep Time</string>
+    <string name="time_string">Time</string>
+    <string name="cook_time_string">Cook Time</string>
+    <string name="servings_string">Servings</string>
+    <string name="dietary_restrictions">Dietary Restrictions</string>
+    <string name="vegetarian_string">Vegetarian</string>
+    <string name="gluten_free_string">Gluten Free</string>
+    <string name="vegan_string">Vegan</string>
+    <string name="peanut_free_string">Peanut Free</string>
+    <string name="enter_steps_to_your_recipe">Enter Recipe Steps:</string>
 </resources>
