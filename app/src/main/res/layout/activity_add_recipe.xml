@@ -36,46 +36,46 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.35" />
+            app:layout_constraintGuide_percent="0.33" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guidelineBottomIngredientsLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.4" />
+            app:layout_constraintGuide_percent="0.38" />
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guidelineBottomIngredientsRV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.58" />
+            app:layout_constraintGuide_percent="0.56" />
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/recipeLabelBottomGuideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.62" />
+            app:layout_constraintGuide_percent="0.60" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guidelineBottomRecipeRecyclerView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.78" />
+            app:layout_constraintGuide_percent="0.76" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guidelineBottomCameraLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent=".83" />
+            app:layout_constraintGuide_percent=".81" />
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guidelineBottomUploadButtons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent=".86" />
+            app:layout_constraintGuide_percent=".84" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guidelineBottomCameraInput"
@@ -430,8 +430,8 @@
 
         <ImageView
             android:id="@+id/pictureOfDishId"
-            android:layout_width="161dp"
-            android:layout_height="156dp"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
             app:layout_constraintBottom_toTopOf="@+id/guidelineBottomCameraInput"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

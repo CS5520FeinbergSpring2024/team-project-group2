@@ -1,20 +1,35 @@
 package edu.northeastern.recipeasy.activities;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.slider.RangeSlider;
 
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 import edu.northeastern.recipeasy.ItemRecyvlerView.ListItem;
 import edu.northeastern.recipeasy.ItemRecyvlerView.ListItemViewAdapter;
@@ -27,16 +42,34 @@ public class AddRecipeActivity extends AppCompatActivity {
     private RecyclerView recipeRecyclerView;
     private ArrayList<ListItem> recipeStepsList;
     private ListItemViewAdapter recipeAdapter;
+    private ActivityResultLauncher<Uri> cameraLauncher;
+    private ActivityResultLauncher<Intent> galleryLauncher;
+    private ImageView dishPicture;
+    private Button cameraButton;
+    private Button galleryButton;
+    private Uri dishPictureUri;
+    private static final int CAMERA_REQUEST_CODE = 101;
+    private static final int GALLERY_REQUEST_CODE = 102;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_recipe);
 
-        initializeIngredientsRecycler();
-        initializeRecipeRecycler();
+        setUp();
     }
 
+    private void setUp(){
+        dishPicture = findViewById(R.id.pictureOfDishId);
+        cameraButton = findViewById(R.id.cameraButtonId);
+        galleryButton = findViewById(R.id.galleryButtonId);
+        dishPictureUri = makeUri();
+
+        initializeIngredientsRecycler();
+        initializeRecipeRecycler();
+        initializeCamera();
+        initializeGallery();
+    }
 
     private void initializeIngredientsRecycler(){
         ingredientsRecyclerView = findViewById(R.id.ingredientsRecyclerViewId);
@@ -84,17 +117,59 @@ public class AddRecipeActivity extends AppCompatActivity {
         }
     }
 
+
+    private Uri makeUri() {
+        File imageFile = new File(getApplicationContext().getFilesDir(), "pic.jpg");
+        return FileProvider.getUriForFile(
+                getApplicationContext(),
+                "edu.northeastern.recipeasy.fileProvider",
+                imageFile
+        );
+    }
+
     private void blankListItem() {
-        Toast.makeText(this, "Step cannot be left blank", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Item cannot be left blank", Toast.LENGTH_SHORT).show();
     }
 
     public void clickedCamera(View view) {
+        if (ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
+        } else {
+            cameraLauncher.launch(dishPictureUri);
+        }
     }
 
     public void clickedGallery(View view) {
+        // Can we just put a toast and if you are under that SDK not allow gallery
+
+        if (Build.VERSION.SDK_INT < 33) {
+//            if (ContextCompat.checkSelfPermission(NewRecipeActivity.this,
+//                    Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+//                ActivityCompat.requestPermissions(NewRecipeActivity.this,
+//                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, GALLERY_REQUEST_CODE);
+//            } else {
+//                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//                galleryLauncher.launch(intent);
+
+//            }
+            Toast.makeText(view.getContext(), "Gallery access requires software update", Toast.LENGTH_LONG).show();
+
+        } else {
+            if (ContextCompat.checkSelfPermission(this,
+                    android.Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_MEDIA_IMAGES}, GALLERY_REQUEST_CODE);
+            } else {
+                Intent intent = new Intent(MediaStore.ACTION_PICK_IMAGES);
+                galleryLauncher.launch(intent);
+            }
+        }
     }
 
     public void submitRecipe(View view) {
+        // TODO: which items are required, which arent?
         //TODO: make a recipe object and push to DB
 
         String[] formedStrings = formListItemStrings();
@@ -137,8 +212,8 @@ public class AddRecipeActivity extends AppCompatActivity {
         //TODO: figure out how to store a picture
         String cuisine = cuisineSpinner.getSelectedItem().toString();
 
-        // likes = 0
-        // dislikes = 0
+        int likes = 0;
+        int dislikes = 0;
 
         Log.w(" CUISINE", " " + cuisine );
 
@@ -161,4 +236,66 @@ public class AddRecipeActivity extends AppCompatActivity {
         }
         return new String[]{ingredients.toString(), recipeSteps.toString()};
     }
+
+
+    private void initializeCamera() {
+        cameraLauncher = registerForActivityResult(
+                new ActivityResultContracts.TakePicture(),
+                result -> {
+                    try {
+                        if (result) {
+                            dishPicture.setImageURI(null);
+                            dishPicture.setImageURI(dishPictureUri);
+                            galleryButton.setVisibility(View.GONE);
+                        } else {
+                            Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                    }
+                }
+        );
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == CAMERA_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                cameraLauncher.launch(dishPictureUri);
+            } else {
+                Toast.makeText(this, "Camera permission denied", Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestCode == GALLERY_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Intent intent = new Intent(MediaStore.ACTION_PICK_IMAGES);
+                galleryLauncher.launch(intent);
+            } else {
+                Toast.makeText(this, "Gallery permission denied", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void initializeGallery() {
+        galleryLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    try {
+                        if (result.getResultCode() == RESULT_OK) {
+                            dishPicture.setImageURI(null);
+                            assert result.getData() != null;
+                            dishPictureUri = result.getData().getData();
+                            dishPicture.setImageURI(dishPictureUri);
+                            cameraButton.setVisibility(View.GONE);
+                        } else {
+                            Toast.makeText(this, "Gallery action canceled", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                    }
+                }
+        );
+    }
+
+    //TODO: either prevent a screen rotate or fix it so inputs aren't lost
 }
