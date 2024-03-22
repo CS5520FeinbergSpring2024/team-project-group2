@@ -11,72 +11,78 @@
         tools:context=".activities.AddRecipeActivity">
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline5"
+            android:id="@+id/guidelineBottomMainLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.02" />
+            app:layout_constraintGuide_percent="0.03" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline27"
+            android:id="@+id/guidelineBottomGeneralSection"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.20" />
+            app:layout_constraintGuide_percent="0.25" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline31"
+            android:id="@+id/guidelineBottomDietaryRestrictionsLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.23" />
+            app:layout_constraintGuide_percent="0.28" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline36"
+            android:id="@+id/guidelineBottomDietaryRestrictionsSection"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.26" />
+            app:layout_constraintGuide_percent="0.35" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guidelineBottomIngredientsLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.3" />
+            app:layout_constraintGuide_percent="0.4" />
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/topRecipeRVGuideline"
+            android:id="@+id/guidelineBottomIngredientsRV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.42" />
+            app:layout_constraintGuide_percent="0.58" />
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/recipeLabelBottomGuideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.45" />
+            app:layout_constraintGuide_percent="0.62" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline58"
+            android:id="@+id/guidelineBottomRecipeRecyclerView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.58" />
+            app:layout_constraintGuide_percent="0.78" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline83"
+            android:id="@+id/guidelineBottomCameraLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_percent=".83" />
-
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline95"
+            android:id="@+id/guidelineBottomUploadButtons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.95" />
+            app:layout_constraintGuide_percent=".86" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineBottomCameraInput"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.96" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guidelinev1"
@@ -100,7 +106,7 @@
             android:text="@string/add_a_new_recipe_string"
             android:textSize="24sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/guideline5"
+            app:layout_constraintBottom_toTopOf="@+id/guidelineBottomMainLabel"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -118,7 +124,7 @@
             app:layout_constraintEnd_toStartOf="@+id/guidelinev2"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/guidelinev1"
-            app:layout_constraintTop_toBottomOf="@id/guideline5" />
+            app:layout_constraintTop_toBottomOf="@id/guidelineBottomMainLabel" />
 
         <TextView
             android:id="@+id/servingSizeLabelIdAddNewRecipe"
@@ -128,7 +134,7 @@
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintBaseline_toBaselineOf="@id/servingSizeIdAddNewRecipe"
-            app:layout_constraintBottom_toTopOf="@id/guideline27"
+            app:layout_constraintBottom_toTopOf="@id/guidelineBottomGeneralSection"
             app:layout_constraintEnd_toStartOf="@+id/guidelinev2"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/guidelinev1"
@@ -187,7 +193,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/guidelinev2"
-            app:layout_constraintTop_toBottomOf="@+id/guideline5" />
+            app:layout_constraintTop_toBottomOf="@+id/guidelineBottomMainLabel" />
 
         <Spinner
             android:id="@+id/spinnerAddNewCuisine"
@@ -257,7 +263,7 @@
             android:hint="@string/servings_string"
             android:inputType="number"
             android:minHeight="48dp"
-            app:layout_constraintBottom_toTopOf="@id/guideline27"
+            app:layout_constraintBottom_toTopOf="@id/guidelineBottomGeneralSection"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/guidelinev2"
@@ -270,11 +276,11 @@
             android:text="@string/dietary_restrictions"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/guideline31"
+            app:layout_constraintBottom_toTopOf="@id/guidelineBottomDietaryRestrictionsLabel"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/guidelinev1"
-            app:layout_constraintTop_toBottomOf="@+id/guideline27" />
+            app:layout_constraintTop_toBottomOf="@+id/guidelineBottomGeneralSection" />
 
         <CheckBox
             android:id="@+id/vegetarianBoxId"
@@ -282,12 +288,12 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:text="@string/vegetarian_string"
-            app:layout_constraintBottom_toTopOf="@id/guideline36"
+            app:layout_constraintBottom_toTopOf="@id/guidelineBottomDietaryRestrictionsSection"
             app:layout_constraintEnd_toStartOf="@+id/veganBoxId"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="@id/guidelinev1"
-            app:layout_constraintTop_toBottomOf="@id/guideline31" />
+            app:layout_constraintTop_toBottomOf="@id/guidelineBottomDietaryRestrictionsLabel" />
 
         <CheckBox
             android:id="@+id/veganBoxId"
@@ -295,11 +301,11 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:text="@string/vegan_string"
-            app:layout_constraintBottom_toTopOf="@id/guideline36"
+            app:layout_constraintBottom_toTopOf="@id/guidelineBottomDietaryRestrictionsSection"
             app:layout_constraintEnd_toStartOf="@+id/glutenFreeBoxId"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/vegetarianBoxId"
-            app:layout_constraintTop_toBottomOf="@id/guideline31" />
+            app:layout_constraintTop_toBottomOf="@id/guidelineBottomDietaryRestrictionsLabel" />
 
         <CheckBox
             android:id="@+id/glutenFreeBoxId"
@@ -307,11 +313,11 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:text="@string/gluten_free_string"
-            app:layout_constraintBottom_toTopOf="@id/guideline36"
+            app:layout_constraintBottom_toTopOf="@id/guidelineBottomDietaryRestrictionsSection"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/veganBoxId"
-            app:layout_constraintTop_toBottomOf="@id/guideline31" />
+            app:layout_constraintTop_toBottomOf="@id/guidelineBottomDietaryRestrictionsLabel" />
 
         <TextView
             android:id="@+id/ingredientListLabelId"
@@ -322,8 +328,7 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/ingredientsRecyclerViewId"
             app:layout_constraintStart_toStartOf="@+id/guidelinev1"
-            app:layout_constraintTop_toTopOf="@+id/guideline36"
-            app:layout_constraintVertical_bias="0.95" />
+            app:layout_constraintTop_toTopOf="@+id/guidelineBottomDietaryRestrictionsSection" />
 
         <Button
             android:id="@+id/addNewIngredientButton"
@@ -334,14 +339,13 @@
             app:layout_constraintBottom_toTopOf="@+id/ingredientsRecyclerViewId"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guidelinev2"
-            app:layout_constraintTop_toBottomOf="@+id/guideline36"
-            app:layout_constraintVertical_bias="0.95" />
+            app:layout_constraintTop_toBottomOf="@+id/guidelineBottomDietaryRestrictionsSection" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/ingredientsRecyclerViewId"
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            app:layout_constraintBottom_toTopOf="@+id/topRecipeRVGuideline"
+            app:layout_constraintBottom_toTopOf="@+id/guidelineBottomIngredientsRV"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/guidelineBottomIngredientsLabel"
@@ -358,7 +362,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toTopOf="@id/recipeLabelBottomGuideline"
-            app:layout_constraintTop_toBottomOf="@+id/topRecipeRVGuideline" />
+            app:layout_constraintTop_toBottomOf="@+id/guidelineBottomIngredientsRV" />
 
         <Button
             android:id="@+id/addNewRecipeStepButton"
@@ -369,18 +373,77 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/recipeStepsLabelId"
-            app:layout_constraintTop_toBottomOf="@+id/topRecipeRVGuideline"
+            app:layout_constraintTop_toBottomOf="@+id/guidelineBottomIngredientsRV"
             app:layout_constraintBottom_toTopOf="@id/recipeLabelBottomGuideline"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recipeRecyclerViewId"
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            app:layout_constraintBottom_toTopOf="@id/guideline58"
+            app:layout_constraintBottom_toTopOf="@id/guidelineBottomRecipeRecyclerView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/recipeLabelBottomGuideline"
             app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/cameraSectionLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/camera_section_label"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/guidelineBottomCameraLabel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/guidelinev1"
+            app:layout_constraintTop_toBottomOf="@+id/guidelineBottomRecipeRecyclerView" />
+
+        <Button
+            android:id="@+id/cameraButtonId"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:contentDescription="@string/calories_string"
+            android:drawableBottom="@android:drawable/ic_menu_camera"
+            android:onClick="clickedCamera"
+            app:layout_constraintBottom_toTopOf="@+id/guidelineBottomUploadButtons"
+            app:layout_constraintEnd_toStartOf="@id/galleryButtonId"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/guidelineBottomCameraLabel" />
+
+        <Button
+            android:id="@+id/galleryButtonId"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:contentDescription="@string/camera_section_label"
+            android:drawableBottom="@android:drawable/ic_menu_gallery"
+            android:onClick="clickedGallery"
+            app:layout_constraintBottom_toTopOf="@+id/guidelineBottomUploadButtons"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/cameraButtonId"
+            app:layout_constraintTop_toBottomOf="@+id/guidelineBottomCameraLabel" />
+
+        <ImageView
+            android:id="@+id/pictureOfDishId"
+            android:layout_width="161dp"
+            android:layout_height="156dp"
+            app:layout_constraintBottom_toTopOf="@+id/guidelineBottomCameraInput"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guidelineBottomUploadButtons"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <Button
+            android:id="@+id/submitButtonId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/submit"
+            android:onClick="submitRecipe"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.96"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guidelineBottomCameraInput" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
