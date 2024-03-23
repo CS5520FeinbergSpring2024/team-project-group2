@@ -1,4 +1,4 @@
-package edu.northeastern.recipeasy.ItemRecyvlerView;
+package edu.northeastern.recipeasy.ItemRecyclerView;
 
 import android.annotation.SuppressLint;
 import android.text.Editable;

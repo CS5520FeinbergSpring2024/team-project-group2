@@ -31,8 +31,8 @@ import android.widget.Toast;
 import java.io.File;
 import java.util.ArrayList;
 
-import edu.northeastern.recipeasy.ItemRecyvlerView.ListItem;
-import edu.northeastern.recipeasy.ItemRecyvlerView.ListItemViewAdapter;
+import edu.northeastern.recipeasy.ItemRecyclerView.ListItem;
+import edu.northeastern.recipeasy.ItemRecyclerView.ListItemViewAdapter;
 import edu.northeastern.recipeasy.R;
 
 public class AddRecipeActivity extends AppCompatActivity {
@@ -50,12 +50,21 @@ public class AddRecipeActivity extends AppCompatActivity {
     private Uri dishPictureUri;
     private static final int CAMERA_REQUEST_CODE = 101;
     private static final int GALLERY_REQUEST_CODE = 102;
+    private boolean restoreIngredients = false;
+    private boolean restoreRecipe = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_recipe);
-
+        if (savedInstanceState != null){
+            if (savedInstanceState.containsKey("ingredientListSize")) {
+                restoreIngredients = true;
+            }
+            if (savedInstanceState.containsKey("recipeStepsListSize")) {
+                restoreRecipe = true;
+            }
+        }
         setUp();
     }
 
@@ -76,7 +85,10 @@ public class AddRecipeActivity extends AppCompatActivity {
         ingredientsRecyclerView.setHasFixedSize(true);
         ingredientsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         ingredientList = new ArrayList<>();
-        ingredientList.add(new ListItem("", "Ingredient"));
+        if (!restoreIngredients){
+            ingredientList.add(new ListItem("", "Ingredient"));
+        }
+
         ingredientAdapter = new ListItemViewAdapter(ingredientList);
         ingredientsRecyclerView.setAdapter(ingredientAdapter);
     }
@@ -85,7 +97,9 @@ public class AddRecipeActivity extends AppCompatActivity {
         recipeRecyclerView.setHasFixedSize(true);
         recipeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         recipeStepsList = new ArrayList<>();
-        recipeStepsList.add(new ListItem("", "Step"));
+        if (!restoreRecipe){
+            recipeStepsList.add(new ListItem("", "Step"));
+        }
         recipeAdapter = new ListItemViewAdapter(recipeStepsList);
         recipeRecyclerView.setAdapter(recipeAdapter);
     }
@@ -142,19 +156,15 @@ public class AddRecipeActivity extends AppCompatActivity {
     }
 
     public void clickedGallery(View view) {
-        // Can we just put a toast and if you are under that SDK not allow gallery
-
         if (Build.VERSION.SDK_INT < 33) {
-//            if (ContextCompat.checkSelfPermission(NewRecipeActivity.this,
-//                    Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-//                ActivityCompat.requestPermissions(NewRecipeActivity.this,
-//                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, GALLERY_REQUEST_CODE);
-//            } else {
-//                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//                galleryLauncher.launch(intent);
-
-//            }
-            Toast.makeText(view.getContext(), "Gallery access requires software update", Toast.LENGTH_LONG).show();
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, GALLERY_REQUEST_CODE);
+            } else {
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                galleryLauncher.launch(intent);
+            }
 
         } else {
             if (ContextCompat.checkSelfPermission(this,
@@ -268,8 +278,13 @@ public class AddRecipeActivity extends AppCompatActivity {
             }
         } else if (requestCode == GALLERY_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Intent intent = new Intent(MediaStore.ACTION_PICK_IMAGES);
-                galleryLauncher.launch(intent);
+                if (Build.VERSION.SDK_INT < 33){
+                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    galleryLauncher.launch(intent);
+                } else {
+                    Intent intent = new Intent(MediaStore.ACTION_PICK_IMAGES);
+                    galleryLauncher.launch(intent);
+                }
             } else {
                 Toast.makeText(this, "Gallery permission denied", Toast.LENGTH_SHORT).show();
             }
@@ -297,5 +312,51 @@ public class AddRecipeActivity extends AppCompatActivity {
         );
     }
 
-    //TODO: either prevent a screen rotate or fix it so inputs aren't lost
+    //TODO: should all be saved or just hte ones that disappear
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (ingredientList.size() > 0){
+            outState.putInt("ingredientListSize", ingredientList.size());
+            for (int i = 0; i < ingredientList.size(); i++) {
+                outState.putString("ingredient"+ i, ingredientList.get(i).getItem());
+            }
+        }
+        if (recipeStepsList.size() > 0){
+            outState.putInt("recipeStepsListSize", recipeStepsList.size());
+            for (int i = 0; i < recipeStepsList.size(); i++) {
+                outState.putString("recipeStep"+ i, recipeStepsList.get(i).getItem());
+            }
+        }
+        if (dishPictureUri != null){
+            outState.putString("dishPicture", dishPictureUri.toString());
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState.containsKey("ingredientListSize")) {
+            if (ingredientList == null || ingredientList.size() <= 1) {
+                int size = savedInstanceState.getInt("ingredientListSize");
+                for (int i = 0; i < size; i++) {
+                    String ingredient = savedInstanceState.getString("ingredient" + i);
+                    ingredientList.add(new ListItem(ingredient, "Ingredient"));
+                }
+            }
+        }
+        if (savedInstanceState.containsKey("recipeStepsListSize")) {
+            if (recipeStepsList == null || recipeStepsList.size() <= 1) {
+                int size = savedInstanceState.getInt("recipeStepsListSize");
+                for (int i = 0; i < size; i++) {
+                    String recipeStep = savedInstanceState.getString("recipeStep" + i);
+                    recipeStepsList.add(new ListItem(recipeStep, "Step"));
+                }
+            }
+        }
+        if (savedInstanceState.containsKey("dishPicture")) {
+            dishPictureUri = Uri.parse(savedInstanceState.getString("dishPicture"));
+            dishPicture.setImageURI(dishPictureUri);
+        }
+    }
 }

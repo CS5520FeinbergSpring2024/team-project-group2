@@ -1,4 +1,4 @@
-package edu.northeastern.recipeasy.ItemRecyvlerView;
+package edu.northeastern.recipeasy.ItemRecyclerView;
 
 public class ListItem {
     private String item;

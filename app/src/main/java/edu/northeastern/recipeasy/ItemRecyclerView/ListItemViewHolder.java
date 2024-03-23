@@ -1,4 +1,4 @@
-package edu.northeastern.recipeasy.ItemRecyvlerView;
+package edu.northeastern.recipeasy.ItemRecyclerView;
 
 import android.view.View;
 import android.widget.EditText;
