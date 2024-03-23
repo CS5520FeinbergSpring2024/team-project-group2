@@ -1,16 +1,17 @@
 package edu.northeastern.recipeasy.domain;
 
+import java.util.Date;
 public class Message {
     private String senderUsername;
     private String receiverUsername;
     private String message;
-    private String timeStamp;
+    private Date timeStamp;
 
-    public Message(String senderUsername, String receiverUsername, String message, String timeStamp) {
+    public Message(String senderUsername, String receiverUsername, String message) {
         this.senderUsername = senderUsername;
         this.receiverUsername = receiverUsername;
         this.message = message;
-        this.timeStamp = timeStamp;
+        this.timeStamp = new Date();
     }
 
     public String getSenderUsername() {
@@ -37,11 +38,11 @@ public class Message {
         this.message = message;
     }
 
-    public String getTimeStamp() {
+    public Date getTimeStamp() {
         return timeStamp;
     }
 
-    public void setTimeStamp(String timeStamp) {
+    public void setTimeStamp(Date timeStamp) {
         this.timeStamp = timeStamp;
     }
 }
