@@ -257,8 +257,6 @@ public class AddRecipeActivity extends AppCompatActivity {
                             dishPicture.setImageURI(null);
                             dishPicture.setImageURI(dishPictureUri);
                             galleryButton.setVisibility(View.GONE);
-                        } else {
-                            Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show();
                         }
                     } catch (Exception e) {
                     }
@@ -274,7 +272,7 @@ public class AddRecipeActivity extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 cameraLauncher.launch(dishPictureUri);
             } else {
-                Toast.makeText(this, "Camera permission denied", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please allow camera permissions", Toast.LENGTH_SHORT).show();
             }
         } else if (requestCode == GALLERY_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -286,7 +284,7 @@ public class AddRecipeActivity extends AppCompatActivity {
                     galleryLauncher.launch(intent);
                 }
             } else {
-                Toast.makeText(this, "Gallery permission denied", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please allow photo permissions", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -303,8 +301,6 @@ public class AddRecipeActivity extends AppCompatActivity {
                             dishPictureUri = result.getData().getData();
                             dishPicture.setImageURI(dishPictureUri);
                             cameraButton.setVisibility(View.GONE);
-                        } else {
-                            Toast.makeText(this, "Gallery action canceled", Toast.LENGTH_SHORT).show();
                         }
                     } catch (Exception e) {
                     }
@@ -312,7 +308,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         );
     }
 
-    //TODO: should all be saved or just hte ones that disappear
+    //TODO: should all be saved or just the ones that disappear
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);

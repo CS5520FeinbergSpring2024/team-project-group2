@@ -5,7 +5,7 @@
     <string name="cuisine_string">Cuisine</string>
     <string name="calories_string">Calories</string>
     <string name="prep_time_string">Prep Time</string>
-    <string name="time_string">Time</string>
+    <string name="time_string">Time\n(minutes)</string>
     <string name="cook_time_string">Cook Time</string>
     <string name="servings_string">Servings</string>
     <string name="dietary_restrictions">Dietary Restrictions</string>
