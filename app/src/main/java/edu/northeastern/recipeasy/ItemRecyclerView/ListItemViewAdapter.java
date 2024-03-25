@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import edu.northeastern.recipeasy.R;
+import edu.northeastern.recipeasy.domain.ListItem;
 
 import java.util.List;
 

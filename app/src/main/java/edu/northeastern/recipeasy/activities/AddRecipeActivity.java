@@ -31,7 +31,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.util.ArrayList;
 
-import edu.northeastern.recipeasy.ItemRecyclerView.ListItem;
+import edu.northeastern.recipeasy.domain.ListItem;
 import edu.northeastern.recipeasy.ItemRecyclerView.ListItemViewAdapter;
 import edu.northeastern.recipeasy.R;
 
