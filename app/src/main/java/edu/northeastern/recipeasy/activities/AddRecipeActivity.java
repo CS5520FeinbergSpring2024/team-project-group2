@@ -52,6 +52,7 @@ public class AddRecipeActivity extends AppCompatActivity {
     private static final int GALLERY_REQUEST_CODE = 102;
     private boolean restoreIngredients = false;
     private boolean restoreRecipe = false;
+    private boolean restorePicture = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -257,6 +258,7 @@ public class AddRecipeActivity extends AppCompatActivity {
                             dishPicture.setImageURI(null);
                             dishPicture.setImageURI(dishPictureUri);
                             galleryButton.setVisibility(View.GONE);
+                            restorePicture = true;
                         }
                     } catch (Exception e) {
                     }
@@ -301,6 +303,7 @@ public class AddRecipeActivity extends AppCompatActivity {
                             dishPictureUri = result.getData().getData();
                             dishPicture.setImageURI(dishPictureUri);
                             cameraButton.setVisibility(View.GONE);
+                            restorePicture = true;
                         }
                     } catch (Exception e) {
                     }
@@ -324,7 +327,7 @@ public class AddRecipeActivity extends AppCompatActivity {
                 outState.putString("recipeStep"+ i, recipeStepsList.get(i).getItem());
             }
         }
-        if (dishPictureUri != null){
+        if (restorePicture){
             outState.putString("dishPicture", dishPictureUri.toString());
         }
     }
