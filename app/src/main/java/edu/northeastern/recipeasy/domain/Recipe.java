@@ -12,17 +12,17 @@ public class Recipe {
     private boolean isVeg;
     private boolean isVegan;
     private boolean isGlutenFree;
-    private ArrayList<String> ingredients;
-    private ArrayList<String> steps;
+    private String ingredients;
+    private String steps;
     private String photoPath;
     private Integer calories;
-
-
+    private Integer dislike;
+    private Integer like;
 
     public Recipe(String dishName, String cuisine, Integer prepTime,
                   Integer cookTime, Integer servings, boolean isVeg, boolean isVegan,
-                  boolean isGlutenFree, ArrayList<String> ingredients,
-                  ArrayList<String> steps, String photoPath, Integer calories) {
+                  boolean isGlutenFree, String ingredients,
+                  String steps, String photoPath, Integer calories, Integer dislike, Integer like) {
         this.dishName = dishName;
         this.cuisine = cuisine;
         this.prepTime = prepTime;
@@ -35,6 +35,8 @@ public class Recipe {
         this.steps = steps;
         this.photoPath = photoPath;
         this.calories = calories;
+        this.dislike = dislike;
+        this.like = like;
     }
 
     public String getDishName() {
@@ -101,19 +103,19 @@ public class Recipe {
         isGlutenFree = glutenFree;
     }
 
-    public ArrayList<String> getIngredients() {
+    public String getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(ArrayList<String> ingredients) {
+    public void setIngredients(String ingredients) {
         this.ingredients = ingredients;
     }
 
-    public ArrayList<String> getSteps() {
+    public String getSteps() {
         return steps;
     }
 
-    public void setSteps(ArrayList<String> steps) {
+    public void setSteps(String steps) {
         this.steps = steps;
     }
 
@@ -131,4 +133,21 @@ public class Recipe {
     public void setCalories(Integer calories) {
         this.calories = calories;
     }
+
+    public Integer getDislike() {
+        return dislike;
+    }
+
+    public void setDislike(Integer dislike) {
+        this.dislike = dislike;
+    }
+
+    public Integer getLike() {
+        return like;
+    }
+
+    public void setLike(Integer like) {
+        this.like = like;
+    }
+
 }
