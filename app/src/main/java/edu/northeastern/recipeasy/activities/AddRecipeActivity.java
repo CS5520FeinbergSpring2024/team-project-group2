@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.slider.RangeSlider;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -29,6 +31,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -42,6 +45,7 @@ import java.util.Date;
 import java.util.Objects;
 
 import edu.northeastern.recipeasy.domain.ListItem;
+import edu.northeastern.recipeasy.domain.Recipe;
 import edu.northeastern.recipeasy.ItemRecyclerView.ListItemViewAdapter;
 import edu.northeastern.recipeasy.R;
 
@@ -64,15 +68,12 @@ public class AddRecipeActivity extends AppCompatActivity {
     private boolean restoreRecipe = false;
     private boolean restorePicture = false;
     private String username;
-
-    // private Recipe newRecipe
+    private Recipe newRecipe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_recipe);
-        //TODO: maybe pass the previous activity so we can navigate back to it after submission
-
         if (savedInstanceState != null){
             if (savedInstanceState.containsKey("ingredientListSize")) {
                 restoreIngredients = true;
@@ -206,6 +207,9 @@ public class AddRecipeActivity extends AppCompatActivity {
         EditText prepTime = findViewById(R.id.prepTimeId);
         EditText serving = findViewById(R.id.servingSizeIdAddNewRecipe);
         Spinner cuisineSpinner = findViewById(R.id.spinnerAddNewCuisine);
+        CheckBox vegetarian = findViewById(R.id.vegetarianBoxId);
+        CheckBox vegan = findViewById(R.id.veganBoxId);
+        CheckBox glutenFree = findViewById(R.id.glutenFreeBoxId);
 
         String dishName = dish.getText().toString();
         Log.w(" DISHNAME", " " + dishName);
@@ -245,8 +249,9 @@ public class AddRecipeActivity extends AppCompatActivity {
 
         uploadPhoto();
         // create recipe object here with pictureURL as ""
-        // newRecipe = new Recipe(dishName, cuisine, prepTimeMinutes, cookTimeMinutes,
-        // servingSizes, ADD DIETARY, ingredients, recipeSteps, "", calories, likes, dislikes)
+         newRecipe = new Recipe(dishName, cuisine, prepTimeMinutes, cookTimeMinutes,
+         servingSizes,vegetarian.isChecked(),vegan.isChecked(), glutenFree.isChecked(),
+                 ingredients, recipeSteps, "", calories, likes, dislikes);
 
 
     }
@@ -278,16 +283,31 @@ public class AddRecipeActivity extends AppCompatActivity {
                 String pictureUrl =  uri.toString();
                 Log.w("PICTURE URL", pictureUrl);
 
-                // update recipe object to
-                // newRecipe.setPhotoPath(pictureUrl)
 
-                //TODO: push recipe object to DB (on separate thread lol) now that the url string is there
-                //TODO: add a spinny loading thing while its uploading ?
+                //TODO: put on a separate thread
+                //TODO: add a spinny loading thing while its uploading
 
-                // Navigate to the last page after it submits ?
+                newRecipe.setPhotoPath(pictureUrl);
+                uploadRecipe(newRecipe);
+
             });
         });
 
+    }
+
+    private void uploadRecipe(Recipe recipe) {
+        DatabaseReference recipesRef = FirebaseDatabase.getInstance().getReference().child("recipes");
+        DatabaseReference newRecipeRef = recipesRef.push();
+
+        newRecipeRef.setValue(recipe)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(AddRecipeActivity.this, "Recipe Uploaded", Toast.LENGTH_SHORT).show();
+                    // TODO: make the spinny loading thing stop then finish
+                    finish();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(AddRecipeActivity.this, "Failed to Upload Recipe", Toast.LENGTH_SHORT).show();
+                });
     }
 
     private Bitmap uriToBitmap(Uri uri) {
