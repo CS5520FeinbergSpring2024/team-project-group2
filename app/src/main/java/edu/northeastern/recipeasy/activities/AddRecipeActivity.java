@@ -10,12 +10,18 @@ import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.slider.RangeSlider;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,8 +34,12 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Objects;
 
 import edu.northeastern.recipeasy.domain.ListItem;
 import edu.northeastern.recipeasy.ItemRecyclerView.ListItemViewAdapter;
@@ -53,11 +63,16 @@ public class AddRecipeActivity extends AppCompatActivity {
     private boolean restoreIngredients = false;
     private boolean restoreRecipe = false;
     private boolean restorePicture = false;
+    private String username;
+
+    // private Recipe newRecipe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_recipe);
+        //TODO: maybe pass the previous activity so we can navigate back to it after submission
+
         if (savedInstanceState != null){
             if (savedInstanceState.containsKey("ingredientListSize")) {
                 restoreIngredients = true;
@@ -211,7 +226,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         }
         Log.w("PREP TIME", " " + prepTimeMinutes);
 
-        //TODO: decide how we want to do dietary. 3 separate booleans? a list?
+        //TODO: decide how we want to do dietary?
 
         String recipeSteps = formedStrings[1];
         int servingSizes = 0;
@@ -228,7 +243,63 @@ public class AddRecipeActivity extends AppCompatActivity {
 
         Log.w(" CUISINE", " " + cuisine );
 
+        uploadPhoto();
+        // create recipe object here with pictureURL as ""
+        // newRecipe = new Recipe(dishName, cuisine, prepTimeMinutes, cookTimeMinutes,
+        // servingSizes, ADD DIETARY, ingredients, recipeSteps, "", calories, likes, dislikes)
 
+
+    }
+
+    // https://firebase.google.com/docs/storage/android/upload-files#:~:text=To%20upload%20a%20file%20to,file%2C%20including%20the%20file%20name.&text=Once%20you've%20created%20an,the%20file%20to%20Cloud%20Storage.
+    private void uploadPhoto() {
+        Bitmap bitmap = uriToBitmap(dishPictureUri);
+
+//        String filename = username + new Date() + ".jpg";
+//
+//        Log.w("FILE NAME", filename);
+
+        StorageReference imageRef = FirebaseStorage.getInstance().getReference()
+                .child("recipePics/" + username +"/" + new Date() + ".jpg");
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        assert bitmap != null;
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        byte[] data = stream.toByteArray();
+
+        UploadTask upload = imageRef.putBytes(data);
+        upload.addOnFailureListener(exception -> {
+            Snackbar.make(Objects.requireNonNull(this.getCurrentFocus()), "Photo Upload Failed", Snackbar.LENGTH_LONG)
+                    .setAction("Re-Try?", v -> uploadPhoto()).show();
+        }).addOnSuccessListener(taskSnapshot -> {
+
+            imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+
+                String pictureUrl =  uri.toString();
+                Log.w("PICTURE URL", pictureUrl);
+
+                // update recipe object to
+                // newRecipe.setPhotoPath(pictureUrl)
+
+                //TODO: push recipe object to DB (on separate thread lol) now that the url string is there
+                //TODO: add a spinny loading thing while its uploading ?
+
+                // Navigate to the last page after it submits ?
+            });
+        });
+
+    }
+
+    private Bitmap uriToBitmap(Uri uri) {
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(uri);
+            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+            assert inputStream != null;
+            inputStream.close();
+            return bitmap;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private String[] formListItemStrings() {
