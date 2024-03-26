@@ -15,11 +15,14 @@ public class Recipe {
     private ArrayList<String> ingredients;
     private ArrayList<String> steps;
     private String photoPath;
+    private Integer calories;
+
+
 
     public Recipe(String dishName, String cuisine, Integer prepTime,
                   Integer cookTime, Integer servings, boolean isVeg, boolean isVegan,
                   boolean isGlutenFree, ArrayList<String> ingredients,
-                  ArrayList<String> steps, String photoPath) {
+                  ArrayList<String> steps, String photoPath, Integer calories) {
         this.dishName = dishName;
         this.cuisine = cuisine;
         this.prepTime = prepTime;
@@ -31,6 +34,7 @@ public class Recipe {
         this.ingredients = ingredients;
         this.steps = steps;
         this.photoPath = photoPath;
+        this.calories = calories;
     }
 
     public String getDishName() {
@@ -119,5 +123,12 @@ public class Recipe {
 
     public void setPhotoPath(String photoPath) {
         this.photoPath = photoPath;
+    }
+
+    public Integer getCalories() {
+        return calories;
+    }
+    public void setCalories(Integer calories) {
+        this.calories = calories;
     }
 }
