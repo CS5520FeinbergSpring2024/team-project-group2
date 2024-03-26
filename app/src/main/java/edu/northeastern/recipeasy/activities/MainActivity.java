@@ -8,7 +8,7 @@ import android.view.View;
 
 import edu.northeastern.recipeasy.R;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,5 +19,14 @@ public class MainActivity extends AppCompatActivity {
     public void openAddRecipeActivity(View view){
         Intent intent = new Intent(this, AddRecipeActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onClick(View view) {
+        int clickedId = view.getId();
+        if (clickedId == R.id.homeID) {
+            Intent HomePageActivity = new Intent(this, HomePage.class);
+            startActivity(HomePageActivity);
+        }
     }
 }
