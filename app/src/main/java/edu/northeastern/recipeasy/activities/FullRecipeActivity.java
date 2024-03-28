@@ -2,14 +2,19 @@ package edu.northeastern.recipeasy.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
 
+import java.io.IOException;
+
 import edu.northeastern.recipeasy.R;
 import edu.northeastern.recipeasy.domain.Recipe;
+import edu.northeastern.recipeasy.utils.DataUtil;
 public class FullRecipeActivity extends AppCompatActivity {
 
     private Recipe recipe;
@@ -45,6 +50,23 @@ public class FullRecipeActivity extends AppCompatActivity {
         TextView caloriesTextView = findViewById(R.id.caloriesLabelId);
         TextView prepTimeTextView = findViewById(R.id.prepTimeLabelId);
         TextView servingsTextView = findViewById(R.id.servingsLabelId);
+        ImageView foodPicture = findViewById(R.id.imageView);
+        foodPicture.setImageResource(R.drawable.no_image);
+
+        new Thread(() -> {
+            try {
+                Bitmap picBitMap = DataUtil.downloadFoodPic(recipe.getPhotoPath());
+
+                if(! recipe.getPhotoPath().equals("")){
+                    if (picBitMap != null) {
+                        foodPicture.post(() -> foodPicture.setImageBitmap(picBitMap));
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+
 
         // TODO handle null values
         recipeNameTextView.setText(recipe.getDishName());

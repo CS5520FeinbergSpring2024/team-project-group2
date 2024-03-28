@@ -1,10 +1,17 @@
 package edu.northeastern.recipeasy.utils;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 import edu.northeastern.recipeasy.domain.Recipe;
@@ -46,5 +53,16 @@ public class DataUtil {
     public static void fetchAllRecipes(ValueEventListener listener) {
         DatabaseReference recipesRef = FirebaseDatabase.getInstance().getReference().child("recipes");
         recipesRef.addListenerForSingleValueEvent(listener);
+    }
+
+    public static Bitmap downloadFoodPic(String imageUrl) throws IOException {
+        URL url = new URL(imageUrl);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setDoInput(true);
+        conn.connect();
+
+        InputStream input = conn.getInputStream();
+        return BitmapFactory.decodeStream(input);
+
     }
 }

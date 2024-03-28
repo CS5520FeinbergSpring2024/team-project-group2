@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import edu.northeastern.recipeasy.R;
 import edu.northeastern.recipeasy.domain.Recipe;
 import edu.northeastern.recipeasy.activities.FullRecipeActivity;
+import edu.northeastern.recipeasy.utils.DataUtil;
 
 public class RecipeViewAdapter extends RecyclerView.Adapter<RecipeViewHolder> {
 
@@ -57,7 +58,7 @@ public class RecipeViewAdapter extends RecyclerView.Adapter<RecipeViewHolder> {
 
         new Thread(() -> {
             try {
-                Bitmap picBitMap = downloadFoodPic(recipe.getPhotoPath());
+                Bitmap picBitMap = DataUtil.downloadFoodPic(recipe.getPhotoPath());
 
                 if(! recipe.getPhotoPath().equals("")){
                     if (picBitMap != null) {
@@ -77,15 +78,4 @@ public class RecipeViewAdapter extends RecyclerView.Adapter<RecipeViewHolder> {
         return recipeItemList.size();
     }
 
-
-    public Bitmap downloadFoodPic(String imageUrl) throws IOException {
-        URL url = new URL(imageUrl);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setDoInput(true);
-        conn.connect();
-
-        InputStream input = conn.getInputStream();
-        return BitmapFactory.decodeStream(input);
-
-    }
 }
