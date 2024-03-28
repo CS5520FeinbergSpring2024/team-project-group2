@@ -16,15 +16,15 @@ public class Recipe {
     private String steps;
     private String photoPath;
     private Integer calories;
-    private Integer dislikes;
-    private Integer likes;
     private String author;
+
+    private Integer views;
 
 
     public Recipe(String author, String dishName, String cuisine, Integer prepTime,
                   Integer cookTime, Integer servings, boolean isVeg, boolean isVegan,
                   boolean isGlutenFree, String ingredients,
-                  String steps, String photoPath, Integer calories, Integer dislikes, Integer likes) {
+                  String steps, String photoPath, Integer calories, Integer views) {
         this.dishName = dishName;
         this.author = author;
         this.cuisine = cuisine;
@@ -38,8 +38,8 @@ public class Recipe {
         this.steps = steps;
         this.photoPath = photoPath;
         this.calories = calories;
-        this.dislikes = dislikes;
-        this.likes = likes;
+        this.views = views;
+
     }
 
     public String getAuthorName() {
@@ -146,20 +146,13 @@ public class Recipe {
         this.calories = calories;
     }
 
-    public Integer getDislikes() {
-        return dislikes;
+    public Integer getViews() {
+        return views;
     }
 
-    public void setDislikes(Integer dislikes) {
-        this.dislikes = dislikes;
+    public void setViews(Integer views) {
+        this.views = views;
     }
 
-    public Integer getLikes() {
-        return likes;
-    }
-
-    public void setLikes(Integer likes) {
-        this.likes = likes;
-    }
 
 }

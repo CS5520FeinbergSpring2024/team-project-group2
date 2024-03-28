@@ -29,8 +29,7 @@ public class DataUtil {
             Integer cookTime = recipeSnapshot.child("cookTime").getValue(Integer.class);
             Integer prepTime = recipeSnapshot.child("prepTime").getValue(Integer.class);
             Integer servings = recipeSnapshot.child("servings").getValue(Integer.class);
-            Integer likes = recipeSnapshot.child("likes").getValue(Integer.class);
-            Integer dislikes = recipeSnapshot.child("dislikes").getValue(Integer.class);
+            Integer views = recipeSnapshot.child("views").getValue(Integer.class);
             boolean veg = recipeSnapshot.child("veg").getValue(Boolean.class);
             boolean vegan = recipeSnapshot.child("vegan").getValue(Boolean.class);
             boolean glutenFree = recipeSnapshot.child("glutenFree").getValue(Boolean.class);
@@ -40,7 +39,7 @@ public class DataUtil {
             String photoPath = recipeSnapshot.child("photoPath").getValue(String.class);
 
             recipes.add(new Recipe(author, dishName, cuisine, prepTime, cookTime, servings, veg, vegan, glutenFree,
-                    ingredients, steps, photoPath, calories, dislikes, likes));
+                    ingredients, steps, photoPath, calories, views ));
         }
         return recipes;
     }

@@ -246,15 +246,13 @@ public class AddRecipeActivity extends AppCompatActivity {
         //TODO: figure out how to store a picture
         String cuisine = cuisineSpinner.getSelectedItem().toString();
 
-        int likes = 0;
-        int dislikes = 0;
 
         Log.w(" CUISINE", " " + cuisine );
 
         // create recipe object here with pictureURL as ""
          newRecipe = new Recipe(username, dishName, cuisine, prepTimeMinutes, cookTimeMinutes,
          servingSizes,vegetarian.isChecked(),vegan.isChecked(), glutenFree.isChecked(),
-                 ingredients, recipeSteps, "", calories, likes, dislikes);
+                 ingredients, recipeSteps, "", calories, 0);
 
         uploadPhoto();
     }
