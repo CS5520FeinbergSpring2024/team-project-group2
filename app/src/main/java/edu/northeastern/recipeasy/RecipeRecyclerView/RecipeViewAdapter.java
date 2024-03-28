@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 import edu.northeastern.recipeasy.R;
 import edu.northeastern.recipeasy.domain.Recipe;
+import edu.northeastern.recipeasy.activities.FullRecipeActivity;
 
 public class RecipeViewAdapter extends RecyclerView.Adapter<RecipeViewHolder> {
 
@@ -47,13 +48,21 @@ public class RecipeViewAdapter extends RecyclerView.Adapter<RecipeViewHolder> {
         holder.totalTime.setText(recipe.getCookTime().toString());
         holder.servings.setText(recipe.getServings().toString());
         holder.calories.setText(recipe.getCalories().toString());
+        holder.seeMore.setOnClickListener(view -> {
+            Intent intent = new Intent(view.getContext(), FullRecipeActivity.class);
+            intent.putExtra("recipe", recipe);
+            view.getContext().startActivity(intent);
+        });
+        holder.image.setImageResource(R.drawable.no_image);
 
         new Thread(() -> {
             try {
                 Bitmap picBitMap = downloadFoodPic(recipe.getPhotoPath());
 
-                if (picBitMap != null) {
-                    holder.image.post(() -> holder.image.setImageBitmap(picBitMap));
+                if(! recipe.getPhotoPath().equals("")){
+                    if (picBitMap != null) {
+                        holder.image.post(() -> holder.image.setImageBitmap(picBitMap));
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();

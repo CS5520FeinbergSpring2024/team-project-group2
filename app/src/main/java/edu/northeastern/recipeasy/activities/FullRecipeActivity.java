@@ -19,23 +19,24 @@ public class FullRecipeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_full_recipe);
 
-        recipe = new Recipe(
-                "Spaghetti Carbonara",
-                "John Doe",
-                "Italian",
-                20,
-                30,
-                4,
-                false,
-                false,
-                false,
-                "200g spaghetti\n100g pancetta\n2 eggs\n50g grated Parmesan cheese\nsalt\npepper",
-                "1. Cook spaghetti according to package instructions.\n2. In a pan, fry pancetta until crispy.\n3. In a bowl, whisk together eggs and Parmesan cheese.\n4. Drain spaghetti and add to the pan with pancetta.\n5. Remove from heat and quickly stir in egg mixture.n6. Season with salt and pepper to taste. Serve immediately.",
-                "/path/to/photo.jpg",
-                450,
-                10,
-                100
-        );
+        recipe = (Recipe) getIntent().getSerializableExtra("recipe");
+//        recipe = new Recipe(
+//                "Spaghetti Carbonara",
+//                "John Doe",
+//                "Italian",
+//                20,
+//                30,
+//                4,
+//                false,
+//                false,
+//                false,
+//                "200g spaghetti\n100g pancetta\n2 eggs\n50g grated Parmesan cheese\nsalt\npepper",
+//                "1. Cook spaghetti according to package instructions.\n2. In a pan, fry pancetta until crispy.\n3. In a bowl, whisk together eggs and Parmesan cheese.\n4. Drain spaghetti and add to the pan with pancetta.\n5. Remove from heat and quickly stir in egg mixture.n6. Season with salt and pepper to taste. Serve immediately.",
+//                "/path/to/photo.jpg",
+//                450,
+//                10,
+//                100
+//        );
 
         TabLayout tabs = findViewById(R.id.tabView);
         TextView longContextTextView = findViewById(R.id.longContentTextId);

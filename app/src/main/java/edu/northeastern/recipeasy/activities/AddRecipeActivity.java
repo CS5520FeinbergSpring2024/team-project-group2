@@ -291,12 +291,13 @@ public class AddRecipeActivity extends AppCompatActivity {
                     //TODO: add a spinny loading thing while its uploading
 
                     newRecipe.setPhotoPath(pictureUrl);
+                    uploadRecipe(newRecipe);
 
                 });
             });
+        } else {
+            uploadRecipe(newRecipe);
         }
-        uploadRecipe(newRecipe);
-
 
     }
 
