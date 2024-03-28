@@ -29,20 +29,12 @@ import edu.northeastern.recipeasy.utils.DataUtil;
 import edu.northeastern.recipeasy.utils.IUserFetchListener;
 import edu.northeastern.recipeasy.utils.UserManager;
 
-public class HomePage extends AppCompatActivity implements IUserFetchListener, View.OnClickListener {
+public class HomePage extends AppCompatActivity implements IUserFetchListener {
 
     private RecyclerView recipeRecyclerView;
     private RecipeViewAdapter recipeAdapter;
     private ArrayList<Recipe> recipeList;
     private User user;
-
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.testRecipeButton ) {
-            Intent fullRecipeIntent = new Intent(HomePage.this, FullRecipeActivity.class);
-            startActivity(fullRecipeIntent);
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
