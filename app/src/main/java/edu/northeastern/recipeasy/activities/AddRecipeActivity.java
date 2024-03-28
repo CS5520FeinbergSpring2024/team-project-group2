@@ -354,13 +354,13 @@ public class AddRecipeActivity extends AppCompatActivity {
 
         for (int i = 0; i < ingredientList.size(); i++) {
             ListItem item = ingredientList.get(i);
-            ingredients.append(item.getItem()).append("\n");
+            ingredients.append(item.getItem()).append(";");
         }
         for (int i = 0; i < recipeStepsList.size(); i++) {
             ListItem stepItem = recipeStepsList.get(i);
             recipeSteps.append(stepItem.getLabel())
                     .append(" ").append(i+1).append(": ")
-                    .append(stepItem.getItem()).append("\n");
+                    .append(stepItem.getItem()).append(";");
         }
         return new String[]{ingredients.toString(), recipeSteps.toString()};
     }
