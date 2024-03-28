@@ -1,6 +1,7 @@
 package edu.northeastern.recipeasy.RecipeRecyclerView;
 
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import edu.northeastern.recipeasy.R;
 
@@ -12,8 +13,11 @@ public class RecipeViewHolder extends RecyclerView.ViewHolder{
     public TextView cuisine;
     public TextView totalTime;
     public TextView servings;
+    public ImageView image;
+
     public TextView dietaryRestrictions;
     public TextView calories;
+
 
     public RecipeViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -24,5 +28,6 @@ public class RecipeViewHolder extends RecyclerView.ViewHolder{
         servings = itemView.findViewById(R.id.servingsID);
         dietaryRestrictions = itemView.findViewById(R.id.dietaryRestrictionsID);
         calories = itemView.findViewById(R.id.caloriesID);
+        image = itemView.findViewById(R.id.imageViewID);
     }
 }

@@ -2,6 +2,10 @@ package edu.northeastern.recipeasy.RecipeRecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +13,10 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 import edu.northeastern.recipeasy.R;
@@ -40,10 +48,35 @@ public class RecipeViewAdapter extends RecyclerView.Adapter<RecipeViewHolder> {
         holder.servings.setText(recipe.getServings().toString());
         holder.calories.setText(recipe.getCalories().toString());
 
+        new Thread(() -> {
+            try {
+                Bitmap picBitMap = downloadFoodPic(recipe.getPhotoPath());
+
+                if (picBitMap != null) {
+                    holder.image.post(() -> holder.image.setImageBitmap(picBitMap));
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+
+
     }
 
     @Override
     public int getItemCount() {
         return recipeItemList.size();
+    }
+
+
+    public Bitmap downloadFoodPic(String imageUrl) throws IOException {
+        URL url = new URL(imageUrl);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setDoInput(true);
+        conn.connect();
+
+        InputStream input = conn.getInputStream();
+        return BitmapFactory.decodeStream(input);
+
     }
 }
