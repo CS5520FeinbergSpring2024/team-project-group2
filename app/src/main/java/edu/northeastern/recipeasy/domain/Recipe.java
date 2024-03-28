@@ -12,8 +12,8 @@ public class Recipe {
     private boolean isVeg;
     private boolean isVegan;
     private boolean isGlutenFree;
-    private ArrayList<String> ingredients;
-    private ArrayList<String> steps;
+    private String ingredients;
+    private String steps;
     private String photoPath;
     private Integer calories;
     private Integer dislike;
@@ -22,8 +22,8 @@ public class Recipe {
 
     public Recipe(String author, String dishName, String cuisine, Integer prepTime,
                   Integer cookTime, Integer servings, boolean isVeg, boolean isVegan,
-                  boolean isGlutenFree, ArrayList<String> ingredients,
-                  ArrayList<String> steps, String photoPath, Integer calories, Integer dislike, Integer like) {
+                  boolean isGlutenFree, String ingredients,
+                  String steps, String photoPath, Integer calories, Integer dislike, Integer like) {
         this.dishName = dishName;
         this.cuisine = cuisine;
         this.prepTime = prepTime;
@@ -114,19 +114,19 @@ public class Recipe {
         isGlutenFree = glutenFree;
     }
 
-    public ArrayList<String> getIngredients() {
+    public String getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(ArrayList<String> ingredients) {
+    public void setIngredients(String ingredients) {
         this.ingredients = ingredients;
     }
 
-    public ArrayList<String> getSteps() {
+    public String getSteps() {
         return steps;
     }
 
-    public void setSteps(ArrayList<String> steps) {
+    public void setSteps(String steps) {
         this.steps = steps;
     }
 
