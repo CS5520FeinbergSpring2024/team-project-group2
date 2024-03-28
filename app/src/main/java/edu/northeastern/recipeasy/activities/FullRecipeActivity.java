@@ -70,10 +70,10 @@ public class FullRecipeActivity extends AppCompatActivity {
 
         // TODO handle null values
         recipeNameTextView.setText(recipe.getDishName());
-        authorTextView.setText(recipe.getAuthorName());
-        caloriesTextView.setText(recipe.getCalories().toString());
-        prepTimeTextView.setText(recipe.getPrepTime().toString());
-        servingsTextView.setText(recipe.getServings().toString());
+        authorTextView.setText("By " + recipe.getAuthorName());
+        caloriesTextView.setText(recipe.getCalories().toString() + " Calories");
+        prepTimeTextView.setText("Prep time: " + recipe.getPrepTime().toString() + " minutes");
+        servingsTextView.setText("Servings: " + recipe.getServings().toString());
         longContextTextView.setText(recipe.getIngredients());
 
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
