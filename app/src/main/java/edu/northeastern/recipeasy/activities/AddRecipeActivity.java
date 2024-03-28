@@ -85,6 +85,7 @@ public class AddRecipeActivity extends AppCompatActivity {
                 restoreRecipe = true;
             }
         }
+        username = getIntent().getStringExtra("username");
         setUp();
     }
 

@@ -4,9 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
@@ -35,6 +37,16 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener {
         String username = getIntent().getStringExtra("username");
         UserManager userManager = new UserManager();
         userManager.getUser(username, this);
+        FloatingActionButton addNewRecipe = findViewById(R.id.fabID);
+        addNewRecipeButtonListener(addNewRecipe);
+    }
+
+    private void addNewRecipeButtonListener(FloatingActionButton fab) {
+        fab.setOnClickListener(view -> {
+            Intent newRecipeIntent = new Intent(HomePage.this, AddRecipeActivity.class);
+            newRecipeIntent.putExtra("username", user.getUsername());
+            startActivity(newRecipeIntent);
+        });
     }
 
     public void setUp() {
