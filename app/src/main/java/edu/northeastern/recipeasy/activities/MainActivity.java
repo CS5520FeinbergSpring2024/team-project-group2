@@ -18,7 +18,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import edu.northeastern.recipeasy.R;
@@ -78,5 +77,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent homePageIntent = new Intent(MainActivity.this, HomePage.class);
         homePageIntent.putExtra("username", username);
         startActivity(homePageIntent);
+    }
+
+    public static class ProfileActivity {
     }
 }

@@ -24,9 +24,11 @@
         android:theme="@style/Theme.RecipEasy"
         tools:targetApi="31">
         <activity
+            android:name=".activities.ProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.FullRecipeActivity"
             android:exported="false" />
-
         <activity
             android:name=".activities.AddRecipeActivity"
             android:exported="false" />
@@ -47,12 +49,11 @@
             android:name="androidx.core.content.FileProvider"
             android:authorities="edu.northeastern.recipeasy.fileProvider"
             android:exported="false"
-            android:grantUriPermissions="true" >
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
     </application>
 
 </manifest>
