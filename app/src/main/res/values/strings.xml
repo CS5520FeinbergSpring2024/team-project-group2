@@ -28,5 +28,7 @@
     <string name="picture_of_dish">Picture of Dish</string>
     <string name="username">Username</string>
     <string name="log_in">Log In</string>
+    <string name="recent">Recent</string>
+    <string name="following">Following</string>
 
 </resources>

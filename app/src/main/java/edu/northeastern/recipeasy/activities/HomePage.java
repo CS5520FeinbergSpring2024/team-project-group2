@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -41,6 +42,8 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
 
+        TabLayout tabs = findViewById(R.id.tabViewHomePage);
+
         setUp();
         // DO THIS FIRST
         String username = getIntent().getStringExtra("username");
@@ -49,6 +52,26 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener {
         FloatingActionButton addNewRecipe = findViewById(R.id.fabID);
         addNewRecipeButtonListener(addNewRecipe);
 
+
+        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                int position = tab.getPosition();
+                if (position == 0) {
+                    loadAllRecipes();
+                } else if (position == 1) {
+                    loadFollowingRecipes();
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
 
 
         // keep this for profile page
@@ -69,44 +92,45 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener {
 //        }).start();
 //    }
 
-        // for following
-//        new Thread(() -> {
-//            DataUtil.fetchAllRecipes(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(DataSnapshot dataSnapshot) {
-//                    ArrayList<Recipe> recipes = DataUtil.getRecipesPeopleIFollow(dataSnapshot, user.getFollowing());
-//                    recipeList.clear();
-//                    recipeList.addAll(recipes);
-//                    new Handler(Looper.getMainLooper()).post(() -> recipeAdapter.notifyDataSetChanged());
-//                }
-//
-//                @Override
-//                public void onCancelled(DatabaseError databaseError) {
-//                }
-//            });
-//        }).start();
-//    }
 
-    // normal one
-
-    new Thread(() -> {
-        DataUtil.fetchAllRecipes(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                ArrayList<Recipe> recipes = DataUtil.parseRecipes(dataSnapshot);
-                recipeList.clear();
-                recipeList.addAll(recipes);
-                new Handler(Looper.getMainLooper()).post(() -> recipeAdapter.notifyDataSetChanged());
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-    }).start();
-}
+    }
 
 
+    private void loadAllRecipes(){
+        new Thread(() -> {
+            DataUtil.fetchAllRecipes(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    ArrayList<Recipe> recipes = DataUtil.parseRecipes(dataSnapshot);
+                    recipeList.clear();
+                    recipeList.addAll(recipes);
+                    new Handler(Looper.getMainLooper()).post(() -> recipeAdapter.notifyDataSetChanged());
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+        }).start();
+    }
+
+    private void loadFollowingRecipes(){
+        new Thread(() -> {
+            DataUtil.fetchAllRecipes(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    ArrayList<Recipe> recipes = DataUtil.getRecipesPeopleIFollow(dataSnapshot, user.getFollowing());
+                    recipeList.clear();
+                    recipeList.addAll(recipes);
+                    new Handler(Looper.getMainLooper()).post(() -> recipeAdapter.notifyDataSetChanged());
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+        }).start();
+    }
 
     private void addNewRecipeButtonListener(FloatingActionButton fab) {
         fab.setOnClickListener(view -> {
@@ -123,6 +147,7 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener {
         recipeList = new ArrayList<>();
         recipeAdapter = new RecipeViewAdapter(recipeList, this);
         recipeRecyclerView.setAdapter(recipeAdapter);
+        loadAllRecipes();
     }
 
     @Override
