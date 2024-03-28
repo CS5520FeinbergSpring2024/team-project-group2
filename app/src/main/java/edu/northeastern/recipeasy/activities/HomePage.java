@@ -49,37 +49,62 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener {
         FloatingActionButton addNewRecipe = findViewById(R.id.fabID);
         addNewRecipeButtonListener(addNewRecipe);
 
-//        DataUtil.fetchAllRecipes(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                ArrayList<Recipe> recipes = DataUtil.parseRecipes(dataSnapshot);
-//                Log.w("FROM DB", dataSnapshot+"");
-//                recipeList.clear();
-//                recipeList.addAll(recipes);
-//                recipeAdapter.notifyDataSetChanged();
-//            }
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                // Handle error
-//            }
-//        });
 
-        new Thread(() -> {
-            DataUtil.fetchAllRecipes(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    ArrayList<Recipe> recipes = DataUtil.parseRecipes(dataSnapshot);
-                    recipeList.clear();
-                    recipeList.addAll(recipes);
-                    new Handler(Looper.getMainLooper()).post(() -> recipeAdapter.notifyDataSetChanged());
-                }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                }
-            });
-        }).start();
-    }
+        // keep this for profile page
+//        new Thread(() -> {
+//            DataUtil.fetchRecipesByAuthor(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(DataSnapshot dataSnapshot) {
+//                    ArrayList<Recipe> recipes = DataUtil.parseRecipes(dataSnapshot);
+//                    recipeList.clear();
+//                    recipeList.addAll(recipes);
+//                    new Handler(Looper.getMainLooper()).post(() -> recipeAdapter.notifyDataSetChanged());
+//                }
+//
+//                @Override
+//                public void onCancelled(DatabaseError databaseError) {
+//                }
+//            }, username);
+//        }).start();
+//    }
+
+        // for following
+//        new Thread(() -> {
+//            DataUtil.fetchAllRecipes(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(DataSnapshot dataSnapshot) {
+//                    ArrayList<Recipe> recipes = DataUtil.getRecipesPeopleIFollow(dataSnapshot, user.getFollowing());
+//                    recipeList.clear();
+//                    recipeList.addAll(recipes);
+//                    new Handler(Looper.getMainLooper()).post(() -> recipeAdapter.notifyDataSetChanged());
+//                }
+//
+//                @Override
+//                public void onCancelled(DatabaseError databaseError) {
+//                }
+//            });
+//        }).start();
+//    }
+
+    // normal one
+
+    new Thread(() -> {
+        DataUtil.fetchAllRecipes(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayList<Recipe> recipes = DataUtil.parseRecipes(dataSnapshot);
+                recipeList.clear();
+                recipeList.addAll(recipes);
+                new Handler(Looper.getMainLooper()).post(() -> recipeAdapter.notifyDataSetChanged());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }).start();
+}
 
 
 

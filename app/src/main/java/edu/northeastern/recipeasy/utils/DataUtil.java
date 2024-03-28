@@ -3,9 +3,11 @@ package edu.northeastern.recipeasy.utils;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.google.android.gms.common.util.Strings;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
@@ -29,6 +31,26 @@ public class DataUtil {
         return items;
     }
 
+    private static Recipe parseIndividualRecipe(DataSnapshot recipeSnapshot){
+        String author = recipeSnapshot.child("authorName").getValue(String.class);
+        String dishName = recipeSnapshot.child("dishName").getValue(String.class);
+        Integer calories = recipeSnapshot.child("calories").getValue(Integer.class);
+        Integer cookTime = recipeSnapshot.child("cookTime").getValue(Integer.class);
+        Integer prepTime = recipeSnapshot.child("prepTime").getValue(Integer.class);
+        Integer servings = recipeSnapshot.child("servings").getValue(Integer.class);
+        Integer views = recipeSnapshot.child("views").getValue(Integer.class);
+        boolean veg = recipeSnapshot.child("veg").getValue(Boolean.class);
+        boolean vegan = recipeSnapshot.child("vegan").getValue(Boolean.class);
+        boolean glutenFree = recipeSnapshot.child("glutenFree").getValue(Boolean.class);
+        String cuisine = recipeSnapshot.child("cuisine").getValue(String.class);
+        String ingredients = recipeSnapshot.child("ingredients").getValue(String.class);
+        String steps = recipeSnapshot.child("steps").getValue(String.class);
+        String photoPath = recipeSnapshot.child("photoPath").getValue(String.class);
+
+        return (new Recipe(author, dishName, cuisine, prepTime, cookTime, servings, veg, vegan, glutenFree,
+                ingredients, steps, photoPath, calories, views ));
+    }
+
     public static ArrayList<Recipe> parseRecipes(DataSnapshot snapshot){
         ArrayList<Recipe> recipes = new ArrayList<>();
         List<DataSnapshot> snapshotList = new ArrayList<>();
@@ -37,24 +59,25 @@ public class DataUtil {
             snapshotList.add(recipeSnapshot);
         }
         for (int i = snapshotList.size() -1; i>=0; i--) {
-            DataSnapshot recipeSnapshot = snapshotList.get(i);
-            String author = recipeSnapshot.child("authorName").getValue(String.class);
-            String dishName = recipeSnapshot.child("dishName").getValue(String.class);
-            Integer calories = recipeSnapshot.child("calories").getValue(Integer.class);
-            Integer cookTime = recipeSnapshot.child("cookTime").getValue(Integer.class);
-            Integer prepTime = recipeSnapshot.child("prepTime").getValue(Integer.class);
-            Integer servings = recipeSnapshot.child("servings").getValue(Integer.class);
-            Integer views = recipeSnapshot.child("views").getValue(Integer.class);
-            boolean veg = recipeSnapshot.child("veg").getValue(Boolean.class);
-            boolean vegan = recipeSnapshot.child("vegan").getValue(Boolean.class);
-            boolean glutenFree = recipeSnapshot.child("glutenFree").getValue(Boolean.class);
-            String cuisine = recipeSnapshot.child("cuisine").getValue(String.class);
-            String ingredients = recipeSnapshot.child("ingredients").getValue(String.class);
-            String steps = recipeSnapshot.child("steps").getValue(String.class);
-            String photoPath = recipeSnapshot.child("photoPath").getValue(String.class);
+           recipes.add(parseIndividualRecipe(snapshotList.get(i)));
+        }
+        return recipes;
+    }
 
-            recipes.add(new Recipe(author, dishName, cuisine, prepTime, cookTime, servings, veg, vegan, glutenFree,
-                    ingredients, steps, photoPath, calories, views ));
+    public static ArrayList<Recipe> getRecipesPeopleIFollow(DataSnapshot snapshot, ArrayList<String> following){
+        ArrayList<Recipe> recipes = new ArrayList<>();
+        List<DataSnapshot> snapshotList = new ArrayList<>();
+
+        for(DataSnapshot recipeSnapshot : snapshot.getChildren()) {
+            snapshotList.add(recipeSnapshot);
+        }
+        for (int i = snapshotList.size() -1; i>=0; i--) {
+            DataSnapshot recipeSnapshot = snapshotList.get(i);
+            String person = recipeSnapshot.child("authorName").getValue(String.class);
+            if (following.contains(person)){
+                recipes.add(parseIndividualRecipe(snapshotList.get(i)));
+            }
+
         }
         return recipes;
     }
@@ -62,6 +85,14 @@ public class DataUtil {
         DatabaseReference recipesRef = FirebaseDatabase.getInstance().getReference().child("recipes");
         recipesRef.addListenerForSingleValueEvent(listener);
     }
+
+    public static void fetchRecipesByAuthor(ValueEventListener listener, String username) {
+        DatabaseReference recipesRef = FirebaseDatabase.getInstance().getReference().child("recipes");
+        Query query = recipesRef.orderByChild("authorName").equalTo(username);
+        query.addListenerForSingleValueEvent(listener);
+    }
+
+
 
     public static Bitmap downloadFoodPic(String imageUrl) throws IOException {
         URL url = new URL(imageUrl);
