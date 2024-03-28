@@ -32,7 +32,6 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
-
         // TO THIS FIRST
         String username = getIntent().getStringExtra("username");
         UserManager userManager = new UserManager();
@@ -40,6 +39,8 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener {
         FloatingActionButton addNewRecipe = findViewById(R.id.fabID);
         addNewRecipeButtonListener(addNewRecipe);
     }
+
+
 
     private void addNewRecipeButtonListener(FloatingActionButton fab) {
         fab.setOnClickListener(view -> {
