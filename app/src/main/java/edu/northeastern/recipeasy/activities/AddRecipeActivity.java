@@ -252,7 +252,7 @@ public class AddRecipeActivity extends AppCompatActivity {
 
         uploadPhoto();
         // create recipe object here with pictureURL as ""
-         newRecipe = new Recipe(dishName, cuisine, prepTimeMinutes, cookTimeMinutes,
+         newRecipe = new Recipe(username, dishName, cuisine, prepTimeMinutes, cookTimeMinutes,
          servingSizes,vegetarian.isChecked(),vegan.isChecked(), glutenFree.isChecked(),
                  ingredients, recipeSteps, "", calories, likes, dislikes);
 
