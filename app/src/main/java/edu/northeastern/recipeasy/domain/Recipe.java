@@ -19,12 +19,14 @@ public class Recipe {
     private Integer dislike;
     private Integer like;
     private String author;
+    private String author;
 
-    public Recipe(String author, String dishName, String cuisine, Integer prepTime,
+    public Recipe(String dishName, String author, String cuisine, Integer prepTime,
                   Integer cookTime, Integer servings, boolean isVeg, boolean isVegan,
                   boolean isGlutenFree, String ingredients,
                   String steps, String photoPath, Integer calories, Integer dislike, Integer like) {
         this.dishName = dishName;
+        this.author = author;
         this.cuisine = cuisine;
         this.prepTime = prepTime;
         this.cookTime = cookTime;
@@ -161,4 +163,11 @@ public class Recipe {
         this.like = like;
     }
 
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
 }

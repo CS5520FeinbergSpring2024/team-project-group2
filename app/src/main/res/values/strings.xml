@@ -1,5 +1,12 @@
 <resources>
     <string name="app_name">RecipEasy</string>
+    <string name="author_label">Author:</string>
+    <string name="calories_label">Calories:</string>
+    <string name="recipe_name_default">Recipe</string>
+    <string name="servings_label">Servings:</string>
+    <string name="ingredientsLabel">INGREDIENTS</string>
+    <string name="directionsLabel">DIRECTIONS</string>
+    <string name="prep_time_label">Prep Time:</string>
     <string name="add_a_new_recipe_string">Add a New Recipe</string>
     <string name="dish_string">Dish</string>
     <string name="cuisine_string">Cuisine</string>

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.FullRecipeActivity">
+
+    <TextView
+        android:id="@+id/recipeNameId"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:text="@string/recipe_name_default"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/authorLabelId"
+        app:layout_constraintEnd_toStartOf="@+id/imageView"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.39"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="Recipe Name" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/contentScroll"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@id/guideline"
+        app:layout_constraintVertical_bias="1.0">
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/incredientsTabId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ingredientsLabel" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/directionsTabId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/directionsLabel" />
+    </com.google.android.material.tabs.TabLayout>
+
+    <ScrollView
+        android:id="@+id/contentScroll"
+        android:layout_width="409dp"
+        android:layout_height="667dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tabView">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/longContentTextId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="16dp"
+                android:paddingTop="8dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="8dp"
+                android:text="Ingredient 1\nIngredient 2\nIngredient 3" />
+        </LinearLayout>
+    </ScrollView>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent=".24" />
+
+    <TextView
+        android:id="@+id/caloriesLabelId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="6dp"
+        android:text="@string/calories_label"
+        app:layout_constraintBottom_toTopOf="@id/prepTimeLabelId"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/authorLabelId" />
+
+    <TextView
+        android:id="@+id/prepTimeLabelId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="6dp"
+        android:text="@string/prep_time_label"
+        app:layout_constraintBottom_toTopOf="@+id/servingsLabelId"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@id/caloriesLabelId" />
+
+    <TextView
+        android:id="@+id/authorLabelId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="6dp"
+        android:text="@string/author_label"
+        app:layout_constraintBottom_toTopOf="@+id/caloriesLabelId"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/recipeNameId" />
+
+    <TextView
+        android:id="@+id/servingsLabelId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="6dp"
+        android:text="@string/servings_label"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@id/prepTimeLabelId" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:scaleType="fitStart"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.85"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/recipeNameId"
+        app:layout_constraintVertical_bias="0.0"
+        tools:srcCompat="@drawable/sample_food" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".08" />
+</androidx.constraintlayout.widget.ConstraintLayout>
