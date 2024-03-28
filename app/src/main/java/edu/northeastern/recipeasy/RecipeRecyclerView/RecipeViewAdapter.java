@@ -1,5 +1,6 @@
 package edu.northeastern.recipeasy.RecipeRecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,14 +30,15 @@ public class RecipeViewAdapter extends RecyclerView.Adapter<RecipeViewHolder> {
         return new RecipeViewHolder(v);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
         Recipe recipe = recipeItemList.get(position);
         holder.recipeName.setText(recipe.getDishName());
         holder.cuisine.setText(recipe.getCuisine());
-        holder.totalTime.setText(recipe.getCookTime());
-        holder.servings.setText(recipe.getServings());
-        holder.calories.setText(recipe.getCalories());
+        holder.totalTime.setText(recipe.getCookTime().toString());
+        holder.servings.setText(recipe.getServings().toString());
+        holder.calories.setText(recipe.getCalories().toString());
 
     }
 

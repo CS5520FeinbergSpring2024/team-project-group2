@@ -6,10 +6,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +24,7 @@ import edu.northeastern.recipeasy.R;
 import edu.northeastern.recipeasy.RecipeRecyclerView.RecipeViewAdapter;
 import edu.northeastern.recipeasy.domain.User;
 import edu.northeastern.recipeasy.domain.Recipe;
+import edu.northeastern.recipeasy.utils.DataUtil;
 import edu.northeastern.recipeasy.utils.IUserFetchListener;
 import edu.northeastern.recipeasy.utils.UserManager;
 
@@ -32,12 +39,45 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
-        // TO THIS FIRST
+
+        setUp();
+        // DO THIS FIRST
         String username = getIntent().getStringExtra("username");
         UserManager userManager = new UserManager();
         userManager.getUser(username, this);
         FloatingActionButton addNewRecipe = findViewById(R.id.fabID);
         addNewRecipeButtonListener(addNewRecipe);
+
+//        DataUtil.fetchAllRecipes(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                ArrayList<Recipe> recipes = DataUtil.parseRecipes(dataSnapshot);
+//                Log.w("FROM DB", dataSnapshot+"");
+//                recipeList.clear();
+//                recipeList.addAll(recipes);
+//                recipeAdapter.notifyDataSetChanged();
+//            }
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                // Handle error
+//            }
+//        });
+
+        new Thread(() -> {
+            DataUtil.fetchAllRecipes(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    ArrayList<Recipe> recipes = DataUtil.parseRecipes(dataSnapshot);
+                    recipeList.clear();
+                    recipeList.addAll(recipes);
+                    new Handler(Looper.getMainLooper()).post(() -> recipeAdapter.notifyDataSetChanged());
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+        }).start();
     }
 
 
