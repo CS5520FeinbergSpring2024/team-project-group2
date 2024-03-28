@@ -19,7 +19,7 @@ public class Recipe {
     private Integer dislike;
     private Integer like;
     private String author;
-    private String author;
+
 
     public Recipe(String dishName, String author, String cuisine, Integer prepTime,
                   Integer cookTime, Integer servings, boolean isVeg, boolean isVegan,
@@ -30,7 +30,6 @@ public class Recipe {
         this.cuisine = cuisine;
         this.prepTime = prepTime;
         this.cookTime = cookTime;
-        this.author=author;
         this.servings = servings;
         this.isVeg = isVeg;
         this.isVegan = isVegan;
@@ -163,11 +162,4 @@ public class Recipe {
         this.like = like;
     }
 
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
 }

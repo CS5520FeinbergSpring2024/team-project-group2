@@ -46,7 +46,7 @@ public class FullRecipeActivity extends AppCompatActivity {
 
         // TODO handle null values
         recipeNameTextView.setText(recipe.getDishName());
-        authorTextView.setText(recipe.getAuthor());
+        authorTextView.setText(recipe.getAuthorName());
         caloriesTextView.setText(recipe.getCalories());
         prepTimeTextView.setText(recipe.getPrepTime());
         servingsTextView.setText(recipe.getServings());
