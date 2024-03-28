@@ -12,7 +12,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 import edu.northeastern.recipeasy.domain.Recipe;
 
@@ -29,7 +31,13 @@ public class DataUtil {
 
     public static ArrayList<Recipe> parseRecipes(DataSnapshot snapshot){
         ArrayList<Recipe> recipes = new ArrayList<>();
-        for (DataSnapshot recipeSnapshot : snapshot.getChildren()) {
+        List<DataSnapshot> snapshotList = new ArrayList<>();
+
+        for(DataSnapshot recipeSnapshot : snapshot.getChildren()) {
+            snapshotList.add(recipeSnapshot);
+        }
+        for (int i = snapshotList.size() -1; i>=0; i--) {
+            DataSnapshot recipeSnapshot = snapshotList.get(i);
             String author = recipeSnapshot.child("authorName").getValue(String.class);
             String dishName = recipeSnapshot.child("dishName").getValue(String.class);
             Integer calories = recipeSnapshot.child("calories").getValue(Integer.class);
