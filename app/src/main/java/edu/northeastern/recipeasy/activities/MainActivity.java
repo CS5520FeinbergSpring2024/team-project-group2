@@ -18,6 +18,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import edu.northeastern.recipeasy.R;
 import edu.northeastern.recipeasy.domain.User;
@@ -44,49 +46,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Toast.makeText(this, "Invalid Username", Toast.LENGTH_LONG).show();
             return;
         }
+        Handler handler = new Handler(Looper.getMainLooper());
+        Executors.newSingleThreadExecutor().execute(() -> userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild(username)) {
+                    handler.post(() -> startNextActivity(username));
+                } else {
 
-        FetchUser runnable = new FetchUser(userRef, username, new Handler(Looper.getMainLooper()));
-        new Thread(runnable).start();
+                    Toast.makeText(MainActivity.this, "New account created!", Toast.LENGTH_LONG).show();
+                    User user = new User(username);
+                    ArrayList<String> followers = new ArrayList<>();
+                    followers.add("jerry");
+                    followers.add("chloe");
+                    user.setFollowers(followers);
+                    userRef.child(username).setValue(user).addOnSuccessListener(
+                            (task) -> handler.post(() -> startNextActivity(username)));
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        }));
     }
 
-    class FetchUser implements Runnable {
-        private DatabaseReference userRef;
-        private String username;
-        private Handler handler;
-
-        public FetchUser(DatabaseReference userRef, String username, Handler handler) {
-            this.userRef = userRef;
-            this.username = username;
-            this.handler = handler;
-        }
-        public void startNextActivity(String username) {
-            Intent homePageIntent = new Intent(MainActivity.this, HomePage.class);
-            homePageIntent.putExtra("username", username);
-            startActivity(homePageIntent);
-        }
-        @Override
-        public void run() {
-            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.hasChild(username)) {
-                        handler.post(() -> startNextActivity(username));
-                    } else {
-
-                        Toast.makeText(MainActivity.this, "New account created!", Toast.LENGTH_LONG).show();
-                        User user = new User(username);
-                        ArrayList<String> followers = new ArrayList<>();
-                        followers.add("jerry");
-                        followers.add("chloe");
-                        user.setFollowers(followers);
-                        userRef.child(username).setValue(user).addOnSuccessListener(
-                                (task) -> handler.post(() -> startNextActivity(username)));
-                    }
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                }
-            });
-        }
+    public void startNextActivity(String username) {
+        Intent homePageIntent = new Intent(MainActivity.this, HomePage.class);
+        homePageIntent.putExtra("username", username);
+        startActivity(homePageIntent);
     }
 }

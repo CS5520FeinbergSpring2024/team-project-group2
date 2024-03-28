@@ -28,6 +28,7 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener {
     private ArrayList<Recipe> recipeList;
     private User user;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
