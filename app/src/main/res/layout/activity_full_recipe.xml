@@ -33,7 +33,7 @@
         app:layout_constraintVertical_bias="1.0">
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/incredientsTabId"
+            android:id="@+id/ingredientsTabId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/ingredientsLabel" />

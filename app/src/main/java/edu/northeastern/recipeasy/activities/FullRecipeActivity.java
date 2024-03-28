@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -47,17 +48,18 @@ public class FullRecipeActivity extends AppCompatActivity {
         // TODO handle null values
         recipeNameTextView.setText(recipe.getDishName());
         authorTextView.setText(recipe.getAuthorName());
-        caloriesTextView.setText(recipe.getCalories());
-        prepTimeTextView.setText(recipe.getPrepTime());
-        servingsTextView.setText(recipe.getServings());
+        caloriesTextView.setText(recipe.getCalories().toString());
+        prepTimeTextView.setText(recipe.getPrepTime().toString());
+        servingsTextView.setText(recipe.getServings().toString());
         longContextTextView.setText(recipe.getIngredients());
 
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                if (tab.getId() == R.id.incredientsTabId) {
+                int position = tab.getPosition();
+                if (position == 0) {
                     longContextTextView.setText(recipe.getIngredients());
-                } else if (tab.getId() == R.id.directionsTabId) {
+                } else if (position == 1) {
                     longContextTextView.setText(recipe.getSteps());
                 }
             }

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.View;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -28,13 +29,20 @@ import edu.northeastern.recipeasy.utils.DataUtil;
 import edu.northeastern.recipeasy.utils.IUserFetchListener;
 import edu.northeastern.recipeasy.utils.UserManager;
 
-public class HomePage extends AppCompatActivity implements IUserFetchListener {
+public class HomePage extends AppCompatActivity implements IUserFetchListener, View.OnClickListener {
 
     private RecyclerView recipeRecyclerView;
     private RecipeViewAdapter recipeAdapter;
     private ArrayList<Recipe> recipeList;
     private User user;
 
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.testRecipeButton ) {
+            Intent fullRecipeIntent = new Intent(HomePage.this, FullRecipeActivity.class);
+            startActivity(fullRecipeIntent);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
