@@ -75,6 +75,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         Toast.makeText(MainActivity.this, "New account created!", Toast.LENGTH_LONG).show();
                         User user = new User(username);
+                        ArrayList<String> followers = new ArrayList<>();
+                        followers.add("jerry");
+                        followers.add("chloe");
+                        user.setFollowers(followers);
                         userRef.child(username).setValue(user).addOnSuccessListener(
                                 (task) -> handler.post(() -> startNextActivity(username)));
                     }
