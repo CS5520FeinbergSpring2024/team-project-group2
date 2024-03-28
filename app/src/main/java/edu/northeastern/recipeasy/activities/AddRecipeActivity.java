@@ -251,51 +251,54 @@ public class AddRecipeActivity extends AppCompatActivity {
 
         Log.w(" CUISINE", " " + cuisine );
 
-        uploadPhoto();
         // create recipe object here with pictureURL as ""
          newRecipe = new Recipe(username, dishName, cuisine, prepTimeMinutes, cookTimeMinutes,
          servingSizes,vegetarian.isChecked(),vegan.isChecked(), glutenFree.isChecked(),
                  ingredients, recipeSteps, "", calories, likes, dislikes);
 
-
+        uploadPhoto();
     }
 
     // https://firebase.google.com/docs/storage/android/upload-files#:~:text=To%20upload%20a%20file%20to,file%2C%20including%20the%20file%20name.&text=Once%20you've%20created%20an,the%20file%20to%20Cloud%20Storage.
     private void uploadPhoto() {
-        Bitmap bitmap = uriToBitmap(dishPictureUri);
+
+        if (restorePicture){
+            Bitmap bitmap = uriToBitmap(dishPictureUri);
 
 //        String filename = username + new Date() + ".jpg";
 //
 //        Log.w("FILE NAME", filename);
 
-        StorageReference imageRef = FirebaseStorage.getInstance().getReference()
-                .child("recipePics/" + username +"/" + new Date() + ".jpg");
+            StorageReference imageRef = FirebaseStorage.getInstance().getReference()
+                    .child("recipePics/" + username +"/" + new Date() + ".jpg");
 
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        assert bitmap != null;
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-        byte[] data = stream.toByteArray();
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            assert bitmap != null;
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            byte[] data = stream.toByteArray();
 
-        UploadTask upload = imageRef.putBytes(data);
-        upload.addOnFailureListener(exception -> {
-            Snackbar.make(Objects.requireNonNull(this.getCurrentFocus()), "Photo Upload Failed", Snackbar.LENGTH_LONG)
-                    .setAction("Re-Try?", v -> uploadPhoto()).show();
-        }).addOnSuccessListener(taskSnapshot -> {
+            UploadTask upload = imageRef.putBytes(data);
+            upload.addOnFailureListener(exception -> {
+                Snackbar.make(Objects.requireNonNull(this.getCurrentFocus()), "Photo Upload Failed", Snackbar.LENGTH_LONG)
+                        .setAction("Re-Try?", v -> uploadPhoto()).show();
+            }).addOnSuccessListener(taskSnapshot -> {
 
-            imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
 
-                String pictureUrl =  uri.toString();
-                Log.w("PICTURE URL", pictureUrl);
+                    String pictureUrl =  uri.toString();
+                    Log.w("PICTURE URL", pictureUrl);
 
 
-                //TODO: put on a separate thread
-                //TODO: add a spinny loading thing while its uploading
+                    //TODO: put on a separate thread
+                    //TODO: add a spinny loading thing while its uploading
 
-                newRecipe.setPhotoPath(pictureUrl);
-                uploadRecipe(newRecipe);
+                    newRecipe.setPhotoPath(pictureUrl);
 
+                });
             });
-        });
+        }
+        uploadRecipe(newRecipe);
+
 
     }
 
