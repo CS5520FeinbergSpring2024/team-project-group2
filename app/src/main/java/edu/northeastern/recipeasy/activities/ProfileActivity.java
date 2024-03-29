@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +40,8 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
     private User user;
     private String username;
     private BottomNavigationView bottomNavigationView;
+    private Menu menu;
+    private MenuItem profileMenuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,12 +58,16 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
         }
         setUp();
 
-        bottomNavigationView.setSelectedItemId(R.id.profile_icon);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnItemSelectedListener(this);
+
+        menu = bottomNavigationView.getMenu();
+        profileMenuItem = menu.findItem(R.id.profile_icon);
+        profileMenuItem.setChecked(true);
+
     }
 
     public void setUp() {
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setOnItemSelectedListener(this);
 
         recipeRecyclerView = findViewById(R.id.recyclerID);
         recipeRecyclerView.setHasFixedSize(true);
@@ -93,7 +100,7 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
     @Override
     protected void onResume() {
         super.onResume();
-        bottomNavigationView.setSelectedItemId(R.id.profile_icon);
+        profileMenuItem.setChecked(true);
     }
 
     @Override

@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -42,6 +43,8 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
     private ArrayList<Recipe> recipeList;
     private User user;
     private TabLayout tabs;
+    private Menu menu;
+    private MenuItem homeIcon;
     private BottomNavigationView bottomNavigationView;
 
     @Override
@@ -50,6 +53,10 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
         setContentView(R.layout.activity_home_page);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnItemSelectedListener(this);
+
+        menu = bottomNavigationView.getMenu();
+        homeIcon = menu.findItem(R.id.home_icon);
+
 
         tabs = findViewById(R.id.tabViewHomePage);
 
@@ -87,6 +94,8 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
     @Override
     protected void onResume() {
         super.onResume();
+
+        homeIcon.setChecked(true);
 
         int selectedTabPosition = tabs.getSelectedTabPosition();
         if (selectedTabPosition == 0) {
