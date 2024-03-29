@@ -181,7 +181,6 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
         if(itemId == R.id.search_icon) {
-            Toast.makeText(this, "SEARCH", Toast.LENGTH_LONG).show();
             Intent goSearch = new Intent(HomePage.this, SearchActivity.class);
             goSearch.putExtra("username", user.getUsername());
             startActivity(goSearch);
@@ -195,7 +194,7 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
         } else if(itemId == R.id.profile_icon) {
             Intent goProfile = new Intent(HomePage.this, ProfileActivity.class);
             goProfile.putExtra("currentUsername", user.getUsername());
-            goProfile.putExtra("profileUsername", "test");
+            goProfile.putExtra("profileUsername", user.getUsername());
             goProfile.putExtra("isCurrentUser", true);
             startActivity(goProfile);
             return true;
