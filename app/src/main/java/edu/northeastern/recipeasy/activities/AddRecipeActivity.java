@@ -1,18 +1,16 @@
 package edu.northeastern.recipeasy.activities;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.ContentResolver;
-import android.content.Context;
-import android.graphics.Matrix;
+import android.app.AlertDialog;
 import com.google.android.material.slider.RangeSlider;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
@@ -30,13 +28,10 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -48,8 +43,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
@@ -97,6 +90,20 @@ public class AddRecipeActivity extends AppCompatActivity implements View.OnClick
         }
         username = getIntent().getStringExtra("username");
         setUp();
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(AddRecipeActivity.this);
+                builder.setTitle("Go back?");
+                builder.setMessage("Are you sure you want to go back? The total distance data will be lost.");
+                builder.setPositiveButton("YES", (dialog, which) -> finish());
+                builder.setNegativeButton("NO", (dialog, which) -> dialog.cancel());
+                builder.show();
+            }
+        });
+
+
     }
 
     private void setUp(){
@@ -111,6 +118,7 @@ public class AddRecipeActivity extends AppCompatActivity implements View.OnClick
         initializeCamera();
         initializeGallery();
     }
+
 
     private void initializeIngredientsRecycler(){
         ingredientsRecyclerView = findViewById(R.id.ingredientsRecyclerViewId);
@@ -326,7 +334,7 @@ public class AddRecipeActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (!dataSnapshot.exists()) {
-                    // author doesnt exist
+                    // author doesn't exist
                     return;
                 }
                 DatabaseReference writtenRecipes = authorRef.child("recipeIdList").push();
