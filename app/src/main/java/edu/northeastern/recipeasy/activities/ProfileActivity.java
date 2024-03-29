@@ -169,9 +169,9 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
             return true;
         } else if(itemId == R.id.search_icon) {
 //            Toast.makeText(this, "SEARCH", Toast.LENGTH_LONG).show();
-//            Intent goSearch = new Intent(HomePage.this, SearchActivity.class);
-//            goSearch.putExtra("username", user.getUsername());
-//            startActivity(goSearch);
+            Intent goSearch = new Intent(ProfileActivity.this, SearchActivity.class);
+            goSearch.putExtra("username", user.getUsername());
+            startActivity(goSearch);
             return true;
         }else if(itemId == R.id.message_icon) {
             Toast.makeText(this, "MESSAGES", Toast.LENGTH_LONG).show();
