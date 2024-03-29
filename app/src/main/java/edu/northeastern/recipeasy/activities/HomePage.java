@@ -1,5 +1,6 @@
 package edu.northeastern.recipeasy.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -9,9 +10,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,7 +35,7 @@ import edu.northeastern.recipeasy.utils.DataUtil;
 import edu.northeastern.recipeasy.utils.IUserFetchListener;
 import edu.northeastern.recipeasy.utils.UserManager;
 
-public class HomePage extends AppCompatActivity implements IUserFetchListener {
+public class HomePage extends AppCompatActivity implements IUserFetchListener, NavigationBarView.OnItemSelectedListener {
 
     private RecyclerView recipeRecyclerView;
     private RecipeViewAdapter recipeAdapter;
@@ -41,6 +46,8 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnItemSelectedListener(this);
 
         TabLayout tabs = findViewById(R.id.tabViewHomePage);
 
@@ -166,6 +173,36 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener {
     }
 
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int itemId = item.getItemId();
+        if(itemId == R.id.home_icon) {
+            // alerady home
+//            Toast.makeText(this, "HOME", Toast.LENGTH_LONG).show();
+//            Intent goHome = new Intent(HomePage.this, HomePage.class);
+//            goHome.putExtra("username", user.getUsername());
+//            startActivity(goHome);
+            return true;
+        } else if(itemId == R.id.search_icon) {
+//            Toast.makeText(this, "SEARCH", Toast.LENGTH_LONG).show();
+//            Intent goSearch = new Intent(HomePage.this, SearchActivity.class);
+//            goSearch.putExtra("username", user.getUsername());
+//            startActivity(goSearch);
+            return true;
+        }else if(itemId == R.id.message_icon) {
+            Toast.makeText(this, "MESSAGES", Toast.LENGTH_LONG).show();
+//            Intent goMessages = new Intent(HomePage.this, MessageActivity.class);
+//            goMessages.putExtra("username", user.getUsername());
+//            startActivity(goMessages);
+            return true;
+        } else if(itemId == R.id.profile_icon) {
+//            Toast.makeText(this, "PROFILE", Toast.LENGTH_LONG).show();
+            Intent goProfile = new Intent(HomePage.this, ProfileActivity.class);
+            goProfile.putExtra("username", user.getUsername());
+            startActivity(goProfile);
+            return true;
+        }
 
-
+        return false;
+    }
 }
