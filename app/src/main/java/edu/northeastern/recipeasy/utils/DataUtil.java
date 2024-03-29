@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.northeastern.recipeasy.domain.Recipe;
+import edu.northeastern.recipeasy.domain.User;
 
 public class DataUtil {
 
@@ -30,6 +31,33 @@ public class DataUtil {
         }
         return items;
     }
+
+    private static User parseIndividualUsers(DataSnapshot userSnapshot ) {
+        String username = userSnapshot.child("username").getValue(String.class);
+        return (new User(username));
+    }
+
+    public static ArrayList<User> parseUsers(DataSnapshot userSnapshot) {
+        ArrayList<User> users = new ArrayList<>();
+
+        for (DataSnapshot u : userSnapshot.getChildren()) {
+            users.add(parseIndividualUsers(u));
+        }
+        return users;
+    }
+    public static ArrayList<Recipe> parseRecipes(DataSnapshot snapshot){
+        ArrayList<Recipe> recipes = new ArrayList<>();
+        List<DataSnapshot> snapshotList = new ArrayList<>();
+
+        for(DataSnapshot recipeSnapshot : snapshot.getChildren()) {
+            snapshotList.add(recipeSnapshot);
+        }
+        for (int i = snapshotList.size() -1; i>=0; i--) {
+            recipes.add(parseIndividualRecipe(snapshotList.get(i)));
+        }
+        return recipes;
+    }
+
 
     private static Recipe parseIndividualRecipe(DataSnapshot recipeSnapshot){
         String author = recipeSnapshot.child("authorName").getValue(String.class);
@@ -51,18 +79,7 @@ public class DataUtil {
                 ingredients, steps, photoPath, calories, views ));
     }
 
-    public static ArrayList<Recipe> parseRecipes(DataSnapshot snapshot){
-        ArrayList<Recipe> recipes = new ArrayList<>();
-        List<DataSnapshot> snapshotList = new ArrayList<>();
 
-        for(DataSnapshot recipeSnapshot : snapshot.getChildren()) {
-            snapshotList.add(recipeSnapshot);
-        }
-        for (int i = snapshotList.size() -1; i>=0; i--) {
-           recipes.add(parseIndividualRecipe(snapshotList.get(i)));
-        }
-        return recipes;
-    }
 
     public static ArrayList<Recipe> getRecipesPeopleIFollow(DataSnapshot snapshot, ArrayList<String> following){
         ArrayList<Recipe> recipes = new ArrayList<>();
@@ -84,6 +101,11 @@ public class DataUtil {
     public static void fetchAllRecipes(ValueEventListener listener) {
         DatabaseReference recipesRef = FirebaseDatabase.getInstance().getReference().child("recipes");
         recipesRef.addListenerForSingleValueEvent(listener);
+    }
+
+    public static void fetchAllUsers(ValueEventListener listener) {
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users");
+        usersRef.addListenerForSingleValueEvent(listener);
     }
 
     public static void fetchRecipesByAuthor(ValueEventListener listener, String username) {

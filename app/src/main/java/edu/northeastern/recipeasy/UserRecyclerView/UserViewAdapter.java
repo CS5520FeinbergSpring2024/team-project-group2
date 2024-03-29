@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import edu.northeastern.recipeasy.R;
-import edu.northeastern.recipeasy.RecipeRecyclerView.RecipeViewHolder;
 import edu.northeastern.recipeasy.domain.User;
 
 
