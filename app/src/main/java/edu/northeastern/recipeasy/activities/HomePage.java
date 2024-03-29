@@ -41,15 +41,17 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
     private RecipeViewAdapter recipeAdapter;
     private ArrayList<Recipe> recipeList;
     private User user;
+    private TabLayout tabs;
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnItemSelectedListener(this);
 
-        TabLayout tabs = findViewById(R.id.tabViewHomePage);
+        tabs = findViewById(R.id.tabViewHomePage);
 
         setUp();
         // DO THIS FIRST
@@ -80,27 +82,20 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
             }
         });
 
-
-        // keep this for profile page
-//        new Thread(() -> {
-//            DataUtil.fetchRecipesByAuthor(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(DataSnapshot dataSnapshot) {
-//                    ArrayList<Recipe> recipes = DataUtil.parseRecipes(dataSnapshot);
-//                    recipeList.clear();
-//                    recipeList.addAll(recipes);
-//                    new Handler(Looper.getMainLooper()).post(() -> recipeAdapter.notifyDataSetChanged());
-//                }
-//
-//                @Override
-//                public void onCancelled(DatabaseError databaseError) {
-//                }
-//            }, username);
-//        }).start();
-//    }
-
-
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        int selectedTabPosition = tabs.getSelectedTabPosition();
+        if (selectedTabPosition == 0) {
+            loadAllRecipes();
+        } else if (selectedTabPosition == 1) {
+            loadFollowingRecipes();
+        }
+    }
+
 
 
     private void loadAllRecipes(){
@@ -176,14 +171,7 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
-        if(itemId == R.id.home_icon) {
-            // alerady home
-//            Toast.makeText(this, "HOME", Toast.LENGTH_LONG).show();
-//            Intent goHome = new Intent(HomePage.this, HomePage.class);
-//            goHome.putExtra("username", user.getUsername());
-//            startActivity(goHome);
-            return true;
-        } else if(itemId == R.id.search_icon) {
+        if(itemId == R.id.search_icon) {
 //            Toast.makeText(this, "SEARCH", Toast.LENGTH_LONG).show();
 //            Intent goSearch = new Intent(HomePage.this, SearchActivity.class);
 //            goSearch.putExtra("username", user.getUsername());
@@ -196,9 +184,9 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
 //            startActivity(goMessages);
             return true;
         } else if(itemId == R.id.profile_icon) {
-//            Toast.makeText(this, "PROFILE", Toast.LENGTH_LONG).show();
             Intent goProfile = new Intent(HomePage.this, ProfileActivity.class);
             goProfile.putExtra("username", user.getUsername());
+            goProfile.putExtra("isCurrentUser", true);
             startActivity(goProfile);
             return true;
         }
