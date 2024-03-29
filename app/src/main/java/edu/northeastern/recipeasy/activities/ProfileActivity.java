@@ -204,7 +204,11 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
         }
     }
 
-    public void handleFollow(boolean follow) {
+    private void handleSeeFollowers() {
+
+    }
+
+    private void handleFollow(boolean follow) {
         if (follow) {
             updateFollowingList(currentUsername, profileUsername);
             updateFollowersList(profileUsername, currentUsername);

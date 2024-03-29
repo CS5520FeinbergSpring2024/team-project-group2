@@ -1,8 +1,9 @@
 package edu.northeastern.recipeasy.domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class User {
+public class User implements Serializable  {
     private String username;
     private ArrayList<String> recipeIdList = new ArrayList<>();
     private ArrayList<String> following = new ArrayList<>();

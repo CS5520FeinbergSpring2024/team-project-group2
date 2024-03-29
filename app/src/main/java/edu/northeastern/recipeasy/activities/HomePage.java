@@ -194,7 +194,8 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
             return true;
         } else if(itemId == R.id.profile_icon) {
             Intent goProfile = new Intent(HomePage.this, ProfileActivity.class);
-            goProfile.putExtra("username", user.getUsername());
+            goProfile.putExtra("currentUsername", user.getUsername());
+            goProfile.putExtra("profileUsername", "test");
             goProfile.putExtra("isCurrentUser", true);
             startActivity(goProfile);
             return true;
