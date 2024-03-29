@@ -32,7 +32,10 @@ import edu.northeastern.recipeasy.utils.UserManager;
 public class SearchActivity extends AppCompatActivity implements IUserFetchListener, NavigationBarView.OnItemSelectedListener {
     private RecyclerView userRecyclerView;
     private UserViewAdapter userAdapter;
+    private RecipeViewAdapter recipeAdapter;
     private ArrayList<User> userList;
+    private ArrayList<Recipe> recipeList;
+    private RecyclerView recipeRecyclerView;
     private User user;
     private TabLayout tabs;
 
@@ -57,6 +60,7 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
                     setUpUserRecyclerView();
                 } else if (position == 1) {
                     Toast.makeText(getApplicationContext(), "Recipes", Toast.LENGTH_SHORT).show();
+                    setUpRecipeRecyclerView();
 
                 }
 
@@ -89,6 +93,34 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
         loadAllUsers();
     }
 
+    public void setUpRecipeRecyclerView() {
+        recipeRecyclerView = findViewById(R.id.userRecyclerID);
+        recipeRecyclerView.setHasFixedSize(true);
+        recipeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recipeList = new ArrayList<>();
+        recipeAdapter = new RecipeViewAdapter(recipeList, this);
+        recipeRecyclerView.setAdapter(recipeAdapter);
+        loadAllRecipes();
+    }
+
+    private void loadAllRecipes(){
+        new Thread(() -> {
+            DataUtil.fetchAllRecipes(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    ArrayList<Recipe> recipes = DataUtil.parseRecipes(dataSnapshot);
+                    recipeList.clear();
+                    recipeList.addAll(recipes);
+                    new Handler(Looper.getMainLooper()).post(() -> recipeAdapter.notifyDataSetChanged());
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+        }).start();
+    }
+
     private void loadAllUsers(){
         new Thread(() -> {
             DataUtil.fetchAllUsers(new ValueEventListener() {
@@ -114,7 +146,7 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
         if (selectedTabPosition == 0) {
             setUpUserRecyclerView();
         } else if (selectedTabPosition == 1) {
-
+            setUpRecipeRecyclerView();
             Toast.makeText(getApplicationContext(), "Recipes", Toast.LENGTH_SHORT).show();
 
         } else if (selectedTabPosition == 2) {

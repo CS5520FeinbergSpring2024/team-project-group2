@@ -172,7 +172,7 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
         if(itemId == R.id.search_icon) {
-//            Toast.makeText(this, "SEARCH", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "SEARCH", Toast.LENGTH_LONG).show();
 //            Intent goSearch = new Intent(HomePage.this, SearchActivity.class);
 //            goSearch.putExtra("username", user.getUsername());
 //            startActivity(goSearch);
