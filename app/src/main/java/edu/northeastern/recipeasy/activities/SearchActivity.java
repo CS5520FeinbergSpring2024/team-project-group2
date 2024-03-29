@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationBarView;
@@ -38,6 +39,7 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
     private RecyclerView recipeRecyclerView;
     private User user;
     private TabLayout tabs;
+    private SearchView search;
 
 
     @Override
@@ -78,6 +80,22 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
 
+            }
+        });
+
+        search = findViewById(R.id.searchBarID);
+        search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                return false;
             }
         });
 
