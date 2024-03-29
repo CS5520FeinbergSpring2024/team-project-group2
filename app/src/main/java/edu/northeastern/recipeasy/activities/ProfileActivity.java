@@ -187,9 +187,9 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
     public void onClick(View v) {
         int clickedId = v.getId();
         if (clickedId == R.id.seeFollowingButtonId){
-            Toast.makeText(this, "following", Toast.LENGTH_LONG).show();
+            handleSeeFollowers(R.id.seeFollowingButtonId);
         } else if (clickedId == R.id.seeFollowersButtonId){
-            Toast.makeText(this, "followers", Toast.LENGTH_LONG).show();
+            handleSeeFollowers(R.id.seeFollowersButtonId);
         } else if (clickedId == R.id.followUserButtonId){
             handleFollow(true);
         } else if (clickedId == R.id.unfollowUserButtonId){
@@ -204,7 +204,17 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
         }
     }
 
-    private void handleSeeFollowers() {
+    private void handleSeeFollowers(int clickedId) {
+        Intent expandUsers = new Intent(ProfileActivity.this, SeeFollowersFollowingActivity.class);
+//        expandUsers.putExtra("user", user);
+        if (clickedId == R.id.seeFollowingButtonId){
+            expandUsers.putExtra("type", "Following");
+            expandUsers.putStringArrayListExtra("list", user.getFollowing());
+        } else {
+            expandUsers.putExtra("type", "Followers");
+            expandUsers.putStringArrayListExtra("list", user.getFollowers());
+        }
+        startActivity(expandUsers);
 
     }
 
