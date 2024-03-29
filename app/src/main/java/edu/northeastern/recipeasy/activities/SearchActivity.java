@@ -10,8 +10,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -32,6 +34,7 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
     private UserViewAdapter userAdapter;
     private ArrayList<User> userList;
     private User user;
+    private TabLayout tabs;
 
 
     @Override
@@ -43,10 +46,40 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
         UserManager userManager = new UserManager();
         userManager.getUser(username, this);
 
-        setUp();
+        tabs = findViewById(R.id.tabLayoutID);
+
+        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                int position = tab.getPosition();
+                if (position == 0) {
+                    Toast.makeText(getApplicationContext(), "Hi", Toast.LENGTH_SHORT).show();
+                    setUpUserRecyclerView();
+                } else if (position == 1) {
+                    Toast.makeText(getApplicationContext(), "Recipes", Toast.LENGTH_SHORT).show();
+
+                }
+
+                else if (position == 2) {
+                    Toast.makeText(getApplicationContext(), "API", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
     }
 
-    public void setUp() {
+    public void setUpUserRecyclerView() {
         userRecyclerView = findViewById(R.id.userRecyclerID);
         userRecyclerView.setHasFixedSize(true);
         userRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -66,13 +99,31 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
                     userList.addAll(users);
                     new Handler(Looper.getMainLooper()).post(() -> userAdapter.notifyDataSetChanged());
                 }
-
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
                 }
             });
         }).start();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        int selectedTabPosition = tabs.getSelectedTabPosition();
+        if (selectedTabPosition == 0) {
+            setUpUserRecyclerView();
+        } else if (selectedTabPosition == 1) {
+
+            Toast.makeText(getApplicationContext(), "Recipes", Toast.LENGTH_SHORT).show();
+
+        } else if (selectedTabPosition == 2) {
+            Toast.makeText(getApplicationContext(), "API", Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
+
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {

@@ -13,7 +13,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/userRecyclerID"/>
+        app:layout_constraintBottom_toTopOf="@+id/tabLayoutID"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/userRecyclerID"
@@ -21,5 +21,37 @@
         android:layout_height="679dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tabLayoutID"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayoutID"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchBarID"
+        android:layout_width="407dp"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="51dp">
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/usersTabID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Users" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/recipesTabID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Recipes" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/APITabID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="API" />
+    </com.google.android.material.tabs.TabLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
