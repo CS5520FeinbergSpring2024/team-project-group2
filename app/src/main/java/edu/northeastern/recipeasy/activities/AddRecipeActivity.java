@@ -9,6 +9,9 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.ContentResolver;
+import android.content.Context;
 import android.graphics.Matrix;
 import com.google.android.material.slider.RangeSlider;
 import com.google.android.material.snackbar.Snackbar;
@@ -39,6 +42,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -53,8 +58,9 @@ import edu.northeastern.recipeasy.domain.ListItem;
 import edu.northeastern.recipeasy.domain.Recipe;
 import edu.northeastern.recipeasy.ItemRecyclerView.ListItemViewAdapter;
 import edu.northeastern.recipeasy.R;
+import edu.northeastern.recipeasy.utils.PhotosUtil;
 
-public class AddRecipeActivity extends AppCompatActivity {
+public class AddRecipeActivity extends AppCompatActivity implements View.OnClickListener {
     private RecyclerView ingredientsRecyclerView;
     private ArrayList<ListItem> ingredientList;
     private ListItemViewAdapter ingredientAdapter;
@@ -66,6 +72,8 @@ public class AddRecipeActivity extends AppCompatActivity {
     private ImageView dishPicture;
     private Button cameraButton;
     private Button galleryButton;
+    private ProgressBar progressBar;
+    private ScrollView scrollView;
     private Uri dishPictureUri;
     private static final int CAMERA_REQUEST_CODE = 101;
     private static final int GALLERY_REQUEST_CODE = 102;
@@ -95,8 +103,9 @@ public class AddRecipeActivity extends AppCompatActivity {
         dishPicture = findViewById(R.id.pictureOfDishId);
         cameraButton = findViewById(R.id.cameraButtonId);
         galleryButton = findViewById(R.id.galleryButtonId);
-        dishPictureUri = makeUri();
-
+        dishPictureUri = PhotosUtil.makeImageUri(getApplicationContext());
+        progressBar = findViewById(R.id.progressBarID);
+        scrollView = findViewById(R.id.scrollViewId);
         initializeIngredientsRecycler();
         initializeRecipeRecycler();
         initializeCamera();
@@ -115,6 +124,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         ingredientAdapter = new ListItemViewAdapter(ingredientList);
         ingredientsRecyclerView.setAdapter(ingredientAdapter);
     }
+
     private void initializeRecipeRecycler(){
         recipeRecyclerView = findViewById(R.id.recipeRecyclerViewId);
         recipeRecyclerView.setHasFixedSize(true);
@@ -127,48 +137,53 @@ public class AddRecipeActivity extends AppCompatActivity {
         recipeRecyclerView.setAdapter(recipeAdapter);
     }
 
-    public void clickedAddNewStep(View view){
-        int clickedId = view.getId();
+    @Override
+    public void onClick(View v) {
+        int clickedId = v.getId();
         if (clickedId == R.id.addNewIngredientButton) {
-            int position = ingredientList.size() - 1;
-            ListItem lastItem = ingredientList.get(position);
-            if (!lastItem.getItem().trim().isEmpty()) {
-                ingredientList.add(new ListItem("", "Ingredient"));
-                position = ingredientList.size() - 1;
-                ingredientAdapter.notifyItemInserted(position);
-                ingredientsRecyclerView.scrollToPosition(position);
-            } else {
-                blankListItem();
-            }
-        } else {
-            int position = recipeStepsList.size() - 1;
-            ListItem lastItem = recipeStepsList.get(position);
-            if (!lastItem.getItem().trim().isEmpty()) {
-                recipeStepsList.add(new ListItem("", "Step"));
-                position = recipeStepsList.size() - 1;
-                recipeAdapter.notifyItemInserted(position);
-                recipeRecyclerView.scrollToPosition(position);
-            } else {
-                blankListItem();
-            }
+            addNewIngredient();
+        } else if (clickedId == R.id.addNewRecipeStepButton) {
+            addNewStep();
+        } else if (clickedId == R.id.cameraButtonId) {
+            clickedCameraButton();
+        } else if (clickedId == R.id.galleryButtonId) {
+            clickedGallery();
+        } else if (clickedId == R.id.submitButtonId) {
+            submitRecipe();
         }
     }
 
-
-    private Uri makeUri() {
-        File imageFile = new File(getApplicationContext().getFilesDir(), "pic.jpg");
-        return FileProvider.getUriForFile(
-                getApplicationContext(),
-                "edu.northeastern.recipeasy.fileProvider",
-                imageFile
-        );
+    public void addNewIngredient() {
+        int position = ingredientList.size() - 1;
+        ListItem lastItem = ingredientList.get(position);
+        if (!lastItem.getItem().trim().isEmpty()) {
+            ingredientList.add(new ListItem("", "Ingredient"));
+            position = ingredientList.size() - 1;
+            ingredientAdapter.notifyItemInserted(position);
+            ingredientsRecyclerView.scrollToPosition(position);
+        } else {
+            showBlankListItemToast();
+        }
     }
 
-    private void blankListItem() {
+    public void addNewStep() {
+        int position = recipeStepsList.size() - 1;
+        ListItem lastItem = recipeStepsList.get(position);
+        if (!lastItem.getItem().trim().isEmpty()) {
+            recipeStepsList.add(new ListItem("", "Step"));
+            position = recipeStepsList.size() - 1;
+            recipeAdapter.notifyItemInserted(position);
+            recipeRecyclerView.scrollToPosition(position);
+        } else {
+            showBlankListItemToast();
+        }
+    }
+
+    private void showBlankListItemToast() {
         Toast.makeText(this, "Item cannot be left blank", Toast.LENGTH_SHORT).show();
     }
 
-    public void clickedCamera(View view) {
+    public void clickedCameraButton() {
         if (ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
@@ -178,7 +193,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         }
     }
 
-    public void clickedGallery(View view) {
+    public void clickedGallery() {
         if (Build.VERSION.SDK_INT < 33) {
             if (ContextCompat.checkSelfPermission(this,
                     Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -201,10 +216,19 @@ public class AddRecipeActivity extends AppCompatActivity {
         }
     }
 
-    public void submitRecipe(View view) {
-        // TODO: which items are required, which arent?
-        //TODO: make a recipe object and push to DB
+    private void setLoadingViewOn() {
+        progressBar.setVisibility(View.VISIBLE);
+        scrollView.setVisibility(View.INVISIBLE);
+    }
 
+    private void setLoadingViewOff() {
+        progressBar.setVisibility(View.INVISIBLE);
+        scrollView.setVisibility(View.VISIBLE);
+    }
+
+    public void submitRecipe() {
+        this.setLoadingViewOn();
+        // TODO: which items are required, which arent?
         String[] formedStrings = formListItemStrings();
 
         EditText dish = findViewById(R.id.editDishAddRecipe);
@@ -218,23 +242,18 @@ public class AddRecipeActivity extends AppCompatActivity {
         CheckBox glutenFree = findViewById(R.id.glutenFreeBoxId);
 
         String dishName = dish.getText().toString();
-        Log.w(" DISHNAME", " " + dishName);
-        // String author = username;
         String ingredients =  formedStrings[0];
-        Log.w("INGREDIENTS", " " +ingredients );
         int calories = Math.round(calorieSlider.getValues().get(0));
-        Log.w("CALORIES", " " + calories);
+
         int cookTimeMinutes = 0;
         if (!cookTime.getText().toString().isEmpty()) {
             cookTimeMinutes = Integer.parseInt(cookTime.getText().toString());
         }
-        Log.w("COOK TIME", " " + cookTimeMinutes);
 
         int prepTimeMinutes = 0;
         if (!prepTime.getText().toString().isEmpty()) {
             prepTimeMinutes = Integer.parseInt(prepTime.getText().toString());
         }
-        Log.w("PREP TIME", " " + prepTimeMinutes);
 
         //TODO: decide how we want to do dietary?
 
@@ -243,29 +262,23 @@ public class AddRecipeActivity extends AppCompatActivity {
         if (!serving.getText().toString().isEmpty()) {
             servingSizes = Integer.parseInt(serving.getText().toString());
         }
-        Log.w("SERVINGS", " " + servingSizes );
 
-        //TODO: figure out how to store a picture
         String cuisine = cuisineSpinner.getSelectedItem().toString();
 
-
-        Log.w(" CUISINE", " " + cuisine );
-
         // create recipe object here with pictureURL as ""
-         newRecipe = new Recipe(username, dishName, cuisine, prepTimeMinutes, cookTimeMinutes,
+         this.newRecipe = new Recipe(username, dishName, cuisine, prepTimeMinutes, cookTimeMinutes,
          servingSizes,vegetarian.isChecked(),vegan.isChecked(), glutenFree.isChecked(),
                  ingredients, recipeSteps, "", calories, 0);
 
-        uploadPhoto();
+         uploadPhotoAndRecipe();
     }
 
-    private void uploadPhoto() {
-
-        if (restorePicture){
-            Bitmap bitmap = uriToBitmap(dishPictureUri);
+    private void uploadPhotoAndRecipe() {
+        if (restorePicture) {
+            Bitmap bitmap = PhotosUtil.uriToBitmap(dishPictureUri, getContentResolver());
 
             StorageReference imageRef = FirebaseStorage.getInstance().getReference()
-                    .child("recipePics/" + username +"/" + new Date() + ".jpg");
+                    .child("recipePics/" + username + "/" + new Date() + ".jpg");
 
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             assert bitmap != null;
@@ -274,29 +287,21 @@ public class AddRecipeActivity extends AppCompatActivity {
 
             UploadTask upload = imageRef.putBytes(data);
             upload.addOnFailureListener(exception -> {
+                this.setLoadingViewOff();
                 Snackbar.make(Objects.requireNonNull(this.getCurrentFocus()), "Photo Upload Failed", Snackbar.LENGTH_LONG)
-                        .setAction("Re-Try?", v -> uploadPhoto()).show();
+                        .setAction("RETRY", v -> uploadPhotoAndRecipe()).show();
             }).addOnSuccessListener(taskSnapshot -> {
-
                 imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-
-                    String pictureUrl =  uri.toString();
-                    Log.w("PICTURE URL", pictureUrl);
-
-
-                    //TODO: put on a separate thread
-                    //TODO: add a spinny loading thing while its uploading
-
+                    String pictureUrl = uri.toString();
                     newRecipe.setPhotoPath(pictureUrl);
                     uploadRecipe(newRecipe);
-
                 });
             });
         } else {
             uploadRecipe(newRecipe);
         }
-
     }
+
 
     private void uploadRecipe(Recipe recipe) {
         DatabaseReference recipesRef = FirebaseDatabase.getInstance().getReference().child("recipes");
@@ -306,7 +311,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         newRecipeRef.setValue(recipe)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(AddRecipeActivity.this, "Recipe Uploaded", Toast.LENGTH_SHORT).show();
-                    // TODO: make the spinny loading thing stop then finish
+                    progressBar.setVisibility(View.INVISIBLE);
                     finish();
                 })
                 .addOnFailureListener(e -> {
@@ -332,34 +337,6 @@ public class AddRecipeActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
-    }
-
-    private Bitmap uriToBitmap(Uri uri) {
-        try {
-            InputStream inputStream = getContentResolver().openInputStream(uri);
-            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-            ExifInterface exif = new ExifInterface(getContentResolver().openInputStream(uri));
-            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
-            Matrix matrix = new Matrix();
-            switch (orientation) {
-                case ExifInterface.ORIENTATION_ROTATE_90:
-                    matrix.setRotate(90);
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_180:
-                    matrix.setRotate(180);
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_270:
-                    matrix.setRotate(270);
-                    break;
-                default:
-                    break;
-            }
-            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-            inputStream.close();
-            return bitmap;
-        } catch (Exception e) {
-            return null;
-        }
     }
 
     private String[] formListItemStrings() {

@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (dataSnapshot.hasChild(username)) {
                     handler.post(() -> startNextActivity(username));
                 } else {
-
+                    // TODO remove sample data
                     Toast.makeText(MainActivity.this, "New account created!", Toast.LENGTH_LONG).show();
                     User user = new User(username);
                     ArrayList<String> followers = new ArrayList<>();
