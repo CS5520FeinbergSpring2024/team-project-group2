@@ -6,6 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".activities.SearchActivity">
 
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:menu="@menu/bottom_navigation_menu" />
+
     <SearchView
         android:id="@+id/searchBarID"
         android:layout_width="409dp"
@@ -40,18 +52,18 @@
             android:id="@+id/usersTabID"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Users" />
+            android:text="@string/users" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/recipesTabID"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Recipes" />
+            android:text="@string/recipes" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/APITabID"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="API" />
+            android:text="@string/api" />
     </com.google.android.material.tabs.TabLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

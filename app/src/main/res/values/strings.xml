@@ -34,5 +34,8 @@
     <string name="follow">Follow</string>
     <string name="unfollow">Unfollow</string>
     <string name="followers">Followers</string>
+    <string name="users">Users</string>
+    <string name="api">API</string>
+    <string name="recipes">Recipes</string>
 
 </resources>
