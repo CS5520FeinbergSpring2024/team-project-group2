@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerID"
-        android:layout_width="422dp"
-        android:layout_height="579dp"
+        android:layout_width="match_parent"
+        android:layout_height="450dp"
         app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameID" />
+        app:layout_constraintTop_toBottomOf="@id/userReviewLabelId" />
 
     <TextView
         android:id="@+id/nameID"
-        android:layout_width="15dp"
-        android:layout_height="6dp"
-        android:layout_marginTop="16dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/titleProfileGuideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="username" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
@@ -35,4 +35,87 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0"
         app:menu="@menu/bottom_navigation_menu" />
+
+    <TextView
+        android:id="@+id/userReviewLabelId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerID"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guidelineProfile"
+        tools:text="user reviews" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintGuide_percent=".25"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/seeFollowingButtonId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/following"
+        app:layout_constraintBottom_toTopOf="@id/middleGuidlineId"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titleProfileGuideline" />
+
+    <Button
+        android:id="@+id/unfollowUserButtonId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/unfollow"
+        app:layout_constraintBottom_toTopOf="@id/middleGuidlineId"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titleProfileGuideline" />
+
+    <Button
+        android:id="@+id/followUserButtonId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/follow"
+        app:layout_constraintBottom_toTopOf="@id/middleGuidlineId"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titleProfileGuideline"/>
+
+    <Button
+        android:id="@+id/seeFollowersButtonId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/followers"
+        app:layout_constraintBottom_toTopOf="@id/guidelineProfile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/middleGuidlineId" />
+
+    <Button
+        android:id="@+id/messageUserButtonId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/message"
+        app:layout_constraintBottom_toTopOf="@id/guidelineProfile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/middleGuidlineId" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/titleProfileGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent=".1" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/middleGuidlineId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent=".175" />
 </androidx.constraintlayout.widget.ConstraintLayout>

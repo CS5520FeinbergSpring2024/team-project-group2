@@ -12,6 +12,8 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,24 +40,25 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
     private ArrayList<Recipe> recipeList;
     private boolean isCurrentUser;
     private User user;
-    private String username;
+    private String profileUsername;
+    private String currentUsername;
     private BottomNavigationView bottomNavigationView;
     private Menu menu;
     private MenuItem profileMenuItem;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_page);
-        username = getIntent().getStringExtra("username");
+
+        profileUsername = getIntent().getStringExtra("profileUsername");
+        currentUsername = getIntent().getStringExtra("currentUsername");
         isCurrentUser = getIntent().getBooleanExtra("isCurrentUser", false);
         UserManager userManager = new UserManager();
-        userManager.getUser(username, this);
+        userManager.getUser(currentUsername, this);
         TextView name = findViewById(R.id.nameID);
-        name.setText(username);
-        if (isCurrentUser){
-            name.setText(username+" CURRENT USER");
-        }
+        name.setText(profileUsername);
         setUp();
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -64,6 +67,37 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
         menu = bottomNavigationView.getMenu();
         profileMenuItem = menu.findItem(R.id.profile_icon);
         profileMenuItem.setChecked(true);
+
+    }
+
+    private void setUpPage(){
+        Button followUser = findViewById(R.id.followUserButtonId);
+        Button unfollowUser = findViewById(R.id.unfollowUserButtonId);
+        Button messageUser = findViewById(R.id.messageUserButtonId);
+        Button seeFollowing = findViewById(R.id.seeFollowingButtonId);
+        Button seeFollowers = findViewById(R.id.seeFollowersButtonId);
+        TextView reviewsHeading = findViewById(R.id.userReviewLabelId);
+        if (isCurrentUser){
+            followUser.setVisibility(View.GONE);
+            unfollowUser.setVisibility(View.GONE);
+            messageUser.setVisibility(View.GONE);
+           reviewsHeading.setText("My Reviews:");
+        } else{
+            reviewsHeading.setText(profileUsername+ "'s Reviews:");
+            seeFollowing.setVisibility(View.GONE);
+            seeFollowers.setVisibility(View.GONE);
+            Log.w("THIS USER USERNSME", user.getUsername());
+            for (String follower : user.getFollowing()) {
+                Log.d("User I FOLLOW", follower);
+            }
+            Log.w("DO I FOLLOW", ""+user.getFollowing().contains(profileUsername));
+            if (user.getFollowing().contains(profileUsername)){
+                followUser.setVisibility(View.GONE);
+            } else {
+                unfollowUser.setVisibility(View.GONE);
+            }
+        }
+
 
     }
 
@@ -93,7 +127,7 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
                 }
-            }, username);
+            }, profileUsername);
         }).start();
     }
 
@@ -107,9 +141,8 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
     public void onUserFetched(User user) {
         if (user != null) {
             this.user = user;
-            for (String follower : user.getFollowers()) {
-                Log.d("User", follower);
-            }
+
+            setUpPage();
         }
     }
 
@@ -124,7 +157,7 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
         int itemId = item.getItemId();
         if(itemId == R.id.home_icon) {
             Intent goHome = new Intent(ProfileActivity.this, HomePage.class);
-            goHome.putExtra("username", username);
+            goHome.putExtra("username", profileUsername);
             startActivity(goHome);
             return true;
         } else if(itemId == R.id.search_icon) {
