@@ -21,6 +21,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -46,6 +48,9 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
     private BottomNavigationView bottomNavigationView;
     private Menu menu;
     private MenuItem profileMenuItem;
+    private Button followUser;
+    private Button unfollowUser;
+    private Button messageUser;
 
 
     @Override
@@ -72,9 +77,9 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
     }
 
     private void setUpPage(){
-        Button followUser = findViewById(R.id.followUserButtonId);
-        Button unfollowUser = findViewById(R.id.unfollowUserButtonId);
-        Button messageUser = findViewById(R.id.messageUserButtonId);
+        followUser = findViewById(R.id.followUserButtonId);
+        unfollowUser = findViewById(R.id.unfollowUserButtonId);
+        messageUser = findViewById(R.id.messageUserButtonId);
         Button seeFollowing = findViewById(R.id.seeFollowingButtonId);
         Button seeFollowers = findViewById(R.id.seeFollowersButtonId);
         TextView reviewsHeading = findViewById(R.id.userReviewLabelId);
@@ -95,8 +100,10 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
                 unfollowUser.setVisibility(View.GONE);
             }
             // profile user is a follower of current user
-            if (!user.getFollowers().contains(profileUsername)){
+            if (!(user.getFollowers().contains(profileUsername) && user.getFollowing().contains(profileUsername))){
                 messageUser.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
+            } else{
+                messageUser.setBackgroundColor(getResources().getColor(android.R.color.holo_purple));
             }
         }
     }
@@ -184,9 +191,9 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
         } else if (clickedId == R.id.seeFollowersButtonId){
             Toast.makeText(this, "followers", Toast.LENGTH_LONG).show();
         } else if (clickedId == R.id.followUserButtonId){
-            Toast.makeText(this, "FOLLOW", Toast.LENGTH_LONG).show();
+            handleFollow(true);
         } else if (clickedId == R.id.unfollowUserButtonId){
-            Toast.makeText(this, "UNFOLLOW :(", Toast.LENGTH_LONG).show();
+            handleFollow(false);
         } else if (clickedId == R.id.messageUserButtonId){
             if (!user.getFollowers().contains(profileUsername)){
                 Toast.makeText(this, "You can't message "+ profileUsername +"\n" +
@@ -195,5 +202,81 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
                 Toast.makeText(this, "Message", Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    public void handleFollow(boolean follow) {
+        if (follow) {
+            updateFollowingList(currentUsername, profileUsername);
+            updateFollowersList(profileUsername, currentUsername);
+            followUser.setVisibility(View.GONE);
+            unfollowUser.setVisibility(View.VISIBLE);
+        } else {
+            updateFollowingList(currentUsername, profileUsername);
+            updateFollowersList(profileUsername, currentUsername);
+            followUser.setVisibility(View.VISIBLE);
+            unfollowUser.setVisibility(View.GONE);
+            messageUser.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
+        }
+    }
+
+    private void updateFollowersList(String profileUsername, String currentUsername) {
+        DatabaseReference profileUserRef = FirebaseDatabase.getInstance().getReference().child("users").child(profileUsername).child("followers");
+        profileUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<String> followersList = DataUtil.parseStringArray(dataSnapshot);
+                if (followersList.contains(currentUsername)) {
+                    followersList.remove(currentUsername);
+                } else {
+                    followersList.add(currentUsername);
+                }
+                profileUserRef.setValue(followersList).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (user != null) {
+                            if (followersList.contains(currentUsername)) {
+                                user.getFollowers().add(profileUsername);
+                            } else {
+                                user.getFollowers().remove(profileUsername);
+                            } setUpPage();
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
+
+    private void updateFollowingList(String currentUsername, String profileUsername) {
+        DatabaseReference currentUserRef = FirebaseDatabase.getInstance().getReference().child("users").child(currentUsername).child("following");
+        currentUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<String> followingList = DataUtil.parseStringArray(dataSnapshot);
+                if (followingList.contains(profileUsername)) {
+                    followingList.remove(profileUsername);
+                } else {
+                    followingList.add(profileUsername);
+                }
+                currentUserRef.setValue(followingList).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (user != null) {
+                            if (followingList.contains(profileUsername)) {
+                                user.getFollowing().add(profileUsername);
+                            } else {
+                                user.getFollowing().remove(profileUsername);
+                            }
+                            setUpPage();
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
     }
 }
