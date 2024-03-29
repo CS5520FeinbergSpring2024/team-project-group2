@@ -214,6 +214,7 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
             expandUsers.putExtra("type", "Followers");
             expandUsers.putStringArrayListExtra("list", user.getFollowers());
         }
+        expandUsers.putExtra("currentUsername", currentUsername);
         startActivity(expandUsers);
 
     }

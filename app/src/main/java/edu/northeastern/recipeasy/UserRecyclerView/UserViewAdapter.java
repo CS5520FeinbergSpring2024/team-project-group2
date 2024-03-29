@@ -18,17 +18,22 @@ public class UserViewAdapter extends RecyclerView.Adapter<UserViewHolder> {
 
     private ArrayList<User> userItemList;
     private Context context;
+    private UserItemClickListener listener;
 
     public UserViewAdapter(ArrayList<User> userItemList, Context context) {
         this.userItemList = userItemList;
         this.context = context;
     }
 
+    public void setOnUserClickListener(UserItemClickListener listener) {
+        this.listener = listener;
+    }
+
     @NonNull
     @Override
     public UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_item, parent, false);
-        return new UserViewHolder(v);
+        return new UserViewHolder(v, listener);
     }
 
     @Override

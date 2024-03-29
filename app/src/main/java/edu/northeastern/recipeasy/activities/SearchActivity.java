@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -20,9 +21,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import edu.northeastern.recipeasy.R;
 import edu.northeastern.recipeasy.RecipeRecyclerView.RecipeViewAdapter;
+import edu.northeastern.recipeasy.UserRecyclerView.UserItemClickListener;
 import edu.northeastern.recipeasy.UserRecyclerView.UserViewAdapter;
 import edu.northeastern.recipeasy.domain.Recipe;
 import edu.northeastern.recipeasy.domain.User;
@@ -40,6 +43,7 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
     private User user;
     private TabLayout tabs;
     private SearchView search;
+    private String username;
 
 
     @Override
@@ -47,7 +51,7 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        String username = getIntent().getStringExtra("username");
+        username = getIntent().getStringExtra("username");
         UserManager userManager = new UserManager();
         userManager.getUser(username, this);
 
@@ -107,6 +111,15 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
         userRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         userList = new ArrayList<>();
         userAdapter = new UserViewAdapter(userList, this);
+        UserItemClickListener clickListener = position -> {
+            User clickedUser = userList.get(position);
+            Intent goProfile = new Intent(SearchActivity.this, ProfileActivity.class);
+            goProfile.putExtra("currentUsername", username);
+            goProfile.putExtra("profileUsername", clickedUser.getUsername());
+            goProfile.putExtra("isCurrentUser", Objects.equals(username, clickedUser.getUsername()));
+            startActivity(goProfile);
+        };
+        userAdapter.setOnUserClickListener(clickListener);
         userRecyclerView.setAdapter(userAdapter);
         loadAllUsers();
     }
