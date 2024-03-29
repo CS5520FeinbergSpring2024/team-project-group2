@@ -259,15 +259,10 @@ public class AddRecipeActivity extends AppCompatActivity {
         uploadPhoto();
     }
 
-    // https://firebase.google.com/docs/storage/android/upload-files#:~:text=To%20upload%20a%20file%20to,file%2C%20including%20the%20file%20name.&text=Once%20you've%20created%20an,the%20file%20to%20Cloud%20Storage.
     private void uploadPhoto() {
 
         if (restorePicture){
             Bitmap bitmap = uriToBitmap(dishPictureUri);
-
-//        String filename = username + new Date() + ".jpg";
-//
-//        Log.w("FILE NAME", filename);
 
             StorageReference imageRef = FirebaseStorage.getInstance().getReference()
                     .child("recipePics/" + username +"/" + new Date() + ".jpg");
@@ -306,9 +301,7 @@ public class AddRecipeActivity extends AppCompatActivity {
     private void uploadRecipe(Recipe recipe) {
         DatabaseReference recipesRef = FirebaseDatabase.getInstance().getReference().child("recipes");
         DatabaseReference newRecipeRef = recipesRef.push();
-        // can uncomment this once we have users
-//        updateUserRecipes(newRecipeRef.getKey());
-        Log.w("RECIPE KEY",""+newRecipeRef.getKey() );
+        updateUserRecipes(newRecipeRef.getKey());
 
         newRecipeRef.setValue(recipe)
                 .addOnSuccessListener(aVoid -> {
