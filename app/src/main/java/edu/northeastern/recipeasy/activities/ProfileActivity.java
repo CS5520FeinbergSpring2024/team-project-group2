@@ -33,7 +33,8 @@ import edu.northeastern.recipeasy.utils.DataUtil;
 import edu.northeastern.recipeasy.utils.IUserFetchListener;
 import edu.northeastern.recipeasy.utils.UserManager;
 
-public class ProfileActivity extends AppCompatActivity implements IUserFetchListener, NavigationBarView.OnItemSelectedListener {
+public class ProfileActivity extends AppCompatActivity implements IUserFetchListener,
+        NavigationBarView.OnItemSelectedListener, View.OnClickListener {
 
     private RecyclerView recipeRecyclerView;
     private RecipeViewAdapter recipeAdapter;
@@ -86,19 +87,18 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
             reviewsHeading.setText(profileUsername+ "'s Reviews:");
             seeFollowing.setVisibility(View.GONE);
             seeFollowers.setVisibility(View.GONE);
-            Log.w("THIS USER USERNSME", user.getUsername());
-            for (String follower : user.getFollowing()) {
-                Log.d("User I FOLLOW", follower);
-            }
-            Log.w("DO I FOLLOW", ""+user.getFollowing().contains(profileUsername));
+
+            // current user is a follower
             if (user.getFollowing().contains(profileUsername)){
                 followUser.setVisibility(View.GONE);
             } else {
                 unfollowUser.setVisibility(View.GONE);
             }
+            // profile user is a follower of current user
+            if (!user.getFollowers().contains(profileUsername)){
+                messageUser.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
+            }
         }
-
-
     }
 
     public void setUp() {
@@ -174,5 +174,26 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onClick(View v) {
+        int clickedId = v.getId();
+        if (clickedId == R.id.seeFollowingButtonId){
+            Toast.makeText(this, "following", Toast.LENGTH_LONG).show();
+        } else if (clickedId == R.id.seeFollowersButtonId){
+            Toast.makeText(this, "followers", Toast.LENGTH_LONG).show();
+        } else if (clickedId == R.id.followUserButtonId){
+            Toast.makeText(this, "FOLLOW", Toast.LENGTH_LONG).show();
+        } else if (clickedId == R.id.unfollowUserButtonId){
+            Toast.makeText(this, "UNFOLLOW :(", Toast.LENGTH_LONG).show();
+        } else if (clickedId == R.id.messageUserButtonId){
+            if (!user.getFollowers().contains(profileUsername)){
+                Toast.makeText(this, "You can't message "+ profileUsername +"\n" +
+                        profileUsername +" does not follow you!", Toast.LENGTH_LONG).show();
+            } else{
+                Toast.makeText(this, "Message", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }
