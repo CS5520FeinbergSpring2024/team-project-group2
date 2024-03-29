@@ -96,7 +96,7 @@ public class AddRecipeActivity extends AppCompatActivity implements View.OnClick
             public void handleOnBackPressed() {
                 AlertDialog.Builder builder = new AlertDialog.Builder(AddRecipeActivity.this);
                 builder.setTitle("Go back?");
-                builder.setMessage("Are you sure you want to go back? The total distance data will be lost.");
+                builder.setMessage("Are you sure you want to go back? You will lose your progress on this recipe.");
                 builder.setPositiveButton("YES", (dialog, which) -> finish());
                 builder.setNegativeButton("NO", (dialog, which) -> dialog.cancel());
                 builder.show();
@@ -353,13 +353,16 @@ public class AddRecipeActivity extends AppCompatActivity implements View.OnClick
 
         for (int i = 0; i < ingredientList.size(); i++) {
             ListItem item = ingredientList.get(i);
-            ingredients.append(item.getItem()).append(";");
+            if (!item.getItem().equals("")) {
+                ingredients.append(item.getItem()).append(";;");
+            }
         }
         for (int i = 0; i < recipeStepsList.size(); i++) {
             ListItem stepItem = recipeStepsList.get(i);
-            recipeSteps.append(stepItem.getLabel())
-                    .append(" ").append(i+1).append(": ")
-                    .append(stepItem.getItem()).append(";");
+            if (!stepItem.getItem().equals("")) {
+                recipeSteps.append(i + 1).append(". ")
+                        .append(stepItem.getItem()).append(";;");
+            }
         }
         return new String[]{ingredients.toString(), recipeSteps.toString()};
     }

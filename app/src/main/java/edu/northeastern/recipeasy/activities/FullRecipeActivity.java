@@ -6,11 +6,11 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 import edu.northeastern.recipeasy.R;
 import edu.northeastern.recipeasy.domain.Recipe;
@@ -25,23 +25,6 @@ public class FullRecipeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_full_recipe);
 
         recipe = (Recipe) getIntent().getSerializableExtra("recipe");
-//        recipe = new Recipe(
-//                "Spaghetti Carbonara",
-//                "John Doe",
-//                "Italian",
-//                20,
-//                30,
-//                4,
-//                false,
-//                false,
-//                false,
-//                "200g spaghetti\n100g pancetta\n2 eggs\n50g grated Parmesan cheese\nsalt\npepper",
-//                "1. Cook spaghetti according to package instructions.\n2. In a pan, fry pancetta until crispy.\n3. In a bowl, whisk together eggs and Parmesan cheese.\n4. Drain spaghetti and add to the pan with pancetta.\n5. Remove from heat and quickly stir in egg mixture.n6. Season with salt and pepper to taste. Serve immediately.",
-//                "/path/to/photo.jpg",
-//                450,
-//                10,
-//                100
-//        );
 
         TabLayout tabs = findViewById(R.id.tabView);
         TextView longContextTextView = findViewById(R.id.longContentTextId);
@@ -67,6 +50,8 @@ public class FullRecipeActivity extends AppCompatActivity {
             }
         }).start();
 
+        String ingredientsData = String.join("\n", recipe.getIngredients().split(Pattern.quote(";;")));
+        String stepsData = String.join("\n", recipe.getSteps().split(Pattern.quote(";;")));
 
         // TODO handle null values
         recipeNameTextView.setText(recipe.getDishName());
@@ -74,16 +59,16 @@ public class FullRecipeActivity extends AppCompatActivity {
         caloriesTextView.setText(recipe.getCalories().toString() + " Calories");
         prepTimeTextView.setText("Prep time: " + recipe.getPrepTime().toString() + " minutes");
         servingsTextView.setText("Servings: " + recipe.getServings().toString());
-        longContextTextView.setText(recipe.getIngredients());
+        longContextTextView.setText(ingredientsData);
 
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
                 if (position == 0) {
-                    longContextTextView.setText(recipe.getIngredients());
+                    longContextTextView.setText(ingredientsData);
                 } else if (position == 1) {
-                    longContextTextView.setText(recipe.getSteps());
+                    longContextTextView.setText(stepsData);
                 }
             }
 
