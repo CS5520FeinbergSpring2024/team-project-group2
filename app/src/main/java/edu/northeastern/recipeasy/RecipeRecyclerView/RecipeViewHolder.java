@@ -31,6 +31,6 @@ public class RecipeViewHolder extends RecyclerView.ViewHolder{
         dietaryRestrictions = itemView.findViewById(R.id.dietaryRestrictionsID);
         calories = itemView.findViewById(R.id.caloriesID);
         image = itemView.findViewById(R.id.imageViewID);
-        seeMore = itemView.findViewById(R.id.viewRecipeButtonID);
+        seeMore = itemView.findViewById(R.id.viewProfileButtonID);
     }
 }
