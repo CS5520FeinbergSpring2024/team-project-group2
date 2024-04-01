@@ -15,7 +15,7 @@
         android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#efe3fd" >
+        android:background="#e0d0af" >
 
         <TextView
             android:id="@+id/listItemLabelId"
@@ -26,21 +26,24 @@
             app:layout_constraintHorizontal_bias="0.2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            android:textColor="@color/black"
+            android:textStyle="bold"
             tools:text="Step 1:" />
 
         <EditText
             android:id="@+id/editListItemId"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:ems="10"
             android:gravity="start|top"
+            android:importantForAutofill="no"
             android:inputType="textMultiLine"
-            app:layout_constraintStart_toEndOf="@id/listItemLabelId"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/listItemLabelId"
+            android:minHeight="48dp"
             app:layout_constraintBottom_toBottomOf="@id/listItemLabelId"
-            android:layout_marginStart="10dp"
-            android:importantForAutofill="no" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/listItemLabelId"
+            app:layout_constraintTop_toTopOf="@id/listItemLabelId" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

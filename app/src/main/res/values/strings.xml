@@ -39,5 +39,6 @@
     <string name="recipes">Recipes</string>
     <string name="username_label">Username</string>
     <string name="view_profile">View Profile</string>
+    <string name="see_more">See More</string>
 
 </resources>

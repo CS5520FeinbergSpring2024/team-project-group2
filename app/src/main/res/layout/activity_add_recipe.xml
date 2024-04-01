@@ -250,7 +250,9 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/guidelinev2"
                 app:layout_constraintTop_toBottomOf="@+id/spinnerAddNewCuisine"
-                app:values="@array/single_calorie_value" />
+                app:values="@array/single_calorie_value"
+                app:thumbColor="#800000"
+                app:trackColorActive="#800000"/>
 
             <EditText
                 android:id="@+id/prepTimeId"
@@ -369,6 +371,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/ingredientsRecyclerViewId"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guidelinev2"
+                android:backgroundTint="#800000"
                 app:layout_constraintTop_toBottomOf="@+id/guidelineBottomDietaryRestrictionsSection" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -403,6 +406,7 @@
                 app:layout_constraintBottom_toTopOf="@id/recipeLabelBottomGuideline"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
+                android:backgroundTint="#800000"
                 app:layout_constraintStart_toEndOf="@+id/recipeStepsLabelId"
                 app:layout_constraintTop_toBottomOf="@+id/guidelineBottomIngredientsRV" />
 
@@ -439,6 +443,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/guidelineBottomUploadButtons"
                 app:layout_constraintEnd_toStartOf="@id/galleryButtonId"
                 app:layout_constraintStart_toStartOf="parent"
+                android:backgroundTint="#800000"
                 app:layout_constraintTop_toBottomOf="@+id/guidelineBottomCameraLabel" />
 
             <Button
@@ -450,6 +455,7 @@
                 android:onClick="onClick"
                 app:layout_constraintBottom_toTopOf="@+id/guidelineBottomUploadButtons"
                 app:layout_constraintEnd_toEndOf="parent"
+                android:backgroundTint="#800000"
                 app:layout_constraintStart_toEndOf="@id/cameraButtonId"
                 app:layout_constraintTop_toBottomOf="@+id/guidelineBottomCameraLabel"
                 tools:ignore="DuplicateSpeakableTextCheck" />
@@ -474,6 +480,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.96"
+                android:backgroundTint="#800000"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/guidelineBottomCameraInput" />
 

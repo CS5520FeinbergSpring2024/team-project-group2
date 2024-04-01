@@ -14,7 +14,7 @@ public class RecipeViewHolder extends RecyclerView.ViewHolder{
     public TextView cuisine;
     public TextView totalTime;
     public TextView servings;
-    public ImageView image;
+//    public ImageView image;
 
     public TextView dietaryRestrictions;
     public TextView calories;
@@ -30,7 +30,7 @@ public class RecipeViewHolder extends RecyclerView.ViewHolder{
         servings = itemView.findViewById(R.id.servingsID);
         dietaryRestrictions = itemView.findViewById(R.id.dietaryRestrictionsID);
         calories = itemView.findViewById(R.id.caloriesID);
-        image = itemView.findViewById(R.id.imageViewID);
+//        image = itemView.findViewById(R.id.imageViewID);
         seeMore = itemView.findViewById(R.id.viewProfileButtonID);
     }
 }

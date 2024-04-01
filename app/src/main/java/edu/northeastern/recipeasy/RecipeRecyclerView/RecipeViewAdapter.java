@@ -54,21 +54,20 @@ public class RecipeViewAdapter extends RecyclerView.Adapter<RecipeViewHolder> {
             intent.putExtra("recipe", recipe);
             view.getContext().startActivity(intent);
         });
-        holder.image.setImageResource(R.drawable.no_image);
-
-        new Thread(() -> {
-            try {
-                Bitmap picBitMap = DataUtil.downloadFoodPic(recipe.getPhotoPath());
-
-                if(! recipe.getPhotoPath().equals("")){
-                    if (picBitMap != null) {
-                        holder.image.post(() -> holder.image.setImageBitmap(picBitMap));
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
+//        holder.image.setImageResource(R.drawable.no_image);
+//        new Thread(() -> {
+//            try {
+//                Bitmap picBitMap = DataUtil.downloadFoodPic(recipe.getPhotoPath());
+//
+//                if(! recipe.getPhotoPath().equals("")){
+//                    if (picBitMap != null) {
+//                        holder.image.post(() -> holder.image.setImageBitmap(picBitMap));
+//                    }
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }).start();
 
 
     }

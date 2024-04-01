@@ -13,7 +13,7 @@
         android:layout_marginVertical="8dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        app:cardBackgroundColor="#A7E0FA"
+        app:cardBackgroundColor="#e0d0af"
         app:cardCornerRadius="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -24,27 +24,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="4dp">
+           >
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="4dp">
+                >
 
-                <ImageView
-                    android:id="@+id/imageViewID"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:adjustViewBounds="true"
-                    android:contentDescription="desc"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:srcCompat="@tools:sample/avatars"
-                    app:layout_constraintEnd_toStartOf="@+id/verticalLayout"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:layout_marginStart="10dp"/>
+<!--                <ImageView-->
+<!--                    android:id="@+id/imageViewID"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:adjustViewBounds="true"-->
+<!--                    android:contentDescription="desc"-->
+<!--                    app:layout_constraintTop_toTopOf="parent"-->
+<!--                    tools:srcCompat="@tools:sample/avatars"-->
+<!--                    app:layout_constraintEnd_toStartOf="@+id/verticalLayout"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    android:layout_marginStart="10dp"/>-->
 
                 <LinearLayout
                     android:id="@+id/verticalLayout"
@@ -62,24 +62,34 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/black"
-                        android:textSize="16sp"
+                        android:textSize="25sp"
                         android:textStyle="bold"
                         tools:text="Recipe Name"
-                        android:layout_marginStart="50dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginTop="10dp"/>
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="10dp"
+                        />
 
                     <TextView
                         android:id="@+id/cuisineID"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/black"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:textStyle="bold|italic"
                         tools:text="Cuisine"
-                        android:layout_marginStart="50dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginTop="10dp"/>
+                        android:layout_marginStart="35dp"
+                        />
+
+                    <TextView
+                        android:id="@+id/caloriesID"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        android:textStyle="normal|italic"
+                        tools:text="15 Calories"
+                        android:layout_marginStart="35dp"
+                        android:layout_marginEnd="10dp" />
 
                     <TextView
                         android:id="@+id/totalTimeID"
@@ -89,9 +99,9 @@
                         android:textSize="14sp"
                         android:textStyle="normal"
                         tools:text="Total Time: 30 minutes"
-                        android:layout_marginStart="50dp"
+                        android:layout_marginStart="35dp"
                         android:layout_marginEnd="10dp"
-                        android:layout_marginTop="10dp"/>
+                        android:layout_marginTop="1dp"/>
 
                     <TextView
                         android:id="@+id/servingsID"
@@ -101,9 +111,9 @@
                         android:textSize="14sp"
                         android:textStyle="normal"
                         tools:text="Servings: 4"
-                        android:layout_marginStart="50dp"
+                        android:layout_marginStart="35dp"
                         android:layout_marginEnd="10dp"
-                        android:layout_marginTop="10dp"/>
+                        android:layout_marginTop="1dp"/>
 
                     <TextView
                         android:id="@+id/dietaryRestrictionsID"
@@ -113,30 +123,19 @@
                         android:textSize="14sp"
                         android:textStyle="normal"
                         tools:text="Dietary Restrictions: None"
-                        android:layout_marginStart="50dp"
+                        android:layout_marginStart="35dp"
                         android:layout_marginEnd="10dp"
-                        android:layout_marginTop="10dp"/>
-
-                    <TextView
-                        android:id="@+id/caloriesID"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginVertical="4dp"
-                        android:textColor="@color/black"
-                        android:textSize="14sp"
-                        android:textStyle="normal"
-                        tools:text="15 Calories"
-                        android:layout_marginStart="50dp"
-                        android:layout_marginEnd="10dp" />
+                        android:layout_marginTop="1dp"/>
 
                     <Button
                         android:id="@+id/viewProfileButtonID"
                         android:layout_width="150dp"
                         android:layout_height="50dp"
                         android:layout_marginVertical="4dp"
-                        android:text="See More"
-                        android:layout_marginStart="50dp"
-                        android:layout_marginEnd="50dp"/>
+                        android:text="@string/see_more"
+                        android:layout_marginStart="35dp"
+                        android:layout_marginEnd="50dp"
+                        android:backgroundTint="#800000"/>
                 </LinearLayout>
 
             </LinearLayout>
