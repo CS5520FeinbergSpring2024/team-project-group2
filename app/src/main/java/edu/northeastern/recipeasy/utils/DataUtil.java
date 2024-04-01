@@ -15,6 +15,8 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Array;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -125,5 +127,11 @@ public class DataUtil {
         InputStream input = conn.getInputStream();
         return BitmapFactory.decodeStream(input);
 
+    }
+
+    public static String formatMessageTimeStamp(LocalDateTime dateTime) {
+        String monthAndDate = dateTime.format(DateTimeFormatter.ofPattern("MMM d"));
+        String time = dateTime.format(DateTimeFormatter.ofPattern("h:mm a"));
+        return  monthAndDate + " • " + time;
     }
 }

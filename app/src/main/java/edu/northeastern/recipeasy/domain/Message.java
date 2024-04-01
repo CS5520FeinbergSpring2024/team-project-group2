@@ -1,19 +1,24 @@
 package edu.northeastern.recipeasy.domain;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Calendar;
+import java.util.TimeZone;
+
 public class Message {
     private String senderUsername;
     private String receiverUsername;
     private String message;
-    private Date timeStamp;
+    private ZonedDateTime timeStamp;
 
     public Message(String senderUsername, String receiverUsername, String message) {
         this.senderUsername = senderUsername;
         this.receiverUsername = receiverUsername;
         this.message = message;
-        this.timeStamp = new Date();
+        ZoneId zone = TimeZone.getDefault().toZoneId();
+        this.timeStamp = ZonedDateTime.now(zone);
     }
-
     public String getSenderUsername() {
         return senderUsername;
     }
@@ -38,11 +43,11 @@ public class Message {
         this.message = message;
     }
 
-    public Date getTimeStamp() {
+    public ZonedDateTime getTimeStamp() {
         return timeStamp;
     }
 
-    public void setTimeStamp(Date timeStamp) {
+    public void setTimeStamp(ZonedDateTime timeStamp) {
         this.timeStamp = timeStamp;
     }
 }

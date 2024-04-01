@@ -1,6 +1,8 @@
 package edu.northeastern.recipeasy.MessageRecyclerView;
 
 import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -8,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+import edu.northeastern.recipeasy.R;
+import edu.northeastern.recipeasy.RecipeRecyclerView.RecipeViewHolder;
 import edu.northeastern.recipeasy.domain.Message;
 import edu.northeastern.recipeasy.domain.MessageType;
 
@@ -24,24 +28,39 @@ public class MessageViewAdapter extends RecyclerView.Adapter{
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
+        if (viewType == MessageType.SENT.getValue()) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.sent_message_card, parent, false);
+            return new SentMessageViewHolder(v);
+        } else {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.received_message_card, parent, false);
+            return new ReceivedMessageViewHolder(v);
+        }
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        Message message = messages.get(position);
 
+        if (holder.getItemViewType() == MessageType.SENT.getValue()) {
+            ((SentMessageViewHolder) holder).bind(message);
+        } else {
+            ((ReceivedMessageViewHolder) holder).bind(message);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return messages.size();
     }
 
-    private MessageType getMessageType(Message message) {
+    @Override
+    public int getItemViewType(int position) {
+        Message message = messages.get(position);
         if (message.getSenderUsername().equals(currentUsername)) {
-            return MessageType.SENT;
+            return MessageType.SENT.getValue();
         } else {
-            return MessageType.RECEIVED;
+            return MessageType.RECEIVED.getValue();
         }
     }
+
 }
