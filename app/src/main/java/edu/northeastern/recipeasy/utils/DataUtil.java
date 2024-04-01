@@ -2,6 +2,7 @@ package edu.northeastern.recipeasy.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import com.google.android.gms.common.util.Strings;
 import com.google.firebase.database.DataSnapshot;
@@ -16,7 +17,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Array;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -133,5 +136,20 @@ public class DataUtil {
         String monthAndDate = dateTime.format(DateTimeFormatter.ofPattern("MMM d"));
         String time = dateTime.format(DateTimeFormatter.ofPattern("h:mm a"));
         return  monthAndDate + " • " + time;
+    }
+
+    public static ZonedDateTime stringToZonedDateTime(String stringDateTime) {
+        try {
+            // Parse the string to ZonedDateTime using ISO format
+            return ZonedDateTime.parse(stringDateTime);
+        } catch (DateTimeParseException e) {
+            // Handle parsing errors
+            Log.w("DateParser","Error parsing the input string: " + e.getMessage());
+            return null;
+        }
+
+    }
+    public static String zonedDatetimeToString(ZonedDateTime zonedDateTime) {
+        return zonedDateTime.format(DateTimeFormatter.ISO_ZONED_DATE_TIME);
     }
 }
