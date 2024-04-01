@@ -1,7 +1,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -12,7 +11,7 @@
         android:layout_marginVertical="8dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        app:cardBackgroundColor="#A7E0FA"
+        app:cardBackgroundColor="#e0d0af"
         app:cardCornerRadius="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -27,13 +26,15 @@
 
             <TextView
                 android:id="@+id/usernameID"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_width="87dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
-                android:contentDescription="desc"
-                android:text="Username"
+                android:contentDescription="@string/username"
+                android:text="@string/username_label"
+                android:textStyle="bold"
+                android:textColor="@color/black"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -42,11 +43,11 @@
                 android:id="@+id/viewProfileButtonID"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
-                android:layout_marginVertical="4dp"
-                android:layout_marginStart="10dp"
                 android:layout_weight="1"
-                android:text="View Profile"
-                android:textSize="12sp"/>
+                android:text="@string/view_profile"
+                android:textSize="12sp"
+                android:layout_marginEnd="20dp"
+                android:backgroundTint="#800000"/>
 
         </LinearLayout>
 

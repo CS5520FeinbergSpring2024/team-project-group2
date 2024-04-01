@@ -37,5 +37,7 @@
     <string name="users">Users</string>
     <string name="api">API</string>
     <string name="recipes">Recipes</string>
+    <string name="username_label">Username</string>
+    <string name="view_profile">View Profile</string>
 
 </resources>
