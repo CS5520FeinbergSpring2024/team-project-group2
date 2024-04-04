@@ -202,8 +202,8 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
             updateTheirFollowersListUnfollow();
         } else if (clickedId == R.id.messageUserButtonId){
             if (!user.getFollowers().contains(profileUsername)){
-                Toast.makeText(this, "You can't message "+ profileUsername +"\n" +
-                        profileUsername +" does not follow you!", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "You can't message "+ profileUsername +"\n"
+                        + "You must mutually follow!", Toast.LENGTH_LONG).show();
             } else{
                 Toast.makeText(this, "Message", Toast.LENGTH_LONG).show();
             }

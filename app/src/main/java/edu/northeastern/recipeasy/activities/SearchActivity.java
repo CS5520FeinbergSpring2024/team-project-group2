@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -47,6 +48,8 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
     private SearchView search;
     private String username;
     private int position;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private String filterText = "";
 
 
     @Override
@@ -57,7 +60,7 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
         username = getIntent().getStringExtra("username");
         UserManager userManager = new UserManager();
         userManager.getUser(username, this);
-
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
         tabs = findViewById(R.id.tabLayoutID);
 
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -81,12 +84,10 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
             }
         });
 
@@ -94,7 +95,6 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
         search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Log.w("ONTEXTSUMBIT", query);
                 filterList(query);
                 return true;
             }
@@ -102,8 +102,22 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
             @Override
             public boolean onQueryTextChange(String newText) {
                 filterList(newText);
-                Log.w("ONTEXTCHAGE", newText);
+                filterText = newText;
                 return false;
+            }
+        });
+
+
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            swipeRefreshLayout.setRefreshing(false);
+            if (position == 0) {
+                loadAllUsers();
+            } else if (position == 1) {
+                loadAllRecipes();
+            }
+            else if (position == 2) {
+                Toast.makeText(getApplicationContext(), "API", Toast.LENGTH_SHORT).show();
+
             }
         });
 
@@ -183,8 +197,10 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     ArrayList<Recipe> recipes = DataUtil.parseRecipes(dataSnapshot);
                     recipeList.clear();
+                    originalRecipeList.clear();
                     recipeList.addAll(recipes);
                     originalRecipeList.addAll(recipes);
+                    filterList(filterText);
                     new Handler(Looper.getMainLooper()).post(() -> recipeAdapter.notifyDataSetChanged());
                 }
 
@@ -202,8 +218,10 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     ArrayList<User> users = DataUtil.parseUsers(dataSnapshot);
                     userList.clear();
+                    originalUserList.clear();
                     userList.addAll(users);
                     originalUserList.addAll(users);
+                    filterList(filterText);
                     new Handler(Looper.getMainLooper()).post(() -> userAdapter.notifyDataSetChanged());
                 }
                 @Override
