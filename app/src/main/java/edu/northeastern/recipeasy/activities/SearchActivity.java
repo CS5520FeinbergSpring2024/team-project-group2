@@ -39,11 +39,14 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
     private RecipeViewAdapter recipeAdapter;
     private ArrayList<User> userList;
     private ArrayList<Recipe> recipeList;
+    private ArrayList<User> originalUserList = new ArrayList<>();
+    private ArrayList<Recipe> originalRecipeList = new ArrayList<>();
     private RecyclerView recipeRecyclerView;
     private User user;
     private TabLayout tabs;
     private SearchView search;
     private String username;
+    private int position;
 
 
     @Override
@@ -60,7 +63,7 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                int position = tab.getPosition();
+                position = tab.getPosition();
                 if (position == 0) {
                     Toast.makeText(getApplicationContext(), "Hi", Toast.LENGTH_SHORT).show();
                     setUpUserRecyclerView();
@@ -91,18 +94,57 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
         search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-
-
+                Log.w("ONTEXTSUMBIT", query);
+                filterList(query);
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-
+                filterList(newText);
+                Log.w("ONTEXTCHAGE", newText);
                 return false;
             }
         });
 
+    }
+
+    private void filterList(String text){
+        if (position == 0) {
+            filterUserList(text);
+        } else if (position == 1) {
+            filterRecipeList(text);
+        }
+        else if (position == 2) {
+            Toast.makeText(getApplicationContext(), "API", Toast.LENGTH_SHORT).show();
+
+        }
+
+    }
+
+    private void filterUserList(String text) {
+        ArrayList<User> filteredList = new ArrayList<>();
+        for (User u : originalUserList) {
+            if (u.getUsername().toLowerCase().contains(text.toLowerCase())) {
+                filteredList.add(u);
+            }
+        }
+        userList.clear();
+        userList.addAll(filteredList);
+        userAdapter.notifyDataSetChanged();
+    }
+
+    private void filterRecipeList(String text) {
+        ArrayList<Recipe> filteredList = new ArrayList<>();
+        for (Recipe r : originalRecipeList) {
+            if (r.getDishName().toLowerCase().contains(text.toLowerCase())
+                    || r.getCuisine().toLowerCase().contains(text.toLowerCase())) {
+                filteredList.add(r);
+            }
+        }
+        recipeList.clear();
+        recipeList.addAll(filteredList);
+        recipeAdapter.notifyDataSetChanged();
     }
 
     public void setUpUserRecyclerView() {
@@ -142,6 +184,7 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
                     ArrayList<Recipe> recipes = DataUtil.parseRecipes(dataSnapshot);
                     recipeList.clear();
                     recipeList.addAll(recipes);
+                    originalRecipeList.addAll(recipes);
                     new Handler(Looper.getMainLooper()).post(() -> recipeAdapter.notifyDataSetChanged());
                 }
 
@@ -160,6 +203,7 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
                     ArrayList<User> users = DataUtil.parseUsers(dataSnapshot);
                     userList.clear();
                     userList.addAll(users);
+                    originalUserList.addAll(users);
                     new Handler(Looper.getMainLooper()).post(() -> userAdapter.notifyDataSetChanged());
                 }
                 @Override
