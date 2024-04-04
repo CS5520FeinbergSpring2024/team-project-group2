@@ -11,10 +11,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
@@ -50,6 +52,9 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
     private int position;
     private SwipeRefreshLayout swipeRefreshLayout;
     private String filterText = "";
+    private BottomNavigationView bottomNavigationView;
+    private Menu menu;
+    private MenuItem searchMenuItem;
 
 
     @Override
@@ -63,17 +68,21 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
         tabs = findViewById(R.id.tabLayoutID);
 
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnItemSelectedListener(this);
+
+        menu = bottomNavigationView.getMenu();
+        searchMenuItem = menu.findItem(R.id.search_icon);
+        searchMenuItem.setChecked(true);
+
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 position = tab.getPosition();
                 if (position == 0) {
-                    Toast.makeText(getApplicationContext(), "Hi", Toast.LENGTH_SHORT).show();
                     setUpUserRecyclerView();
                 } else if (position == 1) {
-                    Toast.makeText(getApplicationContext(), "Recipes", Toast.LENGTH_SHORT).show();
                     setUpRecipeRecyclerView();
-
                 }
 
                 else if (position == 2) {
@@ -106,7 +115,6 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
                 return false;
             }
         });
-
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
             swipeRefreshLayout.setRefreshing(false);
@@ -248,13 +256,6 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
         }
     }
 
-
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        return false;
-    }
-
     @Override
     public void onUserFetched(User user) {
         if (user != null) {
@@ -271,5 +272,33 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
 
         Log.d("User", "User not found");
 
+    }
+
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        Log.w("NAV ITEM SELECTED", ""+ item.getItemId() + " "+R.id.home_icon + " "+ R.id.profile_icon);
+        int itemId = item.getItemId();
+        if(itemId == R.id.home_icon) {
+            Intent goHome = new Intent(SearchActivity.this, HomePage.class);
+            goHome.putExtra("username", username);
+            startActivity(goHome);
+            return true;
+        } else if(itemId == R.id.profile_icon) {
+            Intent goProfile = new Intent(SearchActivity.this, ProfileActivity.class);
+            goProfile.putExtra("currentUsername", username);
+            goProfile.putExtra("profileUsername", username);
+            goProfile.putExtra("isCurrentUser", true);
+            startActivity(goProfile);
+            return true;
+        }
+        else if(itemId == R.id.message_icon) {
+            Toast.makeText(this, "MESSAGES", Toast.LENGTH_LONG).show();
+//            Intent goMessages = new Intent(HomePage.this, MessageActivity.class);
+//            goMessages.putExtra("username", user.getUsername());
+//            startActivity(goMessages);
+            return true;
+        }
+        return false;
     }
 }

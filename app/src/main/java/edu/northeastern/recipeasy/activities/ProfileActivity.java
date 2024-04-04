@@ -210,9 +210,6 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
         }
     }
 
-    private void handleUnfollow() {
-
-    }
 
     private void handleSeeFollowers(int clickedId) {
         Intent expandUsers = new Intent(ProfileActivity.this, SeeFollowersFollowingActivity.class);
