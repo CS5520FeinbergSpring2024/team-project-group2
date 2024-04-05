@@ -23,6 +23,7 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.northeastern.recipeasy.domain.Message;
 import edu.northeastern.recipeasy.domain.Recipe;
 import edu.northeastern.recipeasy.domain.User;
 
@@ -85,6 +86,20 @@ public class DataUtil {
     }
 
 
+    public static ArrayList<Message> parseMessages(DataSnapshot dataSnapshot) {
+        ArrayList<Message> messageList = new ArrayList<>();
+        for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+            String timeStamp = childSnapshot.child("timeStamp").getValue(String.class);
+            String messageContent = childSnapshot.child("message").getValue(String.class);
+            String senderUsername = childSnapshot.child("senderUsername").getValue(String.class);
+            String receiverUsername = childSnapshot.child("receiverUsername").getValue(String.class);
+
+            Message message = new Message(senderUsername, receiverUsername, messageContent, timeStamp);
+
+            messageList.add(message);
+        }
+        return messageList;
+    }
 
     public static ArrayList<Recipe> getRecipesPeopleIFollow(DataSnapshot snapshot, ArrayList<String> following){
         ArrayList<Recipe> recipes = new ArrayList<>();

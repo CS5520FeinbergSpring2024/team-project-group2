@@ -197,9 +197,11 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
                 filteredList.add(u);
             }
         }
-        userList.clear();
-        userList.addAll(filteredList);
-        userAdapter.notifyDataSetChanged();
+        if (userList != null) {
+            userList.clear();
+            userList.addAll(filteredList);
+            userAdapter.notifyDataSetChanged();
+        }
     }
 
     private void filterRecipeList(String text) {
@@ -210,9 +212,11 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
                 filteredList.add(r);
             }
         }
-        recipeList.clear();
-        recipeList.addAll(filteredList);
-        recipeAdapter.notifyDataSetChanged();
+        if (recipeList != null) {
+            recipeList.clear();
+            recipeList.addAll(filteredList);
+            recipeAdapter.notifyDataSetChanged();
+        }
     }
 
     public void setUpUserRecyclerView() {

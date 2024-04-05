@@ -6,13 +6,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,9 +24,7 @@ import java.util.Collections;
 import edu.northeastern.recipeasy.MessageRecyclerView.MessageViewAdapter;
 import edu.northeastern.recipeasy.R;
 import edu.northeastern.recipeasy.domain.Message;
-import edu.northeastern.recipeasy.domain.User;
-import edu.northeastern.recipeasy.utils.IUserFetchListener;
-import edu.northeastern.recipeasy.utils.UserManager;
+import edu.northeastern.recipeasy.utils.DataUtil;
 
 public class MessageActivity extends AppCompatActivity implements View.OnClickListener {
     private MessageViewAdapter messageAdapter;
@@ -53,23 +49,28 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         // if doesn't exist, create it in currentUser and otherUser
         // if it does, pull the list of messages into messages arraylist
 
-        if (savedInstanceState != null) {
-            this.messages = savedInstanceState.getParcelableArrayList(MESSAGES_KEY);
-        } else {
-            initializeMessageList();
-        }
-        
+//        if (savedInstanceState != null) {
+//            this.messages = savedInstanceState.getParcelableArrayList(MESSAGES_KEY);
+//        } else {
+//            initializeMessageList();
+//        }
+
+        initializeMessageList();
+        Log.w("Convo", "Message List Initialized");
+
         toolBarTextView = findViewById(R.id.toolBarId);
         newMessageContentTextview = findViewById(R.id.messageTextInputId);
         toolBarTextView.setText(otherUsername);
+    }
 
-        layoutManager = new LinearLayoutManager(this);
-        layoutManager.setStackFromEnd(true);
-        messageRecycler = findViewById(R.id.messageRecyclerViewId);
-        messageRecycler.setLayoutManager(layoutManager);
-        messageAdapter = new MessageViewAdapter(this, currentUsername, messages);
-        messageRecycler.setAdapter(messageAdapter);
-
+    private void onMessageSnapshotReceived() {
+            layoutManager = new LinearLayoutManager(this);
+            layoutManager.setStackFromEnd(true);
+            messageRecycler = findViewById(R.id.messageRecyclerViewId);
+            messageRecycler.setLayoutManager(layoutManager);
+            messageAdapter = new MessageViewAdapter(this, currentUsername, messages);
+            messageRecycler.setAdapter(messageAdapter);
+            Log.w("Convo", "Recycler done");
     }
 
     private void initializeMessageList() {
@@ -83,13 +84,18 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
                 if (dataSnapshot.exists()) {
                     // "otherUsername" exists, populate the arraylist of messages
                     DataSnapshot otherUserMessagesSnapshot = dataSnapshot.child("messages");
+                    messages = DataUtil.parseMessages(otherUserMessagesSnapshot);
                     Log.w("Convo", otherUserMessagesSnapshot + "");
-                    // Now you can read or manipulate the messages under "chloe"
-                    // e.g., display messages in a list, add new messages, etc.
+
+                    // initialize recyclerview
+                    onMessageSnapshotReceived();
+
+//                    messages.clear();
+//                    messages.addAll(messagesList);
+//                    messageAdapter.notifyDataSetChanged();
                 } else {
                     // "otherUsername" doesn't exist, create it
                     convosRef.child(otherUsername).setValue(true);
-                    // Then create "messages" node under "chloe"
                     convosRef.child(otherUsername).child("messages").setValue(new ArrayList<Message>());
                 }
             }

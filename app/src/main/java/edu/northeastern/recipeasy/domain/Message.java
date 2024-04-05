@@ -28,6 +28,13 @@ public class Message implements Parcelable {
         ZoneId zone = TimeZone.getDefault().toZoneId();
         this.timeStamp = DataUtil.zonedDatetimeToString(ZonedDateTime.now(zone));
     }
+
+    public Message(String senderUsername, String receiverUsername, String message, String timeStamp) {
+        this.senderUsername = senderUsername;
+        this.receiverUsername = receiverUsername;
+        this.message = message;
+        this.timeStamp = timeStamp;
+    }
     public String getSenderUsername() {
         return senderUsername;
     }

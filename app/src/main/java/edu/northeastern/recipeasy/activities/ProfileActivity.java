@@ -203,7 +203,6 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
             updateTheirFollowersListUnfollow();
         } else if (clickedId == R.id.messageUserButtonId){
             if ((user.getFollowers().contains(profileUsername) && user.getFollowing().contains(profileUsername))){
-                Toast.makeText(this, "Message", Toast.LENGTH_LONG).show();
                 // Create conversation
                 Intent conversationActivity = new Intent(ProfileActivity.this, MessageActivity.class);
                 conversationActivity.putExtra("currentUsername", user.getUsername());
