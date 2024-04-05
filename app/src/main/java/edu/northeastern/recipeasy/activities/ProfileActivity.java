@@ -65,7 +65,7 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
         UserManager userManager = new UserManager();
         userManager.getUser(currentUsername, this);
         TextView name = findViewById(R.id.nameID);
-        name.setText(profileUsername);
+        name.setText(profileUsername.toUpperCase());
         setUp();
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
