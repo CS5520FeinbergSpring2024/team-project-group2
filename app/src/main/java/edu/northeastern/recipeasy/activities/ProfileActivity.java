@@ -187,6 +187,7 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
         return false;
     }
 
+    // TODO threading
     @Override
     public void onClick(View v) {
         int clickedId = v.getId();
@@ -201,11 +202,16 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
             updateMyFollowingListUnfollow();
             updateTheirFollowersListUnfollow();
         } else if (clickedId == R.id.messageUserButtonId){
-            if (!user.getFollowers().contains(profileUsername)){
+            if ((user.getFollowers().contains(profileUsername) && user.getFollowing().contains(profileUsername))){
+                Toast.makeText(this, "Message", Toast.LENGTH_LONG).show();
+                // Create conversation
+                Intent conversationActivity = new Intent(ProfileActivity.this, MessageActivity.class);
+                conversationActivity.putExtra("currentUsername", user.getUsername());
+                conversationActivity.putExtra("otherUsername", profileUsername);
+                startActivity(conversationActivity);
+            } else{
                 Toast.makeText(this, "You can't message "+ profileUsername +"\n"
                         + "You must mutually follow!", Toast.LENGTH_LONG).show();
-            } else{
-                Toast.makeText(this, "Message", Toast.LENGTH_LONG).show();
             }
         }
     }

@@ -19,6 +19,7 @@ import edu.northeastern.recipeasy.R;
 import edu.northeastern.recipeasy.RecipeRecyclerView.RecipeViewAdapter;
 import edu.northeastern.recipeasy.UserRecyclerView.UserItemClickListener;
 import edu.northeastern.recipeasy.UserRecyclerView.UserViewAdapter;
+import edu.northeastern.recipeasy.domain.Conversation;
 import edu.northeastern.recipeasy.domain.User;
 import edu.northeastern.recipeasy.utils.IUserFetchListener;
 import edu.northeastern.recipeasy.utils.UserManager;
@@ -29,7 +30,7 @@ public class InboxActivity extends AppCompatActivity implements IUserFetchListen
     private InboxViewAdapter inboxAdapter;
     private String username;
     private ArrayList<User> userList;
-
+    private ArrayList<Conversation> conversations;
     private User user;
 
     @Override
@@ -40,7 +41,6 @@ public class InboxActivity extends AppCompatActivity implements IUserFetchListen
         username = getIntent().getStringExtra("username");
         UserManager userManager = new UserManager();
         userManager.getUser(username, this);
-
         setUp();
     }
 
@@ -54,7 +54,7 @@ public class InboxActivity extends AppCompatActivity implements IUserFetchListen
             User clickedUser = userList.get(position);
             Intent goMessage = new Intent(InboxActivity.this, MessageActivity.class);
             goMessage.putExtra("currentUsername", username);
-            goMessage.putExtra("profileUsername", clickedUser.getUsername());
+            goMessage.putExtra("otherUsername", clickedUser.getUsername());
             startActivity(goMessage);
         };
         inboxAdapter.setMessageClickListener(clickListener);

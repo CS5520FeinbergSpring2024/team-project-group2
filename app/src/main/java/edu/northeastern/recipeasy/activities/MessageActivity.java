@@ -7,11 +7,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,6 +26,9 @@ import java.util.Collections;
 import edu.northeastern.recipeasy.MessageRecyclerView.MessageViewAdapter;
 import edu.northeastern.recipeasy.R;
 import edu.northeastern.recipeasy.domain.Message;
+import edu.northeastern.recipeasy.domain.User;
+import edu.northeastern.recipeasy.utils.IUserFetchListener;
+import edu.northeastern.recipeasy.utils.UserManager;
 
 public class MessageActivity extends AppCompatActivity implements View.OnClickListener {
     private MessageViewAdapter messageAdapter;
@@ -36,16 +46,19 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
 
-//        currentUsername = getIntent().getStringExtra("username");
-//        messages = new ArrayList<>();
+        otherUsername = getIntent().getStringExtra("otherUsername");
+        currentUsername = getIntent().getStringExtra("currentUsername");
+
+        // query for otherUser in conversations node of currentUser
+        // if doesn't exist, create it in currentUser and otherUser
+        // if it does, pull the list of messages into messages arraylist
+
         if (savedInstanceState != null) {
             this.messages = savedInstanceState.getParcelableArrayList(MESSAGES_KEY);
         } else {
-            addSampleData();
+            initializeMessageList();
         }
-
-        currentUsername = "user1";
-        otherUsername = "John Doe";
+        
         toolBarTextView = findViewById(R.id.toolBarId);
         newMessageContentTextview = findViewById(R.id.messageTextInputId);
         toolBarTextView.setText(otherUsername);
@@ -59,6 +72,35 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
+    private void initializeMessageList() {
+        // Get the reference to the "convos" node
+        DatabaseReference convosRef = FirebaseDatabase.getInstance().getReference().child("users").child(currentUsername).child("convos");
+
+        // Check if "otherUsername" exists under "convos"
+        convosRef.child(otherUsername).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // "otherUsername" exists, populate the arraylist of messages
+                    DataSnapshot otherUserMessagesSnapshot = dataSnapshot.child("messages");
+                    Log.w("Convo", otherUserMessagesSnapshot + "");
+                    // Now you can read or manipulate the messages under "chloe"
+                    // e.g., display messages in a list, add new messages, etc.
+                } else {
+                    // "otherUsername" doesn't exist, create it
+                    convosRef.child(otherUsername).setValue(true);
+                    // Then create "messages" node under "chloe"
+                    convosRef.child(otherUsername).child("messages").setValue(new ArrayList<Message>());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle errors
+            }
+        });
+
+    }
 
     private void sendMessage() {
         String content = String.valueOf(newMessageContentTextview.getText());
@@ -68,18 +110,38 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         String sender = currentUsername;
         String receiver = otherUsername;
         Message message = new Message(sender, receiver, content);
+
+        addMessageToDB(currentUsername, otherUsername, message);
+        addMessageToDB(otherUsername, currentUsername, message);
+
         messages.add(message);
         newMessageContentTextview.setText("");
         this.messageAdapter.notifyItemInserted(messages.size() - 1);
         messageRecycler.scrollToPosition(messages.size() - 1);
 
-        // close keyboard
+        // close keyboard (reference: https://stackoverflow.com/questions/13032436/hiding-softkeyboard-reliably)
         try {
             InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
         } catch (Exception e) {
-            // TODO: handle exception
         }
+    }
+
+    private void addMessageToDB(String user1, String user2, Message message) {
+        new Thread(() -> {
+            DatabaseReference messagesRef = FirebaseDatabase.getInstance().getReference().child("users").child(user1).child("convos").child(user2).child("messages");
+            messagesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    DatabaseReference newMessageRef = messagesRef.push();
+                    newMessageRef.setValue(message);
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+            });
+        }).start();
 
     }
 
