@@ -73,6 +73,7 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
             Log.w("Convo", "Recycler done");
     }
 
+    // TODO threading
     private void initializeMessageList() {
         // Get the reference to the "convos" node
         DatabaseReference convosRef = FirebaseDatabase.getInstance().getReference().child("users").child(currentUsername).child("convos");
@@ -105,7 +106,6 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
                 // Handle errors
             }
         });
-
     }
 
     private void sendMessage() {

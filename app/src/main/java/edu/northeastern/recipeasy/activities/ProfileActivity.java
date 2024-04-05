@@ -168,7 +168,7 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
         int itemId = item.getItemId();
         if(itemId == R.id.home_icon) {
             Intent goHome = new Intent(ProfileActivity.this, HomePage.class);
-            goHome.putExtra("username", profileUsername);
+            goHome.putExtra("username", currentUsername);
             startActivity(goHome);
             return true;
         } else if(itemId == R.id.search_icon) {

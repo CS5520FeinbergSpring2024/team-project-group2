@@ -17,12 +17,12 @@ import edu.northeastern.recipeasy.UserRecyclerView.UserViewHolder;
 import edu.northeastern.recipeasy.domain.User;
 
 public class InboxViewAdapter extends RecyclerView.Adapter<InboxViewHolder>{
-    private ArrayList<User> userItemList;
+    private ArrayList<String> users;
     private Context context;
     private InboxItemClickListener listener;
 
-    public InboxViewAdapter(ArrayList<User> userItemList, Context context) {
-        this.userItemList = userItemList;
+    public InboxViewAdapter(ArrayList<String> userItemList, Context context) {
+        this.users = userItemList;
         this.context = context;
     }
 
@@ -39,13 +39,12 @@ public class InboxViewAdapter extends RecyclerView.Adapter<InboxViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull InboxViewHolder holder, int position) {
-        User user = userItemList.get(position);
-        holder.username.setText(user.getUsername());
-
+        String user = users.get(position);
+        holder.username.setText(user);
     }
 
     @Override
     public int getItemCount() {
-        return userItemList.size();
+        return users.size();
     }
 }
