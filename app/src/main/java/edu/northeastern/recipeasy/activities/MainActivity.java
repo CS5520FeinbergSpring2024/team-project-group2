@@ -55,14 +55,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     // TODO remove sample data
                     Toast.makeText(MainActivity.this, "New account created!", Toast.LENGTH_LONG).show();
                     User user = new User(username);
-                    ArrayList<String> followers = new ArrayList<>();
-                    followers.add("jerry");
-                    followers.add("chloe");
-                    user.setFollowers(followers);
-                    ArrayList<String> following = new ArrayList<>();
-                    following.add("bram");
-                    following.add("chloe");
-                    user.setFollowing(following);
                     userRef.child(username).setValue(user).addOnSuccessListener(
                             (task) -> handler.post(() -> startNextActivity(username)));
                 }

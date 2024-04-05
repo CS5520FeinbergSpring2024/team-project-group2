@@ -263,8 +263,6 @@ public class AddRecipeActivity extends AppCompatActivity implements View.OnClick
             prepTimeMinutes = Integer.parseInt(prepTime.getText().toString());
         }
 
-        //TODO: decide how we want to do dietary?
-
         String recipeSteps = formedStrings[1];
         int servingSizes = 0;
         if (!serving.getText().toString().isEmpty()) {
@@ -327,7 +325,6 @@ public class AddRecipeActivity extends AppCompatActivity implements View.OnClick
                 });
     }
 
-    // TODO: fix threading
     private void updateUserRecipes(String recipeId) {
         DatabaseReference authorRef = FirebaseDatabase.getInstance().getReference().child("users").child(username);
         authorRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -430,7 +427,6 @@ public class AddRecipeActivity extends AppCompatActivity implements View.OnClick
         );
     }
 
-    //TODO: should all be saved or just the ones that disappear
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);

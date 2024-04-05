@@ -34,9 +34,10 @@
     <string name="follow">Follow</string>
     <string name="unfollow">Unfollow</string>
     <string name="followers">Followers</string>
+    <string name="discover">Discover</string>
+    <string name="recipes">Recipes</string>
     <string name="users">Users</string>
     <string name="api">API</string>
-    <string name="recipes">Recipes</string>
     <string name="username_label">Username</string>
     <string name="view_profile">View Profile</string>
     <string name="see_more">See More</string>

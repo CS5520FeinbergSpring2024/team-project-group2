@@ -126,4 +126,23 @@ public class DataUtil {
         return BitmapFactory.decodeStream(input);
 
     }
+
+
+    public static ArrayList<User> fetchUsersInList(DataSnapshot snapshot, ArrayList<String> list){
+        ArrayList<User> users = new ArrayList<>();
+        List<DataSnapshot> snapshotList = new ArrayList<>();
+
+        for(DataSnapshot recipeSnapshot : snapshot.getChildren()) {
+            snapshotList.add(recipeSnapshot);
+        }
+        for (int i = snapshotList.size() -1; i>=0; i--) {
+            DataSnapshot recipeSnapshot = snapshotList.get(i);
+            String person = recipeSnapshot.child("username").getValue(String.class);
+            if (list.contains(person)){
+                users.add(parseIndividualUsers(snapshotList.get(i)));
+            }
+
+        }
+        return users;
+    }
 }
