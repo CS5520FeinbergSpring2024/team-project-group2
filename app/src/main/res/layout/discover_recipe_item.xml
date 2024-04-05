@@ -13,7 +13,7 @@
         android:layout_marginVertical="8dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        app:cardBackgroundColor="#A7E0FA"
+        app:cardBackgroundColor="#e0d0af"
         app:cardCornerRadius="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -89,7 +89,8 @@
                     android:layout_marginVertical="4dp"
                     android:text="@string/recipe_name_default"
                     android:layout_marginStart="50dp"
-                    android:layout_marginEnd="50dp"/>
+                    android:layout_marginEnd="50dp"
+                    android:backgroundTint="#800000"/>
 
 
 
