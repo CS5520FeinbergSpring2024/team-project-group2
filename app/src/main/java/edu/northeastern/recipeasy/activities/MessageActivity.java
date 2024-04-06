@@ -21,6 +21,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import edu.northeastern.recipeasy.Listeners.ConversationListener;
+import edu.northeastern.recipeasy.Listeners.ConversationUpdateListener;
 import edu.northeastern.recipeasy.MessageRecyclerView.MessageViewAdapter;
 import edu.northeastern.recipeasy.R;
 import edu.northeastern.recipeasy.domain.Message;
@@ -36,6 +38,7 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
     private String otherUsername;
     private ArrayList<Message> messages = new ArrayList<>();
     private static final String MESSAGES_KEY = "messages_key";
+    private ConversationListener conversationListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +47,18 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
 
         otherUsername = getIntent().getStringExtra("otherUsername");
         currentUsername = getIntent().getStringExtra("currentUsername");
+        ConversationUpdateListener conversationUpdateListener = new ConversationUpdateListener() {
+            @Override
+            public void onConversationUpdate(ArrayList<Message> messagesList) {
+                messages.clear();
+                messages.addAll(messagesList);
+                messageAdapter.notifyDataSetChanged();
+                if (messages.size() > 0) {
+                    messageRecycler.scrollToPosition(messages.size() - 1);
+                }
+            }
+        };
+        conversationListener = new ConversationListener(conversationUpdateListener, currentUsername, otherUsername);
 
         // query for otherUser in conversations node of currentUser
         // if doesn't exist, create it in currentUser and otherUser
