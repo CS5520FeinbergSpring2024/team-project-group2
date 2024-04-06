@@ -2,6 +2,7 @@ package edu.northeastern.recipeasy.Listeners;
 
 import android.app.Activity;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.util.Log;
 
@@ -35,6 +36,8 @@ import java.util.ArrayList;
 
 import edu.northeastern.recipeasy.R;
 import edu.northeastern.recipeasy.activities.HomePage;
+import edu.northeastern.recipeasy.activities.InboxActivity;
+import edu.northeastern.recipeasy.activities.MessageActivity;
 import edu.northeastern.recipeasy.domain.Message;
 import edu.northeastern.recipeasy.utils.DataUtil;
 
@@ -44,10 +47,12 @@ public class NotificationListener {
     private ValueEventListener listener;
     private Context context;
     private NotificationManager notificationManager;
+    private String currentUser;
     private static final int NOTIFICATION_REQUEST_CODE = 101;
 
     public NotificationListener(String currentUsername, Context context) {
         this.context = context;
+        this.currentUser = currentUsername;
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         createNotificationChannel(
@@ -100,12 +105,20 @@ public class NotificationListener {
     private void sendNotification(String sender, String content, int notificationId){
         String channelId = "edu.northeastern.recipeasy";
 
+        Intent resultIntent = new Intent(context, MessageActivity.class);
+        resultIntent.putExtra("currentUsername", currentUser);
+        resultIntent.putExtra("otherUsername", sender);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(context,0,
+                resultIntent, PendingIntent.FLAG_IMMUTABLE);
+
 
         Notification notification = new Notification.Builder(this.context, channelId)
                 .setContentTitle(sender.toUpperCase() + " sent you a message:")
                 .setContentText(content)
                 .setSmallIcon(R.drawable.recipeasylogo)
                 .setChannelId(channelId)
+                .setContentIntent(pendingIntent)
                 .build();
 
         notificationManager.notify(notificationId, notification);
