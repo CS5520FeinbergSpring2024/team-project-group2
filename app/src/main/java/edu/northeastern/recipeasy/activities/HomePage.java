@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -28,6 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.northeastern.recipeasy.Listeners.NotificationListener;
 import edu.northeastern.recipeasy.R;
 import edu.northeastern.recipeasy.RecipeRecyclerView.RecipeViewAdapter;
 import edu.northeastern.recipeasy.domain.User;
@@ -46,6 +48,7 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
     private Menu menu;
     private MenuItem homeIcon;
     private BottomNavigationView bottomNavigationView;
+    private static final int NOTIFICATION_REQUEST_CODE = 101;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +66,8 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
         setUp();
         // DO THIS FIRST
         String username = getIntent().getStringExtra("username");
+        // register notification listener
+        NotificationListener notificationListener = new NotificationListener(username, this);
         UserManager userManager = new UserManager();
         userManager.getUser(username, this);
         FloatingActionButton addNewRecipe = findViewById(R.id.fabID);
@@ -201,5 +206,15 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
         }
 
         return false;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == NOTIFICATION_REQUEST_CODE) {
+            if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Notification Permission Required", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }

@@ -55,7 +55,7 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
 //            initializeMessageList();
 //        }
 
-        initializeMessageList();
+        initializeRecycler();
         Log.w("Convo", "Message List Initialized");
 
         toolBarTextView = findViewById(R.id.toolBarId);
@@ -63,49 +63,55 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         toolBarTextView.setText(otherUsername);
     }
 
-    private void onMessageSnapshotReceived() {
-            layoutManager = new LinearLayoutManager(this);
-            layoutManager.setStackFromEnd(true);
-            messageRecycler = findViewById(R.id.messageRecyclerViewId);
-            messageRecycler.setLayoutManager(layoutManager);
-            messageAdapter = new MessageViewAdapter(this, currentUsername, messages);
-            messageRecycler.setAdapter(messageAdapter);
-            Log.w("Convo", "Recycler done");
+    private void initializeRecycler() {
+        layoutManager = new LinearLayoutManager(this);
+        layoutManager.setStackFromEnd(true);
+        messageRecycler = findViewById(R.id.messageRecyclerViewId);
+        messageRecycler.setLayoutManager(layoutManager);
+        messageAdapter = new MessageViewAdapter(this, currentUsername, messages);
+        messageRecycler.setAdapter(messageAdapter);
+        initializeMessageList();
+        Log.w("Convo", "Recycler done");
     }
 
     // TODO threading
     private void initializeMessageList() {
-        // Get the reference to the "convos" node
-        DatabaseReference convosRef = FirebaseDatabase.getInstance().getReference().child("users").child(currentUsername).child("convos");
+        new Thread(()->{
+            try{
+                // Get the reference to the "convos" node
+                DatabaseReference convosRef = FirebaseDatabase.getInstance().getReference().child("users").child(currentUsername).child("convos");
 
-        // Check if "otherUsername" exists under "convos"
-        convosRef.child(otherUsername).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    // "otherUsername" exists, populate the arraylist of messages
-                    DataSnapshot otherUserMessagesSnapshot = dataSnapshot.child("messages");
-                    messages = DataUtil.parseMessages(otherUserMessagesSnapshot);
-                    Log.w("Convo", otherUserMessagesSnapshot + "");
+                // Check if "otherUsername" exists under "convos"
+                convosRef.child(otherUsername).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            // "otherUsername" exists, populate the arraylist of messages
+                            DataSnapshot otherUserMessagesSnapshot = dataSnapshot.child("messages");
+                            ArrayList<Message> messagesList = DataUtil.parseMessages(otherUserMessagesSnapshot);
+                            Log.w("Convo", otherUserMessagesSnapshot + "");
 
-                    // initialize recyclerview
-                    onMessageSnapshotReceived();
+                            messages.clear();
+                            messages.addAll(messagesList);
+                            messageAdapter.notifyDataSetChanged();
+                        } else {
+                            // "otherUsername" doesn't exist, create it
+                            convosRef.child(otherUsername).setValue(true);
+                            convosRef.child(otherUsername).child("messages").setValue(new ArrayList<Message>());
+                        }
+                    }
 
-//                    messages.clear();
-//                    messages.addAll(messagesList);
-//                    messageAdapter.notifyDataSetChanged();
-                } else {
-                    // "otherUsername" doesn't exist, create it
-                    convosRef.child(otherUsername).setValue(true);
-                    convosRef.child(otherUsername).child("messages").setValue(new ArrayList<Message>());
-                }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        // Handle errors
+                    }
+                });
+
+            } catch (Exception e){
+
             }
+        }).start();
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle errors
-            }
-        });
     }
 
     private void sendMessage() {
@@ -115,10 +121,11 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         }
         String sender = currentUsername;
         String receiver = otherUsername;
-        Message message = new Message(sender, receiver, content);
+        Message message = new Message(sender, receiver, content, false);
 
         addMessageToDB(currentUsername, otherUsername, message);
         addMessageToDB(otherUsername, currentUsername, message);
+        addReceivedToDB(message);
 
         messages.add(message);
         newMessageContentTextview.setText("");
@@ -151,6 +158,24 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
+    private void addReceivedToDB(Message message) {
+        new Thread(() -> {
+            DatabaseReference receiverRef = FirebaseDatabase.getInstance().getReference().child("messages").child(message.getReceiverUsername());
+            receiverRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    DatabaseReference newMessageRef = receiverRef.push();
+                    newMessageRef.setValue(message);
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+            });
+        }).start();
+
+    }
+
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putParcelableArrayList(MESSAGES_KEY, this.messages);
@@ -158,39 +183,39 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
     }
 
 
-    private void addSampleData() {
-        String user1 = "user1";
-        String user2 = "user2";
-
-        // Sending messages from user1 to user2
-        messages.add(new Message(user1, user2, "Hello, User2!"));
-        messages.add(new Message(user1, user2, "How are you?"));
-        messages.add(new Message(user1, user2, "I hope you're having a great day!"));
-        messages.add(new Message(user1, user2, "Did you see the latest episode of that show?"));
-        messages.add(new Message(user1, user2, "I can't wait for our upcoming event!"));
-
-        // Sending messages from user2 to user1
-        messages.add(new Message(user2, user1, "Hi, User1! I'm doing well, thank you."));
-        messages.add(new Message(user2, user1, "What about you?"));
-        messages.add(new Message(user2, user1, "Yes, I watched it. It was amazing!"));
-        messages.add(new Message(user2, user1, "Me too! It's going to be so much fun."));
-        messages.add(new Message(user2, user1, "I'll see you there!"));
-
-        messages.add(new Message(user2, user1, "Hi, User1! I'm doing well, thank you."));
-        messages.add(new Message(user2, user1, "What about you?"));
-        messages.add(new Message(user2, user1, "Yes, I watched it. It was amazing!"));
-        messages.add(new Message(user2, user1, "Me too! It's going to be so much fun."));
-        messages.add(new Message(user2, user1, "I'll see you there!"));
-
-        messages.add(new Message(user2, user1, "Hi, User1! I'm doing well, thank you."));
-        messages.add(new Message(user2, user1, "What about you?"));
-        messages.add(new Message(user2, user1, "Yes, I watched it. It was amazing!"));
-        messages.add(new Message(user2, user1, "Me too! It's going to be so much fun."));
-        messages.add(new Message(user2, user1, "I'll see you there!"));
-
-        // Shuffle the messages
-        Collections.shuffle(messages);
-    }
+//    private void addSampleData() {
+//        String user1 = "user1";
+//        String user2 = "user2";
+//
+//        // Sending messages from user1 to user2
+//        messages.add(new Message(user1, user2, "Hello, User2!"));
+//        messages.add(new Message(user1, user2, "How are you?"));
+//        messages.add(new Message(user1, user2, "I hope you're having a great day!"));
+//        messages.add(new Message(user1, user2, "Did you see the latest episode of that show?"));
+//        messages.add(new Message(user1, user2, "I can't wait for our upcoming event!"));
+//
+//        // Sending messages from user2 to user1
+//        messages.add(new Message(user2, user1, "Hi, User1! I'm doing well, thank you."));
+//        messages.add(new Message(user2, user1, "What about you?"));
+//        messages.add(new Message(user2, user1, "Yes, I watched it. It was amazing!"));
+//        messages.add(new Message(user2, user1, "Me too! It's going to be so much fun."));
+//        messages.add(new Message(user2, user1, "I'll see you there!"));
+//
+//        messages.add(new Message(user2, user1, "Hi, User1! I'm doing well, thank you."));
+//        messages.add(new Message(user2, user1, "What about you?"));
+//        messages.add(new Message(user2, user1, "Yes, I watched it. It was amazing!"));
+//        messages.add(new Message(user2, user1, "Me too! It's going to be so much fun."));
+//        messages.add(new Message(user2, user1, "I'll see you there!"));
+//
+//        messages.add(new Message(user2, user1, "Hi, User1! I'm doing well, thank you."));
+//        messages.add(new Message(user2, user1, "What about you?"));
+//        messages.add(new Message(user2, user1, "Yes, I watched it. It was amazing!"));
+//        messages.add(new Message(user2, user1, "Me too! It's going to be so much fun."));
+//        messages.add(new Message(user2, user1, "I'll see you there!"));
+//
+//        // Shuffle the messages
+//        Collections.shuffle(messages);
+//    }
 
     @Override
     public void onClick(View v) {

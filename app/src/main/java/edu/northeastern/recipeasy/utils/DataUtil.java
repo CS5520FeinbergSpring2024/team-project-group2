@@ -93,8 +93,8 @@ public class DataUtil {
             String messageContent = childSnapshot.child("message").getValue(String.class);
             String senderUsername = childSnapshot.child("senderUsername").getValue(String.class);
             String receiverUsername = childSnapshot.child("receiverUsername").getValue(String.class);
-
-            Message message = new Message(senderUsername, receiverUsername, messageContent, timeStamp);
+            boolean sentNotification = childSnapshot.child("sentNotification").getValue(Boolean.class);
+            Message message = new Message(senderUsername, receiverUsername, messageContent, sentNotification, timeStamp);
 
             messageList.add(message);
         }

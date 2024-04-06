@@ -19,22 +19,26 @@ public class Message implements Parcelable {
     private String receiverUsername;
     private String message;
     private String timeStamp;
+    private boolean sentNotification;
 
-    public Message(String senderUsername, String receiverUsername, String message) {
+    public Message(String senderUsername, String receiverUsername, String message, boolean sentNotification) {
         this.senderUsername = senderUsername;
         this.receiverUsername = receiverUsername;
         this.message = message;
+        this.sentNotification = sentNotification;
 
         ZoneId zone = TimeZone.getDefault().toZoneId();
         this.timeStamp = DataUtil.zonedDatetimeToString(ZonedDateTime.now(zone));
     }
 
-    public Message(String senderUsername, String receiverUsername, String message, String timeStamp) {
+    public Message(String senderUsername, String receiverUsername, String message, boolean sentNotification, String timeStamp) {
         this.senderUsername = senderUsername;
         this.receiverUsername = receiverUsername;
         this.message = message;
         this.timeStamp = timeStamp;
+        this.sentNotification = sentNotification;
     }
+
     public String getSenderUsername() {
         return senderUsername;
     }
@@ -80,6 +84,7 @@ public class Message implements Parcelable {
         public Message createFromParcel(Parcel in) {
             return new Message(in);
         }
+
         @Override
         public Message[] newArray(int size) {
             return new Message[size];
@@ -93,8 +98,17 @@ public class Message implements Parcelable {
         dest.writeString(message);
         dest.writeString(timeStamp);
     }
+
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    public boolean isSentNotification() {
+        return sentNotification;
+    }
+
+    public void setSentNotification(boolean sentNotification) {
+        this.sentNotification = sentNotification;
     }
 }
