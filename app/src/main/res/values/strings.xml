@@ -6,7 +6,7 @@
     <string name="servings_label">Servings:</string>
     <string name="ingredientsLabel">INGREDIENTS</string>
     <string name="directionsLabel">DIRECTIONS</string>
-    <string name="prep_time_label">Prep Time:</string>
+    <string name="prep_time_label">Prep/Cook Time:</string>
     <string name="add_a_new_recipe_string">Add a New Recipe</string>
     <string name="dish_string">Dish</string>
     <string name="cuisine_string">Cuisine</string>
