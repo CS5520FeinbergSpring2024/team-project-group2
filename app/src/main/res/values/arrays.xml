@@ -10,7 +10,7 @@
     </array>
 
     <string-array name="cuisine_options">
-        <item>Select a Cuisine..</item>
+        <item>Select a Cuisine...</item>
         <item>African</item>
         <item>Asian</item>
         <item>American</item>

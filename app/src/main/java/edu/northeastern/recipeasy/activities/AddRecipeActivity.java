@@ -236,7 +236,6 @@ public class AddRecipeActivity extends AppCompatActivity implements View.OnClick
 
     public void submitRecipe() {
         this.setLoadingViewOn();
-        // TODO: which items are required, which arent?
         String[] formedStrings = formListItemStrings();
 
         EditText dish = findViewById(R.id.editDishAddRecipe);
@@ -251,6 +250,19 @@ public class AddRecipeActivity extends AppCompatActivity implements View.OnClick
 
         String dishName = dish.getText().toString();
         String ingredients =  formedStrings[0];
+        String recipeSteps = formedStrings[1];
+        String cuisine = cuisineSpinner.getSelectedItem().toString();
+
+        if (dishName.trim().isEmpty() || ingredients.trim().isEmpty() || recipeSteps.trim().isEmpty()) {
+            Toast.makeText(this, "Dish Name, Ingredients, and Recipe Steps are required!", Toast.LENGTH_SHORT).show();
+            this.setLoadingViewOff();
+            return;
+        }
+
+        if (cuisine.equals("Select a Cuisine...")) {
+            cuisine = "N/A";
+        }
+
         int calories = Math.round(calorieSlider.getValues().get(0));
 
         int cookTimeMinutes = 0;
@@ -263,13 +275,11 @@ public class AddRecipeActivity extends AppCompatActivity implements View.OnClick
             prepTimeMinutes = Integer.parseInt(prepTime.getText().toString());
         }
 
-        String recipeSteps = formedStrings[1];
         int servingSizes = 0;
         if (!serving.getText().toString().isEmpty()) {
             servingSizes = Integer.parseInt(serving.getText().toString());
         }
 
-        String cuisine = cuisineSpinner.getSelectedItem().toString();
 
         // create recipe object here with pictureURL as ""
          this.newRecipe = new Recipe(username, dishName, cuisine, prepTimeMinutes, cookTimeMinutes,
@@ -350,13 +360,13 @@ public class AddRecipeActivity extends AppCompatActivity implements View.OnClick
 
         for (int i = 0; i < ingredientList.size(); i++) {
             ListItem item = ingredientList.get(i);
-            if (!item.getItem().equals("")) {
+            if (!item.getItem().trim().equals("")) {
                 ingredients.append(item.getItem()).append(";;");
             }
         }
         for (int i = 0; i < recipeStepsList.size(); i++) {
             ListItem stepItem = recipeStepsList.get(i);
-            if (!stepItem.getItem().equals("")) {
+            if (!stepItem.getItem().trim().equals("")) {
                 recipeSteps.append(i + 1).append(". ")
                         .append(stepItem.getItem()).append(";;");
             }

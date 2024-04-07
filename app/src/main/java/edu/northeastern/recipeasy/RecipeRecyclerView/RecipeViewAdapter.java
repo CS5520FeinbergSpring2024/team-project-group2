@@ -40,9 +40,24 @@ public class RecipeViewAdapter extends RecyclerView.Adapter<RecipeViewHolder> {
         Recipe recipe = recipeItemList.get(position);
         holder.recipeName.setText(recipe.getDishName());
         holder.cuisine.setText("Cuisine: " + recipe.getCuisine());
-        holder.totalTime.setText("Time: " + recipe.getCookTime().toString() +" mins");
-        holder.servings.setText("Servings: " + recipe.getServings().toString());
-        holder.calories.setText("Calories: " + recipe.getCalories().toString());
+
+        if (recipe.getCookTime() == 0 || recipe.getPrepTime() == 0) {
+            holder.totalTime.setText("Time: N/A");
+        } else {
+            holder.totalTime.setText("Time: " + (recipe.getCookTime() + recipe.getPrepTime()) +" mins");
+        }
+
+        if (recipe.getServings() == 0) {
+            holder.servings.setText("Servings: N/A");
+        } else {
+            holder.servings.setText("Servings: " + recipe.getServings().toString());
+        }
+
+        if (recipe.getCalories() == 0) {
+            holder.calories.setText("Calories: N/A");
+        } else {
+            holder.calories.setText("Calories: " + recipe.getCalories().toString());
+        }
 
         holder.vegIcon.setVisibility(View.VISIBLE);
         holder.veganIcon.setVisibility(View.VISIBLE);

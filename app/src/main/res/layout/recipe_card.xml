@@ -122,21 +122,22 @@
 
                         <ImageView
                             android:id="@+id/vegIcon"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/veg" />
+                            android:src="@drawable/veg"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"/>
 
                         <ImageView
                             android:id="@+id/veganIcon"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/vegan" />
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/vegan"
+                            />
 
                         <ImageView
                             android:id="@+id/gfIcon"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/gf" />
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/gf"/>
                     </LinearLayout>
 
                     <Button
