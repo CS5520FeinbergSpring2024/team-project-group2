@@ -70,7 +70,7 @@ public class FullRecipeActivity extends AppCompatActivity {
             prepTimeTextView.setText("Prep/Cook time: " + recipe.getPrepTime().toString() + "/ N/A");
 
         } else {
-            prepTimeTextView.setText("Prep/Cook time: " + recipe.getPrepTime().toString() + "/" + recipe.getCookTime().toString() + " minutes");
+            prepTimeTextView.setText("Prep/Cook time: " + recipe.getPrepTime().toString() + " minutes/" + recipe.getCookTime().toString() + " minutes");
         }
 
         if(recipe.getServings() == 0) {

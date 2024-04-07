@@ -134,15 +134,15 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="192dp"
-        android:layout_height="115dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:scaleType="fitStart"
         app:layout_constraintBottom_toTopOf="@+id/tabView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.95"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/recipeNameId"
-        app:layout_constraintVertical_bias="0.26"
+        app:layout_constraintVertical_bias="0.00"
         tools:srcCompat="@drawable/sample_food" />
 
     <androidx.constraintlayout.widget.Guideline
