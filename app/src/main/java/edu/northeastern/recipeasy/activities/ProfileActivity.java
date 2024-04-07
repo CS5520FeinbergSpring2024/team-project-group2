@@ -65,7 +65,11 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
         UserManager userManager = new UserManager();
         userManager.getUser(currentUsername, this);
         TextView name = findViewById(R.id.nameID);
-        name.setText(profileUsername.toUpperCase());
+        if (isCurrentUser) {
+            name.setText("MY PROFILE");
+        } else {
+            name.setText(profileUsername.toUpperCase());
+        }
         setUp();
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -88,9 +92,9 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
             followUser.setVisibility(View.GONE);
             unfollowUser.setVisibility(View.GONE);
             messageUser.setVisibility(View.GONE);
-           reviewsHeading.setText("My Reviews:");
+           reviewsHeading.setText("My Recipes:");
         } else{
-            reviewsHeading.setText(profileUsername+ "'s Reviews:");
+            reviewsHeading.setText(profileUsername+ "'s Recipes:");
             seeFollowing.setVisibility(View.GONE);
             seeFollowers.setVisibility(View.GONE);
 
@@ -104,7 +108,7 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
             }
             // profile user is a follower of current user
             if ((user.getFollowers().contains(profileUsername) && user.getFollowing().contains(profileUsername))){
-                messageUser.setBackgroundColor(getResources().getColor(android.R.color.holo_purple));
+                messageUser.setBackgroundColor(getResources().getColor(R.color.primaryColor));
             } else{
 
                 messageUser.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));

@@ -75,7 +75,7 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
 
         toolBarTextView = findViewById(R.id.toolBarId);
         newMessageContentTextview = findViewById(R.id.messageTextInputId);
-        toolBarTextView.setText(otherUsername);
+        toolBarTextView.setText(otherUsername.toUpperCase());
     }
 
     private void initializeRecycler() {

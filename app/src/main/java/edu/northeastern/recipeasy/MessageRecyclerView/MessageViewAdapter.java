@@ -21,6 +21,7 @@ public class MessageViewAdapter extends RecyclerView.Adapter{
     private Context context;
 
     public MessageViewAdapter(Context context, String currentUsername, ArrayList<Message> messages) {
+        // Reference: https://sendbird.com/developer/tutorials/android-chat-tutorial-building-a-messaging-ui
         this.currentUsername = currentUsername;
         this.messages = messages;
     }

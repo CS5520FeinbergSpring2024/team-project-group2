@@ -33,15 +33,21 @@
 
             <TextView
                 android:id="@+id/nameID"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textSize="40sp"
+                android:background="@color/primaryColor"
+                android:paddingVertical="6dp"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="24sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/titleProfileGuideline"
+                app:layout_constraintBottom_toBottomOf="@id/titleProfileGuideline"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="username" />
+                app:layout_constraintVertical_bias="0.0"
+                tools:text="John Doe" />
 
             <TextView
                 android:id="@+id/userReviewLabelId"
@@ -141,6 +147,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="@color/accentColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

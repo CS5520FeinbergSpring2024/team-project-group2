@@ -12,22 +12,22 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cardViewLayoutId"
-        android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#e0d0af" >
+        android:background="@color/secondaryColor"
+        android:padding="10dp">
 
         <TextView
             android:id="@+id/listItemLabelId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/editListItemId"
             app:layout_constraintHorizontal_bias="0.2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:textColor="@color/black"
-            android:textStyle="bold"
             tools:text="Step 1:" />
 
         <EditText
