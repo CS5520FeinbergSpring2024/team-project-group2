@@ -62,10 +62,8 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayoutHome);
         menu = bottomNavigationView.getMenu();
         homeIcon = menu.findItem(R.id.home_icon);
-
-
         tabs = findViewById(R.id.tabViewHomePage);
-
+        tabs.post(() -> tabs.getTabAt(position).select());
         setUp();
         // DO THIS FIRST
         String username = getIntent().getStringExtra("username");
@@ -75,8 +73,6 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
         userManager.getUser(username, this);
         FloatingActionButton addNewRecipe = findViewById(R.id.fabID);
         addNewRecipeButtonListener(addNewRecipe);
-
-
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -96,7 +92,6 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
-
         swipeRefreshLayout.setOnRefreshListener(() -> {
             swipeRefreshLayout.setRefreshing(false);
             if (position == 0) {
@@ -105,15 +100,12 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
                 loadFollowingRecipes();
             }
         });
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
         homeIcon.setChecked(true);
-
         int selectedTabPosition = tabs.getSelectedTabPosition();
         if (selectedTabPosition == 0) {
             loadAllRecipes();
@@ -121,8 +113,6 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
             loadFollowingRecipes();
         }
     }
-
-
 
     private void loadAllRecipes(){
         new Thread(() -> {
@@ -227,5 +217,17 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
                 Toast.makeText(this, "Notification Permission Required", Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("position", position);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        position = savedInstanceState.getInt("position");
     }
 }
