@@ -14,11 +14,13 @@ public class RecipeViewHolder extends RecyclerView.ViewHolder{
     public TextView cuisine;
     public TextView totalTime;
     public TextView servings;
-//    public ImageView image;
+    public ImageView image;
 
-    public TextView dietaryRestrictions;
     public TextView calories;
     public Button seeMore;
+    public ImageView vegIcon;
+    public ImageView veganIcon;
+    public ImageView gfIcon;
 
 
     public RecipeViewHolder(@NonNull View itemView) {
@@ -28,9 +30,11 @@ public class RecipeViewHolder extends RecyclerView.ViewHolder{
         cuisine = itemView.findViewById(R.id.cuisineID);
         totalTime = itemView.findViewById(R.id.totalTimeID);
         servings = itemView.findViewById(R.id.servingsID);
-        dietaryRestrictions = itemView.findViewById(R.id.dietaryRestrictionsID);
+        vegIcon = itemView.findViewById(R.id.vegIcon);
+        veganIcon = itemView.findViewById(R.id.veganIcon);
+        gfIcon = itemView.findViewById(R.id.gfIcon);
         calories = itemView.findViewById(R.id.caloriesID);
-//        image = itemView.findViewById(R.id.imageViewID);
+        image = itemView.findViewById(R.id.imageViewID);
         seeMore = itemView.findViewById(R.id.viewProfileButtonID);
     }
 }

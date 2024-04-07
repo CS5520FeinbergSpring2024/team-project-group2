@@ -4,8 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +11,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 
 import edu.northeastern.recipeasy.R;
@@ -45,31 +39,47 @@ public class RecipeViewAdapter extends RecyclerView.Adapter<RecipeViewHolder> {
     public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
         Recipe recipe = recipeItemList.get(position);
         holder.recipeName.setText(recipe.getDishName());
-        holder.cuisine.setText("Cuisine"+ recipe.getCuisine());
-        holder.totalTime.setText("Total time" + recipe.getCookTime().toString());
-        holder.servings.setText("Servings" + recipe.getServings().toString());
-        holder.calories.setText("Calories" + recipe.getCalories().toString());
+        holder.cuisine.setText("Cuisine: " + recipe.getCuisine());
+        holder.totalTime.setText("Time: " + recipe.getCookTime().toString());
+        holder.servings.setText("Servings: " + recipe.getServings().toString());
+        holder.calories.setText("Calories: " + recipe.getCalories().toString());
+
+        holder.vegIcon.setVisibility(View.VISIBLE);
+        holder.veganIcon.setVisibility(View.VISIBLE);
+        holder.gfIcon.setVisibility(View.VISIBLE);
+
+        if (!recipe.isGlutenFree()){
+            holder.gfIcon.setVisibility(View.GONE);
+        }if (!recipe.isVeg()){
+            holder.vegIcon.setVisibility(View.GONE);
+        }if (!recipe.isVegan()){
+            holder.veganIcon.setVisibility(View.GONE);
+        }
+
         holder.seeMore.setOnClickListener(view -> {
             Intent intent = new Intent(view.getContext(), FullRecipeActivity.class);
             intent.putExtra("recipe", recipe);
             view.getContext().startActivity(intent);
         });
-//        holder.image.setImageResource(R.drawable.no_image);
-//        new Thread(() -> {
-//            try {
-//                Bitmap picBitMap = DataUtil.downloadFoodPic(recipe.getPhotoPath());
-//
-//                if(! recipe.getPhotoPath().equals("")){
-//                    if (picBitMap != null) {
-//                        holder.image.post(() -> holder.image.setImageBitmap(picBitMap));
-//                    }
-//                }
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }).start();
 
+        holder.image.setTag(position);
 
+        if (!recipe.getPhotoPath().isEmpty()) {
+            new Thread(() -> {
+                try {
+                    Bitmap picBitMap = DataUtil.downloadFoodPic(recipe.getPhotoPath());
+
+                    holder.image.post(() -> {
+                        if (holder.image.getTag() != null && holder.image.getTag().equals(position)) {
+                            holder.image.setImageBitmap(picBitMap);
+                        }
+                    });
+                } catch (Exception e) {
+                }
+            }).start();
+        } else {
+            holder.image.setImageResource(R.drawable.no_image);
+        }
     }
 
     @Override
