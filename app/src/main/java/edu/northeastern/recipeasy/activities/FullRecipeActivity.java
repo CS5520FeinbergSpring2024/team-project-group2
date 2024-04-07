@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,6 +21,9 @@ public class FullRecipeActivity extends AppCompatActivity {
 
     private Recipe recipe;
     private int position;
+    public ImageView vegIcon;
+    public ImageView veganIcon;
+    public ImageView gfIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +43,18 @@ public class FullRecipeActivity extends AppCompatActivity {
         foodPicture.setImageResource(R.drawable.no_image);
         TextView cuisineTextView = findViewById(R.id.cuisineLabelId);
 
+        vegIcon = findViewById(R.id.vegIcon);
+        veganIcon = findViewById(R.id.veganIcon);
+        gfIcon = findViewById(R.id.gfIcon);
+
+        if (!recipe.isGlutenFree()){
+            gfIcon.setVisibility(View.GONE);
+        }if (!recipe.isVeg()){
+            vegIcon.setVisibility(View.GONE);
+        }if (!recipe.isVegan()){
+            veganIcon.setVisibility(View.GONE);
+        }
+
         tabs.post(() -> tabs.getTabAt(position).select());
 
         new Thread(() -> {
@@ -55,14 +71,20 @@ public class FullRecipeActivity extends AppCompatActivity {
             }
         }).start();
 
-        String ingredientsData = String.join("\n", recipe.getIngredients().split(Pattern.quote(";;")));
-        String stepsData = String.join("\n", recipe.getSteps().split(Pattern.quote(";;")));
-
-        // TODO handle null values
-        // dishname, steps, ingredients
+        String ingredientsData = recipe.getIngredients();
+        if (ingredientsData != null) {
+            String[] ingredientsArray = ingredientsData.split(Pattern.quote(";;"));
+            for (int i = 0; i < ingredientsArray.length; i++) {
+                ingredientsArray[i] = "• " + ingredientsArray[i];
+            }
+            ingredientsData = String.join("\n\n", ingredientsArray);
+        } else {
+            ingredientsData = "";
+        }
+        String stepsData = String.join("\n\n", recipe.getSteps().split(Pattern.quote(";;")));
 
         recipeNameTextView.setText(recipe.getDishName());
-        authorTextView.setText("By " + recipe.getAuthorName());
+        authorTextView.setText("By: " + recipe.getAuthorName());
         if (recipe.getCalories() == 0) {
             caloriesTextView.setText("Calories: N/A");
         } else {
@@ -74,7 +96,7 @@ public class FullRecipeActivity extends AppCompatActivity {
             prepTimeTextView.setText("Prep/Cook time: " + recipe.getPrepTime().toString() + "/ N/A");
 
         } else {
-            prepTimeTextView.setText("Prep/Cook time: " + recipe.getPrepTime().toString() + " minutes/" + recipe.getCookTime().toString() + " minutes");
+            prepTimeTextView.setText("Prep/Cook Time (mins): " + recipe.getPrepTime().toString() + "/" + recipe.getCookTime().toString());
         }
 
         if(recipe.getServings() == 0) {
@@ -91,12 +113,13 @@ public class FullRecipeActivity extends AppCompatActivity {
 
         longContextTextView.setText(ingredientsData);
 
+        String finalIngredientsData = ingredientsData;
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 position = tab.getPosition();
                 if (position == 0) {
-                    longContextTextView.setText(ingredientsData);
+                    longContextTextView.setText(finalIngredientsData);
                 } else if (position == 1) {
                     longContextTextView.setText(stepsData);
                 }
