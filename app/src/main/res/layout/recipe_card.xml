@@ -16,7 +16,7 @@
         app:cardElevation="4dp"
         app:cardPreventCornerOverlap="true"
         app:cardUseCompatPadding="true"
-
+        app:cardBackgroundColor="#FFC0CB"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -125,20 +125,20 @@
                         <ImageView
                             android:id="@+id/vegIcon"
                             android:src="@drawable/veg"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"/>
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"/>
 
                         <ImageView
                             android:id="@+id/veganIcon"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
                             android:src="@drawable/vegan"
                             />
 
                         <ImageView
                             android:id="@+id/gfIcon"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
                             android:src="@drawable/gf"/>
                     </LinearLayout>
                     <Button
