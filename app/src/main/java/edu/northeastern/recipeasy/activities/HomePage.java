@@ -203,7 +203,6 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
             startActivity(goSearch);
             return true;
         }else if(itemId == R.id.message_icon) {
-            Toast.makeText(this, "MESSAGES", Toast.LENGTH_LONG).show();
             Intent goMessages = new Intent(HomePage.this, InboxActivity.class);
             goMessages.putExtra("username", user.getUsername());
             startActivity(goMessages);

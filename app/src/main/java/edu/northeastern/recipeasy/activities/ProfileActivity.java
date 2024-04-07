@@ -164,7 +164,6 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        Log.w("NAV ITEM SELECTED", ""+ item.getItemId() + " "+R.id.home_icon + " "+ R.id.profile_icon);
         int itemId = item.getItemId();
         if(itemId == R.id.home_icon) {
             Intent goHome = new Intent(ProfileActivity.this, HomePage.class);
@@ -172,16 +171,14 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
             startActivity(goHome);
             return true;
         } else if(itemId == R.id.search_icon) {
-//            Toast.makeText(this, "SEARCH", Toast.LENGTH_LONG).show();
             Intent goSearch = new Intent(ProfileActivity.this, SearchActivity.class);
             goSearch.putExtra("username", user.getUsername());
             startActivity(goSearch);
             return true;
         }else if(itemId == R.id.message_icon) {
-            Toast.makeText(this, "MESSAGES", Toast.LENGTH_LONG).show();
-//            Intent goMessages = new Intent(HomePage.this, MessageActivity.class);
-//            goMessages.putExtra("username", user.getUsername());
-//            startActivity(goMessages);
+            Intent goMessages = new Intent(ProfileActivity.this, InboxActivity.class);
+            goMessages.putExtra("username", currentUsername);
+            startActivity(goMessages);
             return true;
         }
         return false;

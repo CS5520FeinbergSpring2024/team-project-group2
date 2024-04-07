@@ -343,10 +343,9 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
             return true;
         }
         else if(itemId == R.id.message_icon) {
-            Toast.makeText(this, "MESSAGES", Toast.LENGTH_LONG).show();
-//            Intent goMessages = new Intent(HomePage.this, MessageActivity.class);
-//            goMessages.putExtra("username", user.getUsername());
-//            startActivity(goMessages);
+            Intent goMessages = new Intent(SearchActivity.this, InboxActivity.class);
+            goMessages.putExtra("username", username);
+            startActivity(goMessages);
             return true;
         }
         return false;

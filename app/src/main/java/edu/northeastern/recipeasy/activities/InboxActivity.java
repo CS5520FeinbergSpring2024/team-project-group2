@@ -4,11 +4,16 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,13 +36,15 @@ import edu.northeastern.recipeasy.utils.DataUtil;
 import edu.northeastern.recipeasy.utils.IUserFetchListener;
 import edu.northeastern.recipeasy.utils.UserManager;
 
-public class InboxActivity extends AppCompatActivity {
+public class InboxActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
 
     private RecyclerView inboxRecyclerView;
     private InboxViewAdapter inboxAdapter;
     private String username;
     private ArrayList<String> userList = new ArrayList<>();
-    private ArrayList<Conversation> conversations;
+    private Menu menu;
+    private MenuItem messageIcon;
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +52,11 @@ public class InboxActivity extends AppCompatActivity {
         setContentView(R.layout.activity_inbox);
 
         username = getIntent().getStringExtra("username");
+        bottomNavigationView = findViewById(R.id.bottom_navigationInbox);
+        bottomNavigationView.setOnItemSelectedListener(this);
+        menu = bottomNavigationView.getMenu();
+        messageIcon = menu.findItem(R.id.message_icon);
+        messageIcon.setChecked(true);
 
         initializeConversationList();
     }
@@ -86,5 +98,29 @@ public class InboxActivity extends AppCompatActivity {
                 // Handle errors
             }
         });
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.home_icon) {
+            Intent goHome = new Intent(InboxActivity.this, HomePage.class);
+            goHome.putExtra("username", username);
+            startActivity(goHome);
+            return true;
+        } else if(itemId == R.id.search_icon) {
+            Intent goSearch = new Intent(InboxActivity.this, SearchActivity.class);
+            goSearch.putExtra("username", username);
+            startActivity(goSearch);
+            return true;
+        }else if(itemId == R.id.profile_icon) {
+            Intent goProfile = new Intent(InboxActivity.this, ProfileActivity.class);
+            goProfile.putExtra("currentUsername", username);
+            goProfile.putExtra("profileUsername", username);
+            goProfile.putExtra("isCurrentUser", true);
+            startActivity(goProfile);
+            return true;
+        }
+        return false;
     }
 }
