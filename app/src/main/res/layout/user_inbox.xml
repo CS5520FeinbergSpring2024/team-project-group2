@@ -40,11 +40,11 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Button
-                android:id="@+id/viewProfileButtonID"
-                android:layout_width="0dp"
+                android:id="@+id/seeMessagesID"
+                android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_weight="1"
-                android:text="@string/view_profile"
+                android:text="See Messages"
                 android:textSize="12sp"
                 android:layout_marginEnd="20dp"
                 android:backgroundTint="#800000"/>

@@ -21,7 +21,7 @@ public class SentMessageViewHolder extends RecyclerView.ViewHolder{
     }
 
     public void bind(Message message) {
-        String dateText = DataUtil.formatMessageTimeStamp(message.getTimeStamp().toLocalDateTime());
+        String dateText = DataUtil.formatMessageTimeStamp(DataUtil.stringToZonedDateTime(message.getTimeStamp()).toLocalDateTime());
         timeStampView.setText(dateText);
         messageContentView.setText(message.getMessage());
     }

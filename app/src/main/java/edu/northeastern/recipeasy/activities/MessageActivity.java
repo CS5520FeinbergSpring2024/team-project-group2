@@ -6,19 +6,27 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
+import edu.northeastern.recipeasy.Listeners.ConversationListener;
+import edu.northeastern.recipeasy.Listeners.ConversationUpdateListener;
 import edu.northeastern.recipeasy.MessageRecyclerView.MessageViewAdapter;
 import edu.northeastern.recipeasy.R;
 import edu.northeastern.recipeasy.domain.Message;
+import edu.northeastern.recipeasy.utils.DataUtil;
 
 public class MessageActivity extends AppCompatActivity implements View.OnClickListener {
     private MessageViewAdapter messageAdapter;
@@ -30,35 +38,96 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
     private String otherUsername;
     private ArrayList<Message> messages = new ArrayList<>();
     private static final String MESSAGES_KEY = "messages_key";
+    private ConversationListener conversationListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
 
-//        currentUsername = getIntent().getStringExtra("username");
-//        messages = new ArrayList<>();
-        if (savedInstanceState != null) {
-            this.messages = savedInstanceState.getParcelableArrayList(MESSAGES_KEY);
-        } else {
-            addSampleData();
-        }
+        otherUsername = getIntent().getStringExtra("otherUsername");
+        currentUsername = getIntent().getStringExtra("currentUsername");
+        ConversationUpdateListener conversationUpdateListener = new ConversationUpdateListener() {
+            @Override
+            public void onConversationUpdate(ArrayList<Message> messagesList) {
+                messages.clear();
+                messages.addAll(messagesList);
+                messageAdapter.notifyDataSetChanged();
+                if (messages.size() > 0) {
+                    messageRecycler.scrollToPosition(messages.size() - 1);
+                }
+            }
+        };
+        conversationListener = new ConversationListener(conversationUpdateListener, currentUsername, otherUsername);
 
-        currentUsername = "user1";
-        otherUsername = "John Doe";
+        // query for otherUser in conversations node of currentUser
+        // if doesn't exist, create it in currentUser and otherUser
+        // if it does, pull the list of messages into messages arraylist
+
+//        if (savedInstanceState != null) {
+//            this.messages = savedInstanceState.getParcelableArrayList(MESSAGES_KEY);
+//        } else {
+//            initializeMessageList();
+//        }
+
+        initializeRecycler();
+        Log.w("Convo", "Message List Initialized");
+
         toolBarTextView = findViewById(R.id.toolBarId);
         newMessageContentTextview = findViewById(R.id.messageTextInputId);
         toolBarTextView.setText(otherUsername);
+    }
 
+    private void initializeRecycler() {
         layoutManager = new LinearLayoutManager(this);
         layoutManager.setStackFromEnd(true);
         messageRecycler = findViewById(R.id.messageRecyclerViewId);
         messageRecycler.setLayoutManager(layoutManager);
         messageAdapter = new MessageViewAdapter(this, currentUsername, messages);
         messageRecycler.setAdapter(messageAdapter);
-
+        initializeMessageList();
+        Log.w("Convo", "Recycler done");
     }
 
+    // TODO threading
+    private void initializeMessageList() {
+        new Thread(()->{
+            try{
+                // Get the reference to the "convos" node
+                DatabaseReference convosRef = FirebaseDatabase.getInstance().getReference().child("users").child(currentUsername).child("convos");
+
+                // Check if "otherUsername" exists under "convos"
+                convosRef.child(otherUsername).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            // "otherUsername" exists, populate the arraylist of messages
+                            DataSnapshot otherUserMessagesSnapshot = dataSnapshot.child("messages");
+                            ArrayList<Message> messagesList = DataUtil.parseMessages(otherUserMessagesSnapshot);
+                            Log.w("Convo", otherUserMessagesSnapshot + "");
+
+                            messages.clear();
+                            messages.addAll(messagesList);
+                            messageAdapter.notifyDataSetChanged();
+                        } else {
+                            // "otherUsername" doesn't exist, create it
+                            convosRef.child(otherUsername).setValue(true);
+                            convosRef.child(otherUsername).child("messages").setValue(new ArrayList<Message>());
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        // Handle errors
+                    }
+                });
+
+            } catch (Exception e){
+
+            }
+        }).start();
+
+    }
 
     private void sendMessage() {
         String content = String.valueOf(newMessageContentTextview.getText());
@@ -67,19 +136,58 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         }
         String sender = currentUsername;
         String receiver = otherUsername;
-        Message message = new Message(sender, receiver, content);
+        Message message = new Message(sender, receiver, content, false);
+
+        addMessageToDB(currentUsername, otherUsername, message);
+        addMessageToDB(otherUsername, currentUsername, message);
+        addReceivedToDB(message);
+
         messages.add(message);
         newMessageContentTextview.setText("");
         this.messageAdapter.notifyItemInserted(messages.size() - 1);
         messageRecycler.scrollToPosition(messages.size() - 1);
 
-        // close keyboard
+        // close keyboard (reference: https://stackoverflow.com/questions/13032436/hiding-softkeyboard-reliably)
         try {
             InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
         } catch (Exception e) {
-            // TODO: handle exception
         }
+    }
+
+    private void addMessageToDB(String user1, String user2, Message message) {
+        new Thread(() -> {
+            DatabaseReference messagesRef = FirebaseDatabase.getInstance().getReference().child("users").child(user1).child("convos").child(user2).child("messages");
+            messagesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    DatabaseReference newMessageRef = messagesRef.push();
+                    newMessageRef.setValue(message);
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+            });
+        }).start();
+
+    }
+
+    private void addReceivedToDB(Message message) {
+        new Thread(() -> {
+            DatabaseReference receiverRef = FirebaseDatabase.getInstance().getReference().child("messages").child(message.getReceiverUsername());
+            receiverRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    DatabaseReference newMessageRef = receiverRef.push();
+                    newMessageRef.setValue(message);
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+            });
+        }).start();
 
     }
 
@@ -90,39 +198,39 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
     }
 
 
-    private void addSampleData() {
-        String user1 = "user1";
-        String user2 = "user2";
-
-        // Sending messages from user1 to user2
-        messages.add(new Message(user1, user2, "Hello, User2!"));
-        messages.add(new Message(user1, user2, "How are you?"));
-        messages.add(new Message(user1, user2, "I hope you're having a great day!"));
-        messages.add(new Message(user1, user2, "Did you see the latest episode of that show?"));
-        messages.add(new Message(user1, user2, "I can't wait for our upcoming event!"));
-
-        // Sending messages from user2 to user1
-        messages.add(new Message(user2, user1, "Hi, User1! I'm doing well, thank you."));
-        messages.add(new Message(user2, user1, "What about you?"));
-        messages.add(new Message(user2, user1, "Yes, I watched it. It was amazing!"));
-        messages.add(new Message(user2, user1, "Me too! It's going to be so much fun."));
-        messages.add(new Message(user2, user1, "I'll see you there!"));
-
-        messages.add(new Message(user2, user1, "Hi, User1! I'm doing well, thank you."));
-        messages.add(new Message(user2, user1, "What about you?"));
-        messages.add(new Message(user2, user1, "Yes, I watched it. It was amazing!"));
-        messages.add(new Message(user2, user1, "Me too! It's going to be so much fun."));
-        messages.add(new Message(user2, user1, "I'll see you there!"));
-
-        messages.add(new Message(user2, user1, "Hi, User1! I'm doing well, thank you."));
-        messages.add(new Message(user2, user1, "What about you?"));
-        messages.add(new Message(user2, user1, "Yes, I watched it. It was amazing!"));
-        messages.add(new Message(user2, user1, "Me too! It's going to be so much fun."));
-        messages.add(new Message(user2, user1, "I'll see you there!"));
-
-        // Shuffle the messages
-        Collections.shuffle(messages);
-    }
+//    private void addSampleData() {
+//        String user1 = "user1";
+//        String user2 = "user2";
+//
+//        // Sending messages from user1 to user2
+//        messages.add(new Message(user1, user2, "Hello, User2!"));
+//        messages.add(new Message(user1, user2, "How are you?"));
+//        messages.add(new Message(user1, user2, "I hope you're having a great day!"));
+//        messages.add(new Message(user1, user2, "Did you see the latest episode of that show?"));
+//        messages.add(new Message(user1, user2, "I can't wait for our upcoming event!"));
+//
+//        // Sending messages from user2 to user1
+//        messages.add(new Message(user2, user1, "Hi, User1! I'm doing well, thank you."));
+//        messages.add(new Message(user2, user1, "What about you?"));
+//        messages.add(new Message(user2, user1, "Yes, I watched it. It was amazing!"));
+//        messages.add(new Message(user2, user1, "Me too! It's going to be so much fun."));
+//        messages.add(new Message(user2, user1, "I'll see you there!"));
+//
+//        messages.add(new Message(user2, user1, "Hi, User1! I'm doing well, thank you."));
+//        messages.add(new Message(user2, user1, "What about you?"));
+//        messages.add(new Message(user2, user1, "Yes, I watched it. It was amazing!"));
+//        messages.add(new Message(user2, user1, "Me too! It's going to be so much fun."));
+//        messages.add(new Message(user2, user1, "I'll see you there!"));
+//
+//        messages.add(new Message(user2, user1, "Hi, User1! I'm doing well, thank you."));
+//        messages.add(new Message(user2, user1, "What about you?"));
+//        messages.add(new Message(user2, user1, "Yes, I watched it. It was amazing!"));
+//        messages.add(new Message(user2, user1, "Me too! It's going to be so much fun."));
+//        messages.add(new Message(user2, user1, "I'll see you there!"));
+//
+//        // Shuffle the messages
+//        Collections.shuffle(messages);
+//    }
 
     @Override
     public void onClick(View v) {

@@ -75,7 +75,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent messageIntent = new Intent(MainActivity.this, MessageActivity.class);
         startActivity(messageIntent);
     }
-
-    public static class ProfileActivity {
-    }
 }

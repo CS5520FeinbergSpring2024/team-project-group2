@@ -4,8 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -28,6 +30,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.northeastern.recipeasy.Listeners.NotificationListener;
 import edu.northeastern.recipeasy.R;
 import edu.northeastern.recipeasy.RecipeRecyclerView.RecipeViewAdapter;
 import edu.northeastern.recipeasy.domain.User;
@@ -46,6 +49,9 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
     private Menu menu;
     private MenuItem homeIcon;
     private BottomNavigationView bottomNavigationView;
+    private static final int NOTIFICATION_REQUEST_CODE = 101;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +59,7 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
         setContentView(R.layout.activity_home_page);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnItemSelectedListener(this);
-
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayoutHome);
         menu = bottomNavigationView.getMenu();
         homeIcon = menu.findItem(R.id.home_icon);
 
@@ -63,6 +69,8 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
         setUp();
         // DO THIS FIRST
         String username = getIntent().getStringExtra("username");
+        // register notification listener
+        NotificationListener notificationListener = new NotificationListener(username, this);
         UserManager userManager = new UserManager();
         userManager.getUser(username, this);
         FloatingActionButton addNewRecipe = findViewById(R.id.fabID);
@@ -72,7 +80,7 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                int position = tab.getPosition();
+                position = tab.getPosition();
                 if (position == 0) {
                     loadAllRecipes();
                 } else if (position == 1) {
@@ -86,6 +94,15 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            swipeRefreshLayout.setRefreshing(false);
+            if (position == 0) {
+                loadAllRecipes();
+            } else if (position == 1) {
+                loadFollowingRecipes();
             }
         });
 
@@ -186,10 +203,9 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
             startActivity(goSearch);
             return true;
         }else if(itemId == R.id.message_icon) {
-            Toast.makeText(this, "MESSAGES", Toast.LENGTH_LONG).show();
-//            Intent goMessages = new Intent(HomePage.this, MessageActivity.class);
-//            goMessages.putExtra("username", user.getUsername());
-//            startActivity(goMessages);
+            Intent goMessages = new Intent(HomePage.this, InboxActivity.class);
+            goMessages.putExtra("username", user.getUsername());
+            startActivity(goMessages);
             return true;
         } else if(itemId == R.id.profile_icon) {
             Intent goProfile = new Intent(HomePage.this, ProfileActivity.class);
@@ -201,5 +217,15 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
         }
 
         return false;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == NOTIFICATION_REQUEST_CODE) {
+            if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Notification Permission Required", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }

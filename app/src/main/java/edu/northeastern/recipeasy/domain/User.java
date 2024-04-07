@@ -8,6 +8,7 @@ public class User implements Serializable  {
     private ArrayList<String> recipeIdList = new ArrayList<>();
     private ArrayList<String> following = new ArrayList<>();
     private ArrayList<String> followers = new ArrayList<>();
+    private ArrayList<String> convos = new ArrayList<>();
 
     public User(String username) {
         this.username = username;
@@ -39,5 +40,13 @@ public class User implements Serializable  {
 
     public void setFollowers(ArrayList<String> followers) {
         this.followers = followers;
+    }
+
+    public ArrayList<String> getConvos() {
+        return convos;
+    }
+
+    public void setConvos(ArrayList<String> convos) {
+        this.convos = convos;
     }
 }

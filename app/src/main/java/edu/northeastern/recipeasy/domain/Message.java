@@ -18,15 +18,27 @@ public class Message implements Parcelable {
     private String senderUsername;
     private String receiverUsername;
     private String message;
-    private ZonedDateTime timeStamp;
+    private String timeStamp;
+    private boolean sentNotification;
 
-    public Message(String senderUsername, String receiverUsername, String message) {
+    public Message(String senderUsername, String receiverUsername, String message, boolean sentNotification) {
         this.senderUsername = senderUsername;
         this.receiverUsername = receiverUsername;
         this.message = message;
+        this.sentNotification = sentNotification;
+
         ZoneId zone = TimeZone.getDefault().toZoneId();
-        this.timeStamp = ZonedDateTime.now(zone);
+        this.timeStamp = DataUtil.zonedDatetimeToString(ZonedDateTime.now(zone));
     }
+
+    public Message(String senderUsername, String receiverUsername, String message, boolean sentNotification, String timeStamp) {
+        this.senderUsername = senderUsername;
+        this.receiverUsername = receiverUsername;
+        this.message = message;
+        this.timeStamp = timeStamp;
+        this.sentNotification = sentNotification;
+    }
+
     public String getSenderUsername() {
         return senderUsername;
     }
@@ -51,11 +63,11 @@ public class Message implements Parcelable {
         this.message = message;
     }
 
-    public ZonedDateTime getTimeStamp() {
+    public String getTimeStamp() {
         return timeStamp;
     }
 
-    public void setTimeStamp(ZonedDateTime timeStamp) {
+    public void setTimeStamp(String timeStamp) {
         this.timeStamp = timeStamp;
     }
 
@@ -64,8 +76,7 @@ public class Message implements Parcelable {
         senderUsername = in.readString();
         receiverUsername = in.readString();
         message = in.readString();
-        String timeStampString = in.readString();
-        timeStamp = DataUtil.stringToZonedDateTime(timeStampString);
+        timeStamp = in.readString();
     }
 
     public static final Creator<Message> CREATOR = new Creator<Message>() {
@@ -73,6 +84,7 @@ public class Message implements Parcelable {
         public Message createFromParcel(Parcel in) {
             return new Message(in);
         }
+
         @Override
         public Message[] newArray(int size) {
             return new Message[size];
@@ -84,12 +96,19 @@ public class Message implements Parcelable {
         dest.writeString(senderUsername);
         dest.writeString(receiverUsername);
         dest.writeString(message);
-
-        String timeStampString = DataUtil.zonedDatetimeToString(timeStamp);
-        dest.writeString(timeStampString);
+        dest.writeString(timeStamp);
     }
+
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    public boolean isSentNotification() {
+        return sentNotification;
+    }
+
+    public void setSentNotification(boolean sentNotification) {
+        this.sentNotification = sentNotification;
     }
 }
