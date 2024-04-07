@@ -300,10 +300,6 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
             setUpUserRecyclerView();
         } else if (selectedTabPosition == 1) {
             setUpRecipeRecyclerView();
-            Toast.makeText(getApplicationContext(), "Recipes", Toast.LENGTH_SHORT).show();
-
-        } else if (selectedTabPosition == 2) {
-            Toast.makeText(getApplicationContext(), "API", Toast.LENGTH_SHORT).show();
 
         }
     }

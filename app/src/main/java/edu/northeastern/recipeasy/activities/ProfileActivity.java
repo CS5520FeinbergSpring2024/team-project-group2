@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -188,7 +187,6 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
         return false;
     }
 
-    // TODO threading
     @Override
     public void onClick(View v) {
         int clickedId = v.getId();
@@ -219,7 +217,6 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
 
     private void handleSeeFollowers(int clickedId) {
         Intent expandUsers = new Intent(ProfileActivity.this, SeeFollowersFollowingActivity.class);
-//        expandUsers.putExtra("user", user);
         if (clickedId == R.id.seeFollowingButtonId){
             expandUsers.putExtra("type", "Following");
             expandUsers.putStringArrayListExtra("list", user.getFollowing());

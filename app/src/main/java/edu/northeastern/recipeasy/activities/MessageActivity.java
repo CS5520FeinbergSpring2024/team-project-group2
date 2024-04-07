@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -19,7 +18,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import edu.northeastern.recipeasy.Listeners.ConversationListener;
 import edu.northeastern.recipeasy.Listeners.ConversationUpdateListener;
@@ -38,7 +36,6 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
     private String otherUsername;
     private ArrayList<Message> messages = new ArrayList<>();
     private static final String MESSAGES_KEY = "messages_key";
-    private ConversationListener conversationListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,31 +44,22 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
 
         otherUsername = getIntent().getStringExtra("otherUsername");
         currentUsername = getIntent().getStringExtra("currentUsername");
-        ConversationUpdateListener conversationUpdateListener = new ConversationUpdateListener() {
-            @Override
-            public void onConversationUpdate(ArrayList<Message> messagesList) {
-                messages.clear();
-                messages.addAll(messagesList);
-                messageAdapter.notifyDataSetChanged();
-                if (messages.size() > 0) {
-                    messageRecycler.scrollToPosition(messages.size() - 1);
-                }
+        ConversationUpdateListener conversationUpdateListener = messagesList -> {
+            messages.clear();
+            messages.addAll(messagesList);
+            messageAdapter.notifyDataSetChanged();
+            if (messages.size() > 0) {
+                messageRecycler.scrollToPosition(messages.size() - 1);
             }
         };
-        conversationListener = new ConversationListener(conversationUpdateListener, currentUsername, otherUsername);
+        ConversationListener conversationListener = new ConversationListener(conversationUpdateListener, currentUsername, otherUsername);
 
         // query for otherUser in conversations node of currentUser
         // if doesn't exist, create it in currentUser and otherUser
         // if it does, pull the list of messages into messages arraylist
 
-//        if (savedInstanceState != null) {
-//            this.messages = savedInstanceState.getParcelableArrayList(MESSAGES_KEY);
-//        } else {
-//            initializeMessageList();
-//        }
 
         initializeRecycler();
-        Log.w("Convo", "Message List Initialized");
 
         toolBarTextView = findViewById(R.id.toolBarId);
         newMessageContentTextview = findViewById(R.id.messageTextInputId);
@@ -86,10 +74,8 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         messageAdapter = new MessageViewAdapter(this, currentUsername, messages);
         messageRecycler.setAdapter(messageAdapter);
         initializeMessageList();
-        Log.w("Convo", "Recycler done");
     }
 
-    // TODO threading
     private void initializeMessageList() {
         new Thread(()->{
             try{
@@ -104,7 +90,6 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
                             // "otherUsername" exists, populate the arraylist of messages
                             DataSnapshot otherUserMessagesSnapshot = dataSnapshot.child("messages");
                             ArrayList<Message> messagesList = DataUtil.parseMessages(otherUserMessagesSnapshot);
-                            Log.w("Convo", otherUserMessagesSnapshot + "");
 
                             messages.clear();
                             messages.addAll(messagesList);
@@ -196,41 +181,6 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         outState.putParcelableArrayList(MESSAGES_KEY, this.messages);
         super.onSaveInstanceState(outState);
     }
-
-
-//    private void addSampleData() {
-//        String user1 = "user1";
-//        String user2 = "user2";
-//
-//        // Sending messages from user1 to user2
-//        messages.add(new Message(user1, user2, "Hello, User2!"));
-//        messages.add(new Message(user1, user2, "How are you?"));
-//        messages.add(new Message(user1, user2, "I hope you're having a great day!"));
-//        messages.add(new Message(user1, user2, "Did you see the latest episode of that show?"));
-//        messages.add(new Message(user1, user2, "I can't wait for our upcoming event!"));
-//
-//        // Sending messages from user2 to user1
-//        messages.add(new Message(user2, user1, "Hi, User1! I'm doing well, thank you."));
-//        messages.add(new Message(user2, user1, "What about you?"));
-//        messages.add(new Message(user2, user1, "Yes, I watched it. It was amazing!"));
-//        messages.add(new Message(user2, user1, "Me too! It's going to be so much fun."));
-//        messages.add(new Message(user2, user1, "I'll see you there!"));
-//
-//        messages.add(new Message(user2, user1, "Hi, User1! I'm doing well, thank you."));
-//        messages.add(new Message(user2, user1, "What about you?"));
-//        messages.add(new Message(user2, user1, "Yes, I watched it. It was amazing!"));
-//        messages.add(new Message(user2, user1, "Me too! It's going to be so much fun."));
-//        messages.add(new Message(user2, user1, "I'll see you there!"));
-//
-//        messages.add(new Message(user2, user1, "Hi, User1! I'm doing well, thank you."));
-//        messages.add(new Message(user2, user1, "What about you?"));
-//        messages.add(new Message(user2, user1, "Yes, I watched it. It was amazing!"));
-//        messages.add(new Message(user2, user1, "Me too! It's going to be so much fun."));
-//        messages.add(new Message(user2, user1, "I'll see you there!"));
-//
-//        // Shuffle the messages
-//        Collections.shuffle(messages);
-//    }
 
     @Override
     public void onClick(View v) {
