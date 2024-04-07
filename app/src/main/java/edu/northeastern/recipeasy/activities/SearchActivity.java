@@ -9,6 +9,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -49,6 +50,7 @@ import edu.northeastern.recipeasy.R;
 import edu.northeastern.recipeasy.RecipeRecyclerView.RecipeViewAdapter;
 import edu.northeastern.recipeasy.UserRecyclerView.UserItemClickListener;
 import edu.northeastern.recipeasy.UserRecyclerView.UserViewAdapter;
+import edu.northeastern.recipeasy.domain.ListItem;
 import edu.northeastern.recipeasy.domain.Recipe;
 import edu.northeastern.recipeasy.domain.User;
 import edu.northeastern.recipeasy.utils.DataUtil;
@@ -89,7 +91,6 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
     private Spinner cuisineInput;
     private DiscoverRecipeViewAdapter discoverRecipeAdapter;
     private ArrayList<DiscoverRecipeItem> discoverRecipeList;
-    private ArrayList<DiscoverRecipeItem> discoverOriginalRecipeList = new ArrayList<>();
     private RecyclerView discoverRecipeRecyclerView;
     private Handler apiHandler = new Handler();
     private FloatingActionButton fab;
@@ -99,8 +100,6 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
 
         fab = findViewById(R.id.fabId);
         fab.setVisibility(View.GONE);
@@ -111,6 +110,8 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
         userManager.getUser(username, this);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
         tabs = findViewById(R.id.tabLayoutID);
+
+        tabs.post(() -> tabs.getTabAt(position).select());
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnItemSelectedListener(this);
@@ -491,5 +492,18 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
         maxCalories = Math.round(calorieRange.getValues().get(1));
         url += ("&minCalories="+minCalories + "&maxCalories="+maxCalories)+ "&number=30" + info + key;
         return url;
+    }
+
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("position", position);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        position = savedInstanceState.getInt("position");
     }
 }
