@@ -35,6 +35,7 @@ public class FullRecipeActivity extends AppCompatActivity {
         TextView servingsTextView = findViewById(R.id.servingsLabelId);
         ImageView foodPicture = findViewById(R.id.imageView);
         foodPicture.setImageResource(R.drawable.no_image);
+        TextView cuisineTextView = findViewById(R.id.cuisineLabelId);
 
         new Thread(() -> {
             try {
@@ -54,11 +55,36 @@ public class FullRecipeActivity extends AppCompatActivity {
         String stepsData = String.join("\n", recipe.getSteps().split(Pattern.quote(";;")));
 
         // TODO handle null values
+        // dishname, steps, ingredients
+
         recipeNameTextView.setText(recipe.getDishName());
         authorTextView.setText("By " + recipe.getAuthorName());
-        caloriesTextView.setText(recipe.getCalories().toString() + " Calories");
-        prepTimeTextView.setText("Prep time: " + recipe.getPrepTime().toString() + " minutes");
-        servingsTextView.setText("Servings: " + recipe.getServings().toString());
+        if (recipe.getCalories() == 0) {
+            caloriesTextView.setText("Calories: N/A");
+        } else {
+            caloriesTextView.setText("Calories: " + recipe.getCalories().toString() + " Calories");
+        }
+        if (recipe.getCookTime() == 0) {
+            prepTimeTextView.setText("Prep/Cook time: " +  "N/A /" + recipe.getCookTime().toString() + " minutes");
+        } else if (recipe.getPrepTime() == 0) {
+            prepTimeTextView.setText("Prep/Cook time: " + recipe.getPrepTime().toString() + "/ N/A");
+
+        } else {
+            prepTimeTextView.setText("Prep/Cook time: " + recipe.getPrepTime().toString() + "/" + recipe.getCookTime().toString() + " minutes");
+        }
+
+        if(recipe.getServings() == 0) {
+            servingsTextView.setText("Servings: N/A");
+        } else {
+            servingsTextView.setText("Servings: " + recipe.getServings().toString());
+        }
+
+        if(recipe.getCuisine() == "") {
+            cuisineTextView.setText("Cuisine: N/A");
+        }else {
+            cuisineTextView.setText("Cuisine: " + recipe.getCuisine().toString());
+        }
+
         longContextTextView.setText(ingredientsData);
 
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
