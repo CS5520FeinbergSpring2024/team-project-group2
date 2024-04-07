@@ -40,7 +40,7 @@ public class RecipeViewAdapter extends RecyclerView.Adapter<RecipeViewHolder> {
         Recipe recipe = recipeItemList.get(position);
         holder.recipeName.setText(recipe.getDishName());
         holder.cuisine.setText("Cuisine: " + recipe.getCuisine());
-        holder.totalTime.setText("Time: " + recipe.getCookTime().toString());
+        holder.totalTime.setText("Time: " + recipe.getCookTime().toString() +" mins");
         holder.servings.setText("Servings: " + recipe.getServings().toString());
         holder.calories.setText("Calories: " + recipe.getCalories().toString());
 

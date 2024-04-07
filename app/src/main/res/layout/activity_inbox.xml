@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ffe9ec"
     tools:context=".activities.InboxActivity">
 
     <TextView
@@ -13,13 +14,31 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="Inbox"
+        app:layout_constraintBottom_toTopOf="@+id/scrollviewInbox"
+        app:layout_constraintEnd_toEndOf="parent
+"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_chainStyle="packed" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/inboxRecyclerView"
-        android:layout_width="409dp"
-        android:layout_height="694dp"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="36dp" />
+    <ScrollView
+        android:id="@+id/scrollviewInbox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/inboxRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            tools:layout_editor_absoluteX="1dp" />
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

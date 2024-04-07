@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.SearchActivity">
+    tools:context=".activities.SearchActivity"
+    android:background="#ffe9ec"
+    >
 
     <SearchView
         android:id="@+id/searchBarID"
@@ -48,6 +50,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchBarID"
         android:layout_width="match_parent"
+        android:background="#ffe9ec"
         android:layout_height="wrap_content"
         tools:layout_editor_absoluteX="1dp"
         tools:layout_editor_absoluteY="51dp">
