@@ -26,6 +26,7 @@ import android.widget.Toast;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -90,10 +91,11 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
     private EditText dishInput;
     private Spinner cuisineInput;
     private DiscoverRecipeViewAdapter discoverRecipeAdapter;
-    private ArrayList<DiscoverRecipeItem> discoverRecipeList;
+    private ArrayList<DiscoverRecipeItem> discoverRecipeList = new ArrayList<>();
     private RecyclerView discoverRecipeRecyclerView;
     private Handler apiHandler = new Handler();
     private FloatingActionButton fab;
+    private boolean rotate= false;
 
 
     @Override
@@ -135,10 +137,13 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
                 }
 
                 else if (position == 2) {
-                    search.setVisibility(View.GONE);
                     setUpDiscoverRecipeRecyclerView();
+                    search.setVisibility(View.GONE);
                     fab.setVisibility(View.VISIBLE);
-                    openSearchInput();
+                    if (!rotate){
+                        openSearchInput();
+                    }
+                    rotate = false;
 
                 }
             }
@@ -174,10 +179,6 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
                 loadAllUsers();
             } else if (position == 1) {
                 loadAllRecipes();
-            }
-            else if (position == 2) {
-                openSearchInput();
-
             }
         });
 
@@ -356,7 +357,6 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
         discoverRecipeRecyclerView = findViewById(R.id.userRecyclerID);
         discoverRecipeRecyclerView.setHasFixedSize(true);
         discoverRecipeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        discoverRecipeList = new ArrayList<>();
         discoverRecipeAdapter = new DiscoverRecipeViewAdapter(discoverRecipeList, this);
         discoverRecipeRecyclerView.setAdapter(discoverRecipeAdapter);
     }
@@ -377,12 +377,6 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
         calorieRange = inputView.findViewById(R.id.rangeSlider);
 
         alertDialogBuilder.setPositiveButton("Search", (dialog, which) -> {
-            if (discoverRecipeList != null && discoverRecipeList.size() > 0) {
-                while (discoverRecipeList.size() > 0) {
-                    discoverRecipeList.remove(0);
-                    recipeAdapter.notifyItemRemoved(0);
-                }
-            }
             handleSearch();
 
         });
@@ -429,6 +423,7 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
         try {
             JSONObject json = new JSONObject(response);
             JSONArray results = json.getJSONArray("results");
+            ArrayList<DiscoverRecipeItem> newRecipes = new ArrayList<>();
             for (int i = 0; i < results.length(); i++) {
                 JSONObject recipeResponseItem = results.getJSONObject(i);
 
@@ -446,11 +441,15 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
 
                 String finalDescription = description.replaceAll("<.*?>", "");;
 
-                SearchActivity.this.apiHandler.post(() -> {
-                    discoverRecipeList.add(new DiscoverRecipeItem(title, imageUrl, calories, recipeUrl, finalDescription));
-                    discoverRecipeAdapter.notifyItemInserted(discoverRecipeList.size() -1);
-                });
+                newRecipes.add(new DiscoverRecipeItem(title, imageUrl, calories, recipeUrl, finalDescription));
             }
+            SearchActivity.this.apiHandler.post(() -> {
+                if (discoverRecipeList != null && discoverRecipeList.size() > 0){
+                    discoverRecipeList.clear();
+                }
+                discoverRecipeList.addAll(newRecipes);
+                discoverRecipeAdapter.notifyDataSetChanged();
+            });
             if (results.length() == 0) {
                // toast no results found
             }
@@ -499,11 +498,41 @@ public class SearchActivity extends AppCompatActivity implements IUserFetchListe
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("position", position);
+
+        if (discoverRecipeList.size()>0) {
+            outState.putInt("discoverList", discoverRecipeList.size());
+            for (int i = 0; i < discoverRecipeList.size(); i++) {
+                outState.putString("dishName:" +i, discoverRecipeList.get(i).getDishName());
+                outState.putString("imageUrl:" + i, discoverRecipeList.get(i).getImageUrl());
+                outState.putString("recipeUrl:" + i, discoverRecipeList.get(i).getRecipeUrl());
+                outState.putInt("calories:" + i, discoverRecipeList.get(i).getCalories());
+                outState.putString("description:" + i, discoverRecipeList.get(i).getDescription());
+
+
+            }
+        }
+
     }
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         position = savedInstanceState.getInt("position");
+        if (savedInstanceState.containsKey("discoverList")) {
+            discoverRecipeList = new ArrayList<>();
+            int size = savedInstanceState.getInt("discoverList");
+
+            for (int i = 0; i < size; i++) {
+                String dishName = savedInstanceState.getString("dishName:" + i);
+                String imageUrl = savedInstanceState.getString("imageUrl:" + i);
+                String recipeUrl = savedInstanceState.getString("recipeUrl:" + i);
+                int calories = savedInstanceState.getInt("calories:" + i);
+                String description = savedInstanceState.getString("description:" + i);
+                DiscoverRecipeItem newRecipe = new DiscoverRecipeItem(dishName, imageUrl, calories, recipeUrl, description);
+
+                discoverRecipeList.add(newRecipe);
+            }
+            rotate = true;
+        }
     }
 }
