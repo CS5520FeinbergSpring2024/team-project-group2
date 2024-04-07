@@ -8,9 +8,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.SearchView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -21,20 +24,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 import edu.northeastern.recipeasy.InboxRecyclerView.InboxItemClickListener;
 import edu.northeastern.recipeasy.InboxRecyclerView.InboxViewAdapter;
 import edu.northeastern.recipeasy.R;
-import edu.northeastern.recipeasy.RecipeRecyclerView.RecipeViewAdapter;
-import edu.northeastern.recipeasy.UserRecyclerView.UserItemClickListener;
-import edu.northeastern.recipeasy.UserRecyclerView.UserViewAdapter;
-import edu.northeastern.recipeasy.domain.Conversation;
-import edu.northeastern.recipeasy.domain.Message;
-import edu.northeastern.recipeasy.domain.User;
+import edu.northeastern.recipeasy.domain.Recipe;
 import edu.northeastern.recipeasy.utils.DataUtil;
-import edu.northeastern.recipeasy.utils.IUserFetchListener;
-import edu.northeastern.recipeasy.utils.UserManager;
 
 public class InboxActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
 
@@ -42,9 +37,16 @@ public class InboxActivity extends AppCompatActivity implements NavigationBarVie
     private InboxViewAdapter inboxAdapter;
     private String username;
     private ArrayList<String> userList = new ArrayList<>();
+    private ArrayList<String> originalUserList = new ArrayList<>();
     private Menu menu;
     private MenuItem messageIcon;
     private BottomNavigationView bottomNavigationView;
+    private SearchView search;
+    private String filterText = "";
+    private SwipeRefreshLayout swipeRefreshLayout;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +59,8 @@ public class InboxActivity extends AppCompatActivity implements NavigationBarVie
         menu = bottomNavigationView.getMenu();
         messageIcon = menu.findItem(R.id.message_icon);
         messageIcon.setChecked(true);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+
 
         initializeConversationList();
     }
@@ -75,6 +79,8 @@ public class InboxActivity extends AppCompatActivity implements NavigationBarVie
         };
         inboxAdapter.setMessageClickListener(clickListener);
         inboxRecyclerView.setAdapter(inboxAdapter);
+
+        setupSearch();
     }
 
     private void initializeConversationList() {
@@ -84,9 +90,9 @@ public class InboxActivity extends AppCompatActivity implements NavigationBarVie
         convosRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.w("convos", dataSnapshot + "");
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     userList.add(child.getKey());
+                    originalUserList.add(child.getKey());
                 }
 
                 // initialize recyclerview
@@ -95,9 +101,67 @@ public class InboxActivity extends AppCompatActivity implements NavigationBarVie
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle errors
             }
         });
+    }
+
+    private void setupSearch() {
+        search = findViewById(R.id.searchBarID);
+        search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                filterInboxList(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filterInboxList(newText);
+                filterText = newText;
+                return false;
+            }
+        });
+
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            swipeRefreshLayout.setRefreshing(false);
+            loadConversations();
+        });
+    }
+
+    private void loadConversations(){
+        new Thread(() -> {
+            DatabaseReference convosRef = FirebaseDatabase.getInstance().getReference().child("users").child(username).child("convos");
+            convosRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    userList.clear();
+                    originalUserList.clear();
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                        userList.add(child.getKey());
+                        originalUserList.add(child.getKey());
+                    }
+                    new Handler(Looper.getMainLooper()).post(() -> inboxAdapter.notifyDataSetChanged());
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+            });
+        }).start();
+    }
+
+    private void filterInboxList(String text){
+        ArrayList<String> filteredList = new ArrayList<>();
+        for (String u : originalUserList) {
+            if (u.toLowerCase().contains(text.toLowerCase())) {
+                filteredList.add(u);
+            }
+        }
+        if (userList != null) {
+            userList.clear();
+            userList.addAll(filteredList);
+            inboxAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
