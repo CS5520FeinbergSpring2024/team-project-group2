@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -49,6 +50,8 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
     private MenuItem homeIcon;
     private BottomNavigationView bottomNavigationView;
     private static final int NOTIFICATION_REQUEST_CODE = 101;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +59,7 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
         setContentView(R.layout.activity_home_page);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnItemSelectedListener(this);
-
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayoutHome);
         menu = bottomNavigationView.getMenu();
         homeIcon = menu.findItem(R.id.home_icon);
 
@@ -77,7 +80,7 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                int position = tab.getPosition();
+                position = tab.getPosition();
                 if (position == 0) {
                     loadAllRecipes();
                 } else if (position == 1) {
@@ -91,6 +94,15 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            swipeRefreshLayout.setRefreshing(false);
+            if (position == 0) {
+                loadAllRecipes();
+            } else if (position == 1) {
+                loadFollowingRecipes();
             }
         });
 
