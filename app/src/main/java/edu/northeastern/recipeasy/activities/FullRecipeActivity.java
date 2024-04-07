@@ -1,5 +1,6 @@
 package edu.northeastern.recipeasy.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Bitmap;
@@ -18,6 +19,7 @@ import edu.northeastern.recipeasy.utils.DataUtil;
 public class FullRecipeActivity extends AppCompatActivity {
 
     private Recipe recipe;
+    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,8 @@ public class FullRecipeActivity extends AppCompatActivity {
         ImageView foodPicture = findViewById(R.id.imageView);
         foodPicture.setImageResource(R.drawable.no_image);
         TextView cuisineTextView = findViewById(R.id.cuisineLabelId);
+
+        tabs.post(() -> tabs.getTabAt(position).select());
 
         new Thread(() -> {
             try {
@@ -90,7 +94,7 @@ public class FullRecipeActivity extends AppCompatActivity {
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                int position = tab.getPosition();
+                position = tab.getPosition();
                 if (position == 0) {
                     longContextTextView.setText(ingredientsData);
                 } else if (position == 1) {
@@ -108,5 +112,16 @@ public class FullRecipeActivity extends AppCompatActivity {
 
             }
         });
+    }
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("position", position);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        position = savedInstanceState.getInt("position");
     }
 }
