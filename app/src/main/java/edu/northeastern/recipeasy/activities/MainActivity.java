@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (dataSnapshot.hasChild(username)) {
                     handler.post(() -> startNextActivity(username));
                 } else {
-                    // TODO remove sample data
                     Toast.makeText(MainActivity.this, "New account created!", Toast.LENGTH_LONG).show();
                     User user = new User(username);
                     userRef.child(username).setValue(user).addOnSuccessListener(
@@ -71,8 +70,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startActivity(homePageIntent);
     }
 
-    public void startMessages(View v) {
-        Intent messageIntent = new Intent(MainActivity.this, MessageActivity.class);
-        startActivity(messageIntent);
-    }
 }
