@@ -8,8 +8,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,9 +26,12 @@ import edu.northeastern.recipeasy.Listeners.ConversationUpdateListener;
 import edu.northeastern.recipeasy.MessageRecyclerView.MessageViewAdapter;
 import edu.northeastern.recipeasy.R;
 import edu.northeastern.recipeasy.domain.Message;
+import edu.northeastern.recipeasy.domain.User;
 import edu.northeastern.recipeasy.utils.DataUtil;
+import edu.northeastern.recipeasy.utils.IUserFetchListener;
+import edu.northeastern.recipeasy.utils.UserManager;
 
-public class MessageActivity extends AppCompatActivity implements View.OnClickListener {
+public class MessageActivity extends AppCompatActivity implements View.OnClickListener, IUserFetchListener {
     private MessageViewAdapter messageAdapter;
     private RecyclerView messageRecycler;
     private LinearLayoutManager layoutManager;
@@ -34,6 +39,7 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
     private EditText newMessageContentTextview;
     private String currentUsername;
     private String otherUsername;
+    private User user;
     private ArrayList<Message> messages = new ArrayList<>();
     private static final String MESSAGES_KEY = "messages_key";
 
@@ -44,6 +50,10 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
 
         otherUsername = getIntent().getStringExtra("otherUsername");
         currentUsername = getIntent().getStringExtra("currentUsername");
+
+        UserManager userManager = new UserManager();
+        userManager.getUser(currentUsername, this);
+
         ConversationUpdateListener conversationUpdateListener = messagesList -> {
             messages.clear();
             messages.addAll(messagesList);
@@ -188,5 +198,25 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         if (clickedId == R.id.sendMessageButton) {
             sendMessage();
         }
+    }
+
+    @Override
+    public void onUserFetched(User user) {
+        if (user != null) {
+            this.user = user;
+            // you dont mutually follow each other but you once did so you can only see messages
+            if (!(user.getFollowers().contains(otherUsername) && user.getFollowing().contains(otherUsername))){
+                Toast.makeText(this, "You must mutually follow eachother to message!", Toast.LENGTH_LONG).show();
+                Button send = findViewById(R.id.sendMessageButton);
+                send.setVisibility(View.GONE);
+                EditText enterMessage = findViewById(R.id.messageTextInputId);
+                enterMessage.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    @Override
+    public void onError(DatabaseError databaseError) {
+
     }
 }
