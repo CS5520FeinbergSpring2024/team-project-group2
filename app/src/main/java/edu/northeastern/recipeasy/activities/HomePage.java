@@ -27,6 +27,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.checkerframework.checker.units.qual.A;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,8 +47,8 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
     private RecipeViewAdapter recipeAdapter;
     private RecyclerView recipeRecyclerFollowingView;
     private RecipeViewAdapter recipeFollowingAdapter;
-    private ArrayList<Recipe> recipeFollowingList;
-    private ArrayList<Recipe> recipeList;
+    private ArrayList<Recipe> recipeFollowingList = new ArrayList<>();
+    private ArrayList<Recipe> recipeList = new ArrayList<>();
     private User user;
     private TabLayout tabs;
     private Menu menu;
@@ -60,15 +62,6 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setOnItemSelectedListener(this);
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayoutHome);
-        menu = bottomNavigationView.getMenu();
-        homeIcon = menu.findItem(R.id.home_icon);
-        tabs = findViewById(R.id.tabViewHomePage);
-        tabs.post(() -> tabs.getTabAt(position).select());
-        setUp();
-        setUpFollowing();
         // DO THIS FIRST
         String username = getIntent().getStringExtra("username");
         // register notification listener
@@ -77,19 +70,34 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
         userManager.getUser(username, this);
         FloatingActionButton addNewRecipe = findViewById(R.id.fabID);
         addNewRecipeButtonListener(addNewRecipe);
-        loadAllRecipes();
-        loadFollowingRecipes();
-        recipeRecyclerFollowingView.setVisibility(View.INVISIBLE);
+
+
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnItemSelectedListener(this);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayoutHome);
+        menu = bottomNavigationView.getMenu();
+        homeIcon = menu.findItem(R.id.home_icon);
+        tabs = findViewById(R.id.tabViewHomePage);
+        tabs.post(() -> tabs.getTabAt(position).select());
+        setUpFollowing();
+        setUp();
+
+
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 position = tab.getPosition();
                 if (position == 0) {
-                    recipeRecyclerFollowingView.setVisibility(View.INVISIBLE);
+                    recipeRecyclerFollowingView.setVisibility(View.GONE);
                     recipeRecyclerView.setVisibility(View.VISIBLE);
+                    loadAllRecipes();
                 } else if (position == 1) {
+//                    loadFollowingRecipes();
+                    recipeFollowingAdapter.notifyDataSetChanged();
+                    Log.w("FOLLOWING", recipeFollowingList.get(0).getDishName());
                     recipeRecyclerFollowingView.setVisibility(View.VISIBLE);
-                    recipeRecyclerView.setVisibility(View.INVISIBLE);
+                    recipeRecyclerView.setVisibility(View.GONE);
+
                 }
             }
 
@@ -111,17 +119,17 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
         });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        homeIcon.setChecked(true);
-        int selectedTabPosition = tabs.getSelectedTabPosition();
-        if (selectedTabPosition == 0) {
-            loadAllRecipes();
-        } else if (selectedTabPosition == 1) {
-            loadFollowingRecipes();
-        }
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        homeIcon.setChecked(true);
+//        int selectedTabPosition = tabs.getSelectedTabPosition();
+//        if (selectedTabPosition == 0) {
+//            loadAllRecipes();
+//        } else if (selectedTabPosition == 1) {
+//            loadFollowingRecipes();
+//        }
+//    }
 
     private void loadAllRecipes(){
         new Thread(() -> {
@@ -129,6 +137,10 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     ArrayList<Recipe> recipes = DataUtil.parseRecipes(dataSnapshot);
+                    ArrayList<Recipe> recipesFollowing = DataUtil.getRecipesPeopleIFollow(dataSnapshot, user.getFollowing());
+                    recipeFollowingList.clear();
+                    recipeFollowingList.addAll(recipesFollowing);
+                    new Handler(Looper.getMainLooper()).post(() -> recipeFollowingAdapter.notifyDataSetChanged());
                     recipeList.clear();
                     recipeList.addAll(recipes);
                     new Handler(Looper.getMainLooper()).post(() -> recipeAdapter.notifyDataSetChanged());
@@ -146,10 +158,11 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
             DataUtil.fetchAllRecipes(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    Log.w("FOLLOWING", dataSnapshot+"");
                     ArrayList<Recipe> recipes = DataUtil.getRecipesPeopleIFollow(dataSnapshot, user.getFollowing());
-                    recipeList.clear();
-                    recipeList.addAll(recipes);
-                    new Handler(Looper.getMainLooper()).post(() -> recipeAdapter.notifyDataSetChanged());
+                    recipeFollowingList.clear();
+                    recipeFollowingList.addAll(recipes);
+                    new Handler(Looper.getMainLooper()).post(() -> recipeFollowingAdapter.notifyDataSetChanged());
                 }
 
                 @Override
@@ -171,7 +184,6 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
         recipeRecyclerView = findViewById(R.id.recyclerID);
         recipeRecyclerView.setHasFixedSize(true);
         recipeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recipeList = new ArrayList<>();
         recipeAdapter = new RecipeViewAdapter(recipeList, this);
         recipeRecyclerView.setAdapter(recipeAdapter);
         loadAllRecipes();
@@ -181,10 +193,9 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
         recipeRecyclerFollowingView = findViewById(R.id.followingRecyclerID);
         recipeRecyclerFollowingView.setHasFixedSize(true);
         recipeRecyclerFollowingView.setLayoutManager(new LinearLayoutManager(this));
-        recipeFollowingList = new ArrayList<>();
         recipeFollowingAdapter = new RecipeViewAdapter(recipeFollowingList, this);
         recipeRecyclerFollowingView.setAdapter(recipeFollowingAdapter);
-        loadFollowingRecipes();
+//        loadFollowingRecipes();
 
     }
 
