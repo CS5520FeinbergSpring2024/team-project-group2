@@ -28,6 +28,7 @@
         android:layout_height="wrap_content"
         app:cardBackgroundColor="@android:color/holo_green_dark"
         app:cardCornerRadius="16dp"
+        app:cardElevation="0dp"
         app:contentPaddingBottom="6dp"
         app:contentPaddingLeft="10dp"
         app:contentPaddingRight="9dp"
@@ -41,7 +42,8 @@
             android:id="@+id/messageContentId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#000000"
+            android:textColor="@color/black"
+            android:textSize="15sp"
             tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam." />
     </androidx.cardview.widget.CardView>
 
