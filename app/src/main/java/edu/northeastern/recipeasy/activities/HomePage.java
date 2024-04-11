@@ -79,7 +79,6 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
         homeIcon = menu.findItem(R.id.home_icon);
         tabs = findViewById(R.id.tabViewHomePage);
         tabs.post(() -> tabs.getTabAt(position).select());
-        setUpFollowing();
         setUp();
 
 
@@ -88,15 +87,9 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
             public void onTabSelected(TabLayout.Tab tab) {
                 position = tab.getPosition();
                 if (position == 0) {
-                    recipeRecyclerFollowingView.setVisibility(View.GONE);
-                    recipeRecyclerView.setVisibility(View.VISIBLE);
                     loadAllRecipes();
                 } else if (position == 1) {
-//                    loadFollowingRecipes();
-                    recipeFollowingAdapter.notifyDataSetChanged();
-                    Log.w("FOLLOWING", recipeFollowingList.get(0).getDishName());
-                    recipeRecyclerFollowingView.setVisibility(View.VISIBLE);
-                    recipeRecyclerView.setVisibility(View.GONE);
+                    setUpFollowing();
 
                 }
             }
@@ -112,24 +105,24 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
         swipeRefreshLayout.setOnRefreshListener(() -> {
             swipeRefreshLayout.setRefreshing(false);
             if (position == 0) {
-                loadAllRecipes();
+                setUp();
             } else if (position == 1) {
-                loadFollowingRecipes();
+                setUpFollowing();
             }
         });
     }
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        homeIcon.setChecked(true);
-//        int selectedTabPosition = tabs.getSelectedTabPosition();
-//        if (selectedTabPosition == 0) {
-//            loadAllRecipes();
-//        } else if (selectedTabPosition == 1) {
-//            loadFollowingRecipes();
-//        }
-//    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        homeIcon.setChecked(true);
+        int selectedTabPosition = tabs.getSelectedTabPosition();
+        if (selectedTabPosition == 0) {
+            setUp();
+        } else if (selectedTabPosition == 1) {
+            setUpFollowing();
+        }
+    }
 
     private void loadAllRecipes(){
         new Thread(() -> {
@@ -137,10 +130,6 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     ArrayList<Recipe> recipes = DataUtil.parseRecipes(dataSnapshot);
-                    ArrayList<Recipe> recipesFollowing = DataUtil.getRecipesPeopleIFollow(dataSnapshot, user.getFollowing());
-                    recipeFollowingList.clear();
-                    recipeFollowingList.addAll(recipesFollowing);
-                    new Handler(Looper.getMainLooper()).post(() -> recipeFollowingAdapter.notifyDataSetChanged());
                     recipeList.clear();
                     recipeList.addAll(recipes);
                     new Handler(Looper.getMainLooper()).post(() -> recipeAdapter.notifyDataSetChanged());
@@ -158,7 +147,6 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
             DataUtil.fetchAllRecipes(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    Log.w("FOLLOWING", dataSnapshot+"");
                     ArrayList<Recipe> recipes = DataUtil.getRecipesPeopleIFollow(dataSnapshot, user.getFollowing());
                     recipeFollowingList.clear();
                     recipeFollowingList.addAll(recipes);
@@ -190,14 +178,15 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
     }
 
     public void setUpFollowing() {
-        recipeRecyclerFollowingView = findViewById(R.id.followingRecyclerID);
+        recipeRecyclerFollowingView = findViewById(R.id.recyclerID);
         recipeRecyclerFollowingView.setHasFixedSize(true);
-        recipeRecyclerFollowingView.setLayoutManager(new LinearLayoutManager(this));
+        recipeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         recipeFollowingAdapter = new RecipeViewAdapter(recipeFollowingList, this);
         recipeRecyclerFollowingView.setAdapter(recipeFollowingAdapter);
-//        loadFollowingRecipes();
-
+        loadFollowingRecipes();
     }
+
+
 
     @Override
     public void onUserFetched(User user) {
