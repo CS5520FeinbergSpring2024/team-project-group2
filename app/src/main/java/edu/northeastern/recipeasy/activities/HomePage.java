@@ -87,7 +87,7 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
             public void onTabSelected(TabLayout.Tab tab) {
                 position = tab.getPosition();
                 if (position == 0) {
-                    loadAllRecipes();
+                    setUp();
                 } else if (position == 1) {
                     setUpFollowing();
 
