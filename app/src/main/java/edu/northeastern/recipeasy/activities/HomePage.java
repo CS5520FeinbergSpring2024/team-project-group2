@@ -43,6 +43,9 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
 
     private RecyclerView recipeRecyclerView;
     private RecipeViewAdapter recipeAdapter;
+    private RecyclerView recipeRecyclerFollowingView;
+    private RecipeViewAdapter recipeFollowingAdapter;
+    private ArrayList<Recipe> recipeFollowingList;
     private ArrayList<Recipe> recipeList;
     private User user;
     private TabLayout tabs;
@@ -65,6 +68,7 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
         tabs = findViewById(R.id.tabViewHomePage);
         tabs.post(() -> tabs.getTabAt(position).select());
         setUp();
+        setUpFollowing();
         // DO THIS FIRST
         String username = getIntent().getStringExtra("username");
         // register notification listener
@@ -73,14 +77,19 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
         userManager.getUser(username, this);
         FloatingActionButton addNewRecipe = findViewById(R.id.fabID);
         addNewRecipeButtonListener(addNewRecipe);
+        loadAllRecipes();
+        loadFollowingRecipes();
+        recipeRecyclerFollowingView.setVisibility(View.INVISIBLE);
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 position = tab.getPosition();
                 if (position == 0) {
-                    loadAllRecipes();
+                    recipeRecyclerFollowingView.setVisibility(View.INVISIBLE);
+                    recipeRecyclerView.setVisibility(View.VISIBLE);
                 } else if (position == 1) {
-                    loadFollowingRecipes();
+                    recipeRecyclerFollowingView.setVisibility(View.VISIBLE);
+                    recipeRecyclerView.setVisibility(View.INVISIBLE);
                 }
             }
 
@@ -166,6 +175,17 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
         recipeAdapter = new RecipeViewAdapter(recipeList, this);
         recipeRecyclerView.setAdapter(recipeAdapter);
         loadAllRecipes();
+    }
+
+    public void setUpFollowing() {
+        recipeRecyclerFollowingView = findViewById(R.id.followingRecyclerID);
+        recipeRecyclerFollowingView.setHasFixedSize(true);
+        recipeRecyclerFollowingView.setLayoutManager(new LinearLayoutManager(this));
+        recipeFollowingList = new ArrayList<>();
+        recipeFollowingAdapter = new RecipeViewAdapter(recipeFollowingList, this);
+        recipeRecyclerFollowingView.setAdapter(recipeFollowingAdapter);
+        loadFollowingRecipes();
+
     }
 
     @Override

@@ -53,6 +53,16 @@
         app:layout_constraintStart_toStartOf="parent"
         android:paddingBottom="50dp"/>
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/followingRecyclerID"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toBottomOf="@id/tabViewHomePage"
+            app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:paddingBottom="50dp"/>
+
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
