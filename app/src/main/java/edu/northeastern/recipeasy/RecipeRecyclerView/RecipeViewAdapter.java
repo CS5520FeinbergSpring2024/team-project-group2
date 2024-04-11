@@ -41,7 +41,7 @@ public class RecipeViewAdapter extends RecyclerView.Adapter<RecipeViewHolder> {
         holder.recipeName.setText(recipe.getDishName());
         holder.cuisine.setText("Cuisine: " + recipe.getCuisine());
 
-        if (recipe.getCookTime() == 0 || recipe.getPrepTime() == 0) {
+        if (recipe.getCookTime() + recipe.getPrepTime() == 0) {
             holder.totalTime.setText("Time: N/A");
         } else {
             holder.totalTime.setText("Time: " + (recipe.getCookTime() + recipe.getPrepTime()) +" mins");

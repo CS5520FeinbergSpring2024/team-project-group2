@@ -90,14 +90,22 @@ public class FullRecipeActivity extends AppCompatActivity {
         } else {
             caloriesTextView.setText("Calories: " + recipe.getCalories().toString() + " Calories");
         }
-        if (recipe.getCookTime() == 0) {
-            prepTimeTextView.setText("Prep/Cook time: " +  "N/A /" + recipe.getCookTime().toString() + " minutes");
-        } else if (recipe.getPrepTime() == 0) {
-            prepTimeTextView.setText("Prep/Cook time: " + recipe.getPrepTime().toString() + "/ N/A");
+        String prep;
+        String cook;
 
+        if (recipe.getPrepTime() == 0) {
+            prep = "N/A";
         } else {
-            prepTimeTextView.setText("Prep/Cook Time (mins): " + recipe.getPrepTime().toString() + "/" + recipe.getCookTime().toString());
+            prep= recipe.getPrepTime()+"";
         }
+        if (recipe.getCookTime() == 0) {
+            cook = "N/A";
+        } else {
+            cook= recipe.getCookTime()+"";
+        }
+
+
+        prepTimeTextView.setText("Prep/Cook Time (mins): " + prep + " / " + cook);
 
         if(recipe.getServings() == 0) {
             servingsTextView.setText("Servings: N/A");
