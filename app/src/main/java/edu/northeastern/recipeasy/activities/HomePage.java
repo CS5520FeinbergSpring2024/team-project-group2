@@ -59,6 +59,7 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
     private static final int NOTIFICATION_REQUEST_CODE = 101;
     private SwipeRefreshLayout swipeRefreshLayout;
     private int position;
+    private NotificationListener notificationListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +69,7 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
         String username = getIntent().getStringExtra("username");
         Boolean fromLogin = getIntent().getBooleanExtra("fromLogIn", false);
         // register notification listener
-        NotificationListener notificationListener = new NotificationListener(username, this);
+        notificationListener = new NotificationListener(username, this);
         UserManager userManager = new UserManager();
         userManager.getUser(username, this);
         FloatingActionButton addNewRecipe = findViewById(R.id.fabID);
@@ -138,6 +139,12 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        notificationListener.unregisterListener();
+        }
 
     @Override
     protected void onResume() {
