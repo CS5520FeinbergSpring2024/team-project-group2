@@ -43,5 +43,6 @@
     <string name="see_more">See More</string>
     <string name="inbox">Inbox</string>
     <string name="log_out">Log Out</string>
+    <string name="enter_message">Enter Message</string>
 
 </resources>
