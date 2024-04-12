@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -57,6 +58,7 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_page);
+        FloatingActionButton logoutButton = findViewById(R.id.logOutButton);
 
         profileUsername = getIntent().getStringExtra("profileUsername");
         currentUsername = getIntent().getStringExtra("currentUsername");
@@ -66,8 +68,10 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
         TextView name = findViewById(R.id.nameID);
         if (isCurrentUser) {
             name.setText("MY PROFILE");
+
         } else {
             name.setText(profileUsername.toUpperCase());
+            logoutButton.setVisibility(View.GONE);
         }
         setUp();
 
@@ -78,6 +82,18 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
         profileMenuItem = menu.findItem(R.id.profile_icon);
         profileMenuItem.setChecked(true);
 
+
+
+
+        logoutButton.setOnClickListener(v -> logout());
+
+    }
+
+    public void logout() {
+        // finish activities and open login page
+        finishAffinity();
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     private void setUpPage(){

@@ -42,5 +42,6 @@
     <string name="view_profile">View Profile</string>
     <string name="see_more">See More</string>
     <string name="inbox">Inbox</string>
+    <string name="log_out">Log Out</string>
 
 </resources>
