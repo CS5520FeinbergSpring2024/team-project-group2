@@ -82,9 +82,6 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
         profileMenuItem = menu.findItem(R.id.profile_icon);
         profileMenuItem.setChecked(true);
 
-
-
-
         logoutButton.setOnClickListener(v -> logout());
 
     }

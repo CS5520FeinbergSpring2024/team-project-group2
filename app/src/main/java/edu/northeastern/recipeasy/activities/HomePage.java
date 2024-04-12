@@ -1,11 +1,13 @@
 package edu.northeastern.recipeasy.activities;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -64,12 +66,30 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
         setContentView(R.layout.activity_home_page);
         // DO THIS FIRST
         String username = getIntent().getStringExtra("username");
+        Boolean fromLogin = getIntent().getBooleanExtra("fromLogIn", false);
         // register notification listener
         NotificationListener notificationListener = new NotificationListener(username, this);
         UserManager userManager = new UserManager();
         userManager.getUser(username, this);
         FloatingActionButton addNewRecipe = findViewById(R.id.fabID);
         addNewRecipeButtonListener(addNewRecipe);
+
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (fromLogin){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(HomePage.this);
+                    builder.setTitle("Go back?");
+                    builder.setMessage("Going back to the login screen will log you out.\nAre you sure you want to log out?");
+                    builder.setPositiveButton("YES", (dialog, which) -> logout());
+                    builder.setNegativeButton("NO", (dialog, which) -> dialog.cancel());
+                    builder.show();
+                } else{
+                    finish();
+                }
+            }
+        });
 
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -110,6 +130,13 @@ public class HomePage extends AppCompatActivity implements IUserFetchListener, N
                 setUpFollowing();
             }
         });
+    }
+
+    public void logout() {
+        // finish activities and open login page
+        finishAffinity();
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     @Override
