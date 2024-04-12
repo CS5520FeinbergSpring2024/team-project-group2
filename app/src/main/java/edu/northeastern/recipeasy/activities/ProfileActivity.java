@@ -199,6 +199,12 @@ public class ProfileActivity extends AppCompatActivity implements IUserFetchList
             goMessages.putExtra("username", currentUsername);
             startActivity(goMessages);
             return true;
+        } else if(itemId == R.id.profile_icon && !isCurrentUser) {
+            Intent goProfile = new Intent(ProfileActivity.this, ProfileActivity.class);
+            goProfile.putExtra("currentUsername", user.getUsername());
+            goProfile.putExtra("profileUsername", user.getUsername());
+            goProfile.putExtra("isCurrentUser", true);
+            startActivity(goProfile);
         }
         return false;
     }
