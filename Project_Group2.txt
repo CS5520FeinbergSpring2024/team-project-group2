@@ -1,0 +1,38 @@
+GitHub Link: https://github.com/CS5520FeinbergSpring2024/team-project-group2
+Video Link: https://youtu.be/IA-Jbo-VZBE
+
+Canvas name: Bram Zilter
+Northeastern email: zilter.b@northeasern.edu
+Git Hub Username: bramzilter
+Contributions: Worked on the messaging page, the full recipe page, the inbox, the behind the scenes user fetching, color scheme for user interface, and git management.
+
+Canvas name: Chloe DiPetrillo
+Northeastern email: dipetrillo.c@northeastern.edu
+Git Hub Username: chloedipetrillo
+Contributions: Worked on add new recipe page, profile page, follower/following page, integrating the group's A6 web service assignment into the project, added bottom navigation bar, added test data, and log in/log out functionality 
+
+Canvas name: Neha Annigeri
+Northeastern email: annigeri.n@northeastern.edu
+Git Hub Username: nannigeri
+Contributions: Created recipe object, add the user recycler view, recipe recycler view, inbox recycler view. Worked on the search page (switching between user/recipe/api tabs). Added all listeners to send notification if you recieve a message and to update the conversations in real time. Added functions to fetch user and recipe data.
+
+Test information:
+
+To test our application, you can log in as the following accounts:
+ - test
+ - bram
+ - chloe
+ - neha 
+
+We have a lot of other user accounts, but they are mostly used to create sample data (sample recipes).
+
+If you want to create a new account, just log in as a user account that does not currently exist. There is a toast when a new user is created. A list of all current users is displayed in the search section of the app under the 'users' tab.
+
+To add a recipe:
+ - Click on the (+) button on the home page
+
+To message someone:
+ - Go to the message tab and click the user want to message or start a new conversation (you must be mutually following the user to message them).
+
+
+
